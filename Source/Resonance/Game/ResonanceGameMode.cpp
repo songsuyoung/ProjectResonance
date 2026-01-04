@@ -1,12 +1,9 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "ResonanceGameMode.h"
-#include "ResonanceCharacter.h"
+#include "Character/ResonanceCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AResonanceGameMode::AResonanceGameMode()
 {
-	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
