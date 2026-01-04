@@ -7,6 +7,15 @@
 		{
 			"Name": "Resonance",
 			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"CoreUObject"
+			]
+		},
+		{
+			"Name": "ResonanceClient",
+			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
 	],
