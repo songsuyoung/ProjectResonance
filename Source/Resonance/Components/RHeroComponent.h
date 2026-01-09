@@ -5,20 +5,8 @@
 #include "RHeroComponent.generated.h"
 
 class UInputAction;
-class URInputCommand;
+struct FInputActionValue;
 class UInputMappingContext;
-
-USTRUCT(BlueprintType)
-struct FInputCommandMapping
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> InputAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<URInputCommand> InputCommand;
-};
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class RESONANCE_API URHeroComponent : public UActorComponent
@@ -36,9 +24,29 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void StartJump();
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input|Data")
-	TArray<FInputCommandMapping> InputCommandMappings;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> MoveInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> JumpInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> LookInputAction;
+
+protected:
+
+	UPROPERTY(Transient)
+	TWeakObjectPtr<class APlayerController> PlayerController;
+
+	UPROPERTY(Transient)
+	TWeakObjectPtr<class ACharacter> OwnerPawn;
+
 };

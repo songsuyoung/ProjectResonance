@@ -9,6 +9,8 @@ ARPlayerController::ARPlayerController(const FObjectInitializer& ObjectInitializ
 
 void ARPlayerController::SetupInputComponent()
 {
+	Super::SetupInputComponent();
+
 	if (IsValid(HeroComponent))
 	{
 		HeroComponent->SetupInputComponent();
