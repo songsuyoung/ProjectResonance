@@ -7,6 +7,8 @@
 #include "GameFramework/PlayerController.h"
 
 // Newly Created File 
+#include "Character/ResonanceCharacter.h"
+#include "Components/RCombatComponent.h"
 
 URHeroComponent::URHeroComponent()
 	: Super()
@@ -48,6 +50,7 @@ void URHeroComponent::SetupInputComponent()
 			EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 			EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 			EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ThisClass::StartJump);
+			EnhancedInputComponent->BindAction(CombatInputAction, ETriggerEvent::Started, this, &ThisClass::Attack);
 		}
 	}
 }
@@ -90,4 +93,22 @@ void URHeroComponent::Look(const FInputActionValue& Value)
 
 void URHeroComponent::StartJump()
 {
+}
+
+void URHeroComponent::Attack()
+{
+	if (OwnerPawn.IsValid())
+	{
+		AResonanceCharacter* LocalCharacter= Cast<AResonanceCharacter>(OwnerPawn);
+
+		if (IsValid(LocalCharacter))
+		{
+			URCombatComponent* CombatComponent = LocalCharacter->GetCombatComponent();
+
+			if (IsValid(CombatComponent))
+			{
+				CombatComponent->Attack();
+			}
+		}
+	}
 }

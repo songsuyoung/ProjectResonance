@@ -1,3 +1,3 @@
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_MODULE(FDefaultModuleImpl, ResonanceClientModule);
+IMPLEMENT_MODULE(FDefaultModuleImpl, ResonanceClient);

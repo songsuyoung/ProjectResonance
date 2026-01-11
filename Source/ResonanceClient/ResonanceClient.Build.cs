@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 using UnrealBuildTool;
 
 public class ResonanceClient : ModuleRules
@@ -9,9 +7,13 @@ public class ResonanceClient : ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PublicIncludePaths.AddRange(new string[] { "ResonanceClient" });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { 
-            "Core"
+        PrivateDependencyModuleNames.AddRange(new string[] {
+            "Core",
+            "CoreUObject",
+            "Engine",
+            "UMG",
+            "Slate",
+            "SlateCore"
         });
-
     }
 }
