@@ -11,12 +11,11 @@ ARSword::ARSword()
 	: Super()
 {
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	MeshComponent->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
 }
 
 void ARSword::PrepareAttack()
 {
-	Super::PrepareAttack();
+
 }
 
 void ARSword::ExecuteAttack()
@@ -26,7 +25,7 @@ void ARSword::ExecuteAttack()
 
 void ARSword::EndAttack()
 {
-	Super::EndAttack();
+
 }
 
 void ARSword::ActivateWeapon()

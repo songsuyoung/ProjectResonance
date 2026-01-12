@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 
 // Newly Created File 
+#include "Data/Action/RAttackAction.h"
 #include "Weapon/RWeaponBase.h"
 
 URCombatComponent::URCombatComponent()
@@ -25,6 +26,38 @@ void URCombatComponent::BeginPlay()
 	// 마켓에서 가져온 메시를 어떻게 처리할지 확인해야한다.
 	Weapon = World->SpawnActor<ARWeaponBase>(WeaponClass, Params);
 
+
+	if (IsValid(Weapon))
+	{
+		Weapon->OnWeaponAttack.AddUObject(this, &ThisClass::OnWeaponAttack);
+	}
+}
+
+void URCombatComponent::OnWeaponAttack()
+{
+	PlayAttackAnimation();
+}
+
+void URCombatComponent::PlayAttackAnimation()
+{
+	if (false == IsValid(Weapon))
+	{
+		return;
+	}
+
+	URAttackAction* Action = Weapon->GetAttackAction();
+
+	if (false == IsValid(Action))
+	{
+		return;
+	}
+
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+	if (IsValid(Character))
+	{
+		Character->PlayAnimMontage(Action->AnimMontage);
+	}
 }
 
 void URCombatComponent::Attack()

@@ -5,6 +5,7 @@
 #include "RWeaponBase.generated.h"
 
 class UMeshComponent;
+class URAttackAction;
 
 UENUM()
 enum class EWeaponAttachLocation : uint8
@@ -25,10 +26,15 @@ public:
 	
 	//GET/SET
 	FORCEINLINE UMeshComponent* GetMeshComponent() { return MeshComponent; }
+	
+	// TODO: 어떤 스킬을 실행하는지 전달하도록 함.
+	DECLARE_MULTICAST_DELEGATE(FOnWeaponAttack)
+	FOnWeaponAttack OnWeaponAttack;
 
 public:
 	bool TryAttack();
-
+	// 나중에는 무기에서 선택된 Action을 리턴하도록 한다.
+	URAttackAction* GetAttackAction() { return DefaultAction; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
@@ -78,6 +84,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat")
 	TMap<EWeaponAttachLocation, FName> SocketName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action")
+	TObjectPtr<URAttackAction> DefaultAction;
 
 protected:
 
