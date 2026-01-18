@@ -197,6 +197,7 @@ void URCombatComponent::TryReserveNextCombo(FRSkillContainer& Container)
 	{
 		PendingComboSkill = Container.Skills[NextComboIndex];
 	}
+
 }
 
 void URCombatComponent::OnAttackStarted()
@@ -217,8 +218,11 @@ void URCombatComponent::OnAttackCompleted()
 	{
 		// 안끝났어. 예약된거 있어.
 		CurrentComboIndex += 1;
-		
-		ExecuteAttack(PendingComboSkill.Get());
+
+		TWeakObjectPtr<URSkillBase> NextSkill = PendingComboSkill;
+		PendingComboSkill = nullptr;
+
+		ExecuteAttack(NextSkill.Get());
 	}
 	else
 	{
@@ -235,7 +239,6 @@ void URCombatComponent::OnAttackCompleted()
 		bAttackCompleted |= 1;
 	}
 
-	PendingComboSkill = nullptr;
 }
 
 void URCombatComponent::OnCooldownEventDelegate(URSkillBase* Skill)

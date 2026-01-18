@@ -97,7 +97,7 @@ void URSkillBase::Execute()
 
 bool URSkillBase::IsPlaying() const
 {
-	return CachedAnimInstance->Montage_IsPlaying(SkillMontage);
+	return CachedAnimInstance->IsAnyMontagePlaying();
 }
 
 bool URSkillBase::CanReserveCombo()
