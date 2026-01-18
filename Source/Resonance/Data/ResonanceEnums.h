@@ -6,4 +6,7 @@ enum class ERDataTableType : uint8
 {
 	None,
 	SkillData,
+	Max,
 };
+
+ENUM_RANGE_BY_COUNT(ERDataTableType, ERDataTableType::Max)

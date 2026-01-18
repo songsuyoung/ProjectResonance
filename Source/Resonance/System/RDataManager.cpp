@@ -5,6 +5,7 @@
 
 // Newly Created Files...
 #include "System/RGameInstance.h"
+#include "Data/RDataAsset.h"
 
 URDataManager* URDataManager::Get(UObject* Object)
 { 
@@ -21,10 +22,8 @@ URDataManager* URDataManager::Get(UObject* Object)
     return GameInstance->GetDataManager();
 }
 
-void URDataManager::PostLoad()
+void URDataManager::Initialize()
 {
-    Super::PostLoad();
-
     FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
 
     Streamable.RequestAsyncLoad(DataAssetClass.ToSoftObjectPath(), FStreamableDelegate::CreateUObject(this, &ThisClass::LoadDataAsset));
@@ -37,25 +36,31 @@ void URDataManager::LoadDataAsset()
 
 TArray<UDataTable*> URDataManager::GetAllDataTable()
 {
-    return TArray<UDataTable*>();
+    TArray<UDataTable*> Results;
+
+    for (ERDataTableType Type : TEnumRange<ERDataTableType>())
+    {
+        UDataTable* DataTable  = GetDataTable(Type);
+
+        if (IsValid(DataTable))
+        {
+            Results.Add(DataTable);
+        }
+    }
+    return Results;
 }
 
 UDataTable* URDataManager::GetDataTable(const ERDataTableType& DataType)
 {
-    return nullptr;
+    if (false == IsValid(DataAsset))
+    {
+        return nullptr;
+    }
+
+    return DataAsset->GetTable(DataType);
 }
 
 UDataTable* URDataManager::GetDataTable(const FName& DataType)
-{
-    return nullptr;
-}
-
-FTableRowBase* URDataManager::GetDataTableRow(const ERDataTableType& DataType, int32 ID)
-{
-    return nullptr;
-}
-
-FTableRowBase* URDataManager::GetDataTableRow(const FName& DataType, int32 ID)
 {
     return nullptr;
 }

@@ -14,10 +14,6 @@ public:
 	ARSword();
 
 protected:
-
-	virtual void PrepareAttack() override;
-	virtual void ExecuteAttack() override;
-	virtual void EndAttack() override;
 	virtual void ActivateWeapon() override;
 	virtual void DeactivateWeapon() override;
 	virtual void UnEquip() override;

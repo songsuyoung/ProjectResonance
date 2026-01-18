@@ -13,21 +13,6 @@ ARSword::ARSword()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 }
 
-void ARSword::PrepareAttack()
-{
-
-}
-
-void ARSword::ExecuteAttack()
-{
-	Super::ExecuteAttack();
-}
-
-void ARSword::EndAttack()
-{
-
-}
-
 void ARSword::ActivateWeapon()
 {
 	Super::ActivateWeapon();

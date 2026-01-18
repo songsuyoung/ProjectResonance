@@ -10,4 +10,9 @@ void URGameInstance::Init()
 	check(DataManagerClass);
 
 	DataManager = NewObject<URDataManager>(this, DataManagerClass);
+
+	if (IsValid(DataManager))
+	{
+		DataManager->Initialize();
+	}
 }
