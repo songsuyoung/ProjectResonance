@@ -6,6 +6,18 @@
 
 class ARWeaponBase;
 class URSkillBase;
+enum class ERSkillType : uint8;
+
+USTRUCT()
+struct FRSkillContainer
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<URSkillBase>> Skills;
+};
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class RESONANCE_API URCombatComponent : public UActorComponent
@@ -15,7 +27,7 @@ class RESONANCE_API URCombatComponent : public UActorComponent
 public:
 	URCombatComponent();
 
-	void Attack();
+	void Attack(const ERSkillType& SkillType);
 
 protected:
 	/* 전투 */
@@ -26,9 +38,11 @@ protected:
 	/* 스킬 */
 	void InitializeSkills();
 	void OnCooldownEventDelegate(URSkillBase* Skill);
+	void ExecuteAttack(URSkillBase* Skill);
+	void TryReserveNextCombo(FRSkillContainer& Container);
 	void OnAttackCompleted();
 	void OnAttackStarted();
-
+	
 protected:
 	/* 무기 */
 	void InitializeWeapon();
@@ -58,16 +72,21 @@ protected:
 	UPROPERTY(Transient)
 	TObjectPtr<ARWeaponBase> Weapon;
 
+	// 쿨타임 관리용
 	UPROPERTY(Transient)
-	TArray<TObjectPtr<URSkillBase>> ActiveSkills;
+	TArray<TWeakObjectPtr<URSkillBase>> ActiveSkills;
 
+	// 콤보용
+	UPROPERTY(Transient)
+	TWeakObjectPtr<URSkillBase> PendingComboSkill;
+
+	// 실제 데이터용
 	// TMap, Default, 연타공격
 	// TMap, E공격
 	// TMap, Q공격
 	// 으로 나누어져야 한다.
 	UPROPERTY(Transient)
-	TArray<TObjectPtr<URSkillBase>> AvailableSkills;
-
+	TMap<ERSkillType, FRSkillContainer> SkillSlots;
 
 	// 마지막 공격 이후에 공격하지 않은 채로 경과한 시간
 	// 만약, 경과한 시간이 ActivationDelay 보다 클 경우, 무기를 넣을 예정
@@ -83,4 +102,9 @@ protected:
 	// 공격 완료와 맞지않는다.
 	UPROPERTY(Transient)
 	uint8 bAttackCompleted : 1;
+
+	// TODO: 수정 예정 
+	// 이유: 일반 공격에 대해서 콤보를 어떻게 구현할지 알앤디
+	UPROPERTY(Transient)
+	int32 CurrentComboIndex;
 };

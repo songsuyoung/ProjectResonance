@@ -20,8 +20,10 @@ public:
 public:
 	// 검색 용도
 	TArray<UDataTable*> GetAllDataTable();
+
 	UDataTable* GetDataTable(const ERDataTableType& DataType);
 	UDataTable* GetDataTable(const FName& DataType);
+
 
 	// FTableRowBase를 cast하지 않도록, 템플릿 함수 정의 예정
 	template<typename T>

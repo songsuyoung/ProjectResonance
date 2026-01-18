@@ -25,6 +25,13 @@ void URSkillBase::Init(ACharacter* InOwner)
 	CurrentCooldownTimer = 0.f;
 	LastAttackAtteptTime = 0.f;
 	bCanBeActivated = true;
+
+	USkeletalMeshComponent* MeshComponent = OwnerCharacter->GetMesh();
+
+	if (IsValid(MeshComponent))
+	{
+		CachedAnimInstance = MeshComponent->GetAnimInstance();
+	}
 }
 
 bool URSkillBase::TryAttack()
@@ -41,7 +48,7 @@ bool URSkillBase::TryAttack()
 		// 유효하지 않은 입력
 		return false;
 	}
-	
+
 	// 유효한 입력이기 때문에, 마지막으로 공격을 시도한 시간 저장
 	LastAttackAtteptTime = CurrentTimeSeconds;
 
@@ -57,28 +64,17 @@ bool URSkillBase::TryAttack()
 
 void URSkillBase::BindEvents()
 {
-
 	if (IsValid(SkillMontage))
 	{
 		FOnMontageEnded OnMonstageEnded;
 
 		OnMonstageEnded.BindUObject(this, &ThisClass::EndAttack);
 
-		if (OwnerCharacter.IsValid())
+		if (CachedAnimInstance.IsValid())
 		{
-			USkeletalMeshComponent* MeshComponent = OwnerCharacter->GetMesh();
-
-			if (IsValid(MeshComponent))
-			{
-				UAnimInstance* AnimInstance = OwnerCharacter->GetMesh()->GetAnimInstance();
-
-				ensure(AnimInstance);
-
-				AnimInstance->Montage_SetEndDelegate(OnMonstageEnded, SkillMontage);
-			}
+			CachedAnimInstance->Montage_SetEndDelegate(OnMonstageEnded, SkillMontage);
 		}
 	}
-
 }
 
 bool URSkillBase::IsInputValid(const double& NowTime)
@@ -97,6 +93,30 @@ void URSkillBase::Execute()
 	PrepareAttack();
 	// 공격 진행
 	Attack();
+}
+
+bool URSkillBase::IsPlaying() const
+{
+	return CachedAnimInstance->Montage_IsPlaying(SkillMontage);
+}
+
+bool URSkillBase::CanReserveCombo()
+{
+	bool bResult = false;
+	if (CachedAnimInstance.IsValid())
+	{
+		const float& Position = CachedAnimInstance->Montage_GetPosition(SkillMontage);
+		const float& Length = SkillMontage->GetPlayLength();
+
+		if (Length > 0.0f)
+		{
+			const float& CurrentRatio = Position / Length;
+
+			bResult = ComboRangeThreshold.Contains(CurrentRatio);
+		}
+	}
+
+	return bResult;
 }
 
 void URSkillBase::Tick(const float& DeltaTime)

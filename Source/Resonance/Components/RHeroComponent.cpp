@@ -9,6 +9,7 @@
 // Newly Created File 
 #include "Character/ResonanceCharacter.h"
 #include "Components/RCombatComponent.h"
+#include "Data/ResonanceEnums.h"
 
 URHeroComponent::URHeroComponent()
 	: Super()
@@ -107,7 +108,7 @@ void URHeroComponent::Attack()
 
 			if (IsValid(CombatComponent))
 			{
-				CombatComponent->Attack();
+				CombatComponent->Attack(ERSkillType::Default);
 			}
 		}
 	}

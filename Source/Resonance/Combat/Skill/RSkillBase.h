@@ -4,14 +4,6 @@
 #include "UObject/NoExportTypes.h"
 #include "RSkillBase.generated.h"
 
-UENUM()
-enum class ERSkillType : uint8
-{
-	Default,		// 기본
-	ESkill,			// ESkill
-	QSkill,			// QSkill
-};
-
 class UAnimMontage;
 DECLARE_MULTICAST_DELEGATE(FAttackEventDelegate)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCooldownEventDelegate, URSkillBase*)
@@ -28,6 +20,8 @@ public:
 
 	void Init(ACharacter* InOwner);
 	bool CanUseSkill() { return bCanBeActivated; }
+	bool IsPlaying() const;
+	bool CanReserveCombo();
 
 	// 구조체로 Context 넘길 예정
 	bool TryAttack();
@@ -43,7 +37,7 @@ protected:
 	
 	bool IsInputValid(const double& NowTime);
 	void Execute();
-
+	
 protected:
 	virtual void BindEvents();
 	virtual void PrepareAttack();
@@ -60,10 +54,6 @@ public:
 
 protected:
 
-	// 현재 스킬 타입
-	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
-	ERSkillType SkillType;
-
 	// 스킬시 사용되어지는 몽타주
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	TObjectPtr<UAnimMontage> SkillMontage;
@@ -76,6 +66,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	float InputThreshold;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
+	FFloatRange ComboRangeThreshold;
 
 protected:
 
@@ -92,4 +84,7 @@ protected:
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
+
+	UPROPERTY(Transient)
+	TWeakObjectPtr<UAnimInstance> CachedAnimInstance;
 };

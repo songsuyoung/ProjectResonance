@@ -15,8 +15,14 @@ URCombatComponent::URCombatComponent()
 	: Super()
 	, Weapon(nullptr)
 	, ActiveSkills()
-	, AvailableSkills()
+	, SkillSlots()
+	, bAttackCompleted(false)
+	, CurrentComboIndex(0)
 {
+	SkillSlots.Add(ERSkillType::Default, FRSkillContainer());
+	SkillSlots.Add(ERSkillType::ESkill, FRSkillContainer());
+	SkillSlots.Add(ERSkillType::QSkill, FRSkillContainer());
+
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
 }
@@ -54,6 +60,7 @@ void URCombatComponent::InitializeWeapon()
 	check(World);
 
 	FActorSpawnParameters Params;
+
 
 	// URCombatComponent 의 Owner값이 Actor의 Owner로 지정
 	Params.Owner = GetOwner();
@@ -114,11 +121,16 @@ void URCombatComponent::InitializeSkills()
 
 	check(DataManager);
 
-	FRSkillDataTable* SkillDataTable = DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("101")));
+	TArray< FRSkillDataTable*> SkillDataTable;
 
-	if (nullptr != SkillDataTable)
+	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("101"))));
+	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("102"))));
+	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("103"))));
+	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("104"))));
+
+	for (int SkillIndex = 0; SkillIndex < SkillDataTable.Num(); ++SkillIndex)
 	{
-		URSkillBase* SkillBase = NewObject<URSkillBase>(this, SkillDataTable->SkillClass);
+		URSkillBase* SkillBase = NewObject<URSkillBase>(this, SkillDataTable[SkillIndex]->SkillClass);
 
 		if (IsValid(SkillBase))
 		{
@@ -133,27 +145,57 @@ void URCombatComponent::InitializeSkills()
 				SkillBase->OnAttackStarted.AddUObject(this, &ThisClass::OnAttackStarted);
 			}
 
-			AvailableSkills.Add(SkillBase);
+			FRSkillContainer& SkillContainer = SkillSlots.FindOrAdd(SkillDataTable[SkillIndex]->SkillType);
+
+			SkillContainer.Skills.Add(SkillBase);
 		}
 	}
 }
 
-
-void URCombatComponent::Attack()
+void URCombatComponent::Attack(const ERSkillType& SkillType)
 {
+	FRSkillContainer& Container = SkillSlots.FindOrAdd(SkillType);
+
 	// 존재하는 스킬이 없다.
-	if (AvailableSkills.Num() <= 0)
+	if (false == Container.Skills.IsValidIndex(CurrentComboIndex))
 	{
 		return;
 	}
 
-	bool bCanUseSkill = AvailableSkills[0]->TryAttack();
+	bool bIsPlaying = Container.Skills[CurrentComboIndex]->IsPlaying();
 
 	// 스킬이 발동 했을 때 활성화 스킬로 이동 시킴.
-	if (bCanUseSkill)
+	if (bIsPlaying)
 	{
-		ActiveSkills.Add(AvailableSkills[0]);
-		AvailableSkills.RemoveAt(0);
+		TryReserveNextCombo(Container);
+	}
+	else
+	{
+		ExecuteAttack(Container.Skills[CurrentComboIndex]);
+	}
+}
+
+void URCombatComponent::TryReserveNextCombo(FRSkillContainer& Container)
+{
+	// 이미 예약되어 있음.
+	if (PendingComboSkill.IsValid())
+	{
+		return;
+	}
+
+	int32 NextComboIndex = CurrentComboIndex + 1;
+
+	if (false == Container.Skills.IsValidIndex(NextComboIndex))
+	{
+		return;
+	}
+
+	// 실패 시 현재 스킬 타입에 대해서 CurrentComboIndex를 증가시킨다.
+	bool bReserve = Container.Skills[CurrentComboIndex]->CanReserveCombo();
+
+	if (bReserve)
+	{
+		PendingComboSkill = Container.Skills[NextComboIndex];
 	}
 }
 
@@ -171,21 +213,46 @@ void URCombatComponent::OnAttackStarted()
 
 void URCombatComponent::OnAttackCompleted()
 {
-	UWorld* World = GetWorld();
+	if (PendingComboSkill.IsValid())
+	{
+		// 안끝났어. 예약된거 있어.
+		CurrentComboIndex += 1;
+		
+		ExecuteAttack(PendingComboSkill.Get());
+	}
+	else
+	{
+		CurrentComboIndex = 0;
 
-	check(World);
+		UWorld* World = GetWorld();
 
-	// 마지막으로 완료된 무기 시간 저장
-	LastAttackTime = World->GetTimeSeconds();
+		check(World);
 
-	// 이때 이후로 카운트가 돌아야한다.
-	bAttackCompleted |= 1;
+		// 마지막으로 완료된 무기 시간 저장
+		LastAttackTime = World->GetTimeSeconds();
+
+		// 이때 이후로 카운트가 돌아야한다.
+		bAttackCompleted |= 1;
+	}
+
+	PendingComboSkill = nullptr;
 }
 
 void URCombatComponent::OnCooldownEventDelegate(URSkillBase* Skill)
 {
 	// Skill이 있으면, 제거 
 	ActiveSkills.Remove(Skill);
-	// 다시 사용가능 함으로 이동
-	AvailableSkills.Add(Skill);
+}
+
+void URCombatComponent::ExecuteAttack(URSkillBase* Skill)
+{
+	if (false == IsValid(Skill))
+	{
+		return;
+	}
+	
+	if (Skill->TryAttack())
+	{
+		ActiveSkills.Add(Skill);
+	}
 }

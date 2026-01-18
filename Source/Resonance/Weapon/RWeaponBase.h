@@ -27,11 +27,10 @@ public:
 	//GET/SET
 	FORCEINLINE UMeshComponent* GetMeshComponent() { return MeshComponent; }
 
-public:
-
 	bool IsWeaponActive() { return bIsWeaponActive; }
 	bool IsEquipped() { return bIsEquipped; }
 
+public:
 	virtual void ActivateWeapon();
 	virtual void DeactivateWeapon();
 	virtual void UnEquip();
