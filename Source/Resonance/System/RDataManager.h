@@ -28,6 +28,7 @@ public:
 	// FTableRowBase를 cast하지 않도록, 템플릿 함수 정의 예정
 	template<typename T>
 	T* GetDataTableRow(const ERDataTableType& DataType, const FName& ID);
+
 	template<typename T>
 	T* GetDataTableRow(const ERDataTableType& DataType, int32 ID);
 

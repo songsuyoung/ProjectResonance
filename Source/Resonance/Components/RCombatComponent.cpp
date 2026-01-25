@@ -10,18 +10,20 @@
 #include "System/RDataManager.h"
 #include "Data/ResonanceEnums.h"
 #include "Data/RSkillDataTable.h"
+#include "Data/RCharacterDataTable.h"
+#include "Game/RPlayerController.h"
 
 URCombatComponent::URCombatComponent()
 	: Super()
 	, Weapon(nullptr)
 	, ActiveSkills()
 	, SkillSlots()
-	, bAttackCompleted(false)
+	, ActiveAttackCount(0)
 	, CurrentComboIndex(0)
 {
 	SkillSlots.Add(ERSkillType::Default, FRSkillContainer());
-	SkillSlots.Add(ERSkillType::ESkill, FRSkillContainer());
-	SkillSlots.Add(ERSkillType::QSkill, FRSkillContainer());
+	SkillSlots.Add(ERSkillType::ActiveE, FRSkillContainer());
+	SkillSlots.Add(ERSkillType::ActiveQ, FRSkillContainer());
 
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
@@ -32,7 +34,6 @@ void URCombatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	InitializeWeapon();
-	InitializeSkills();
 }
 
 void URCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -47,7 +48,8 @@ void URCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 	// 장착되어져 있을 때와 관련되어진다. (모두 공격이 완료 된 이후에 실행해야한다!)
 	// Weapon 자체가 활성화 되어져 있다면 아래 로직처리들을 수행
-	if (IsValid(Weapon) && Weapon->IsWeaponActive() && bAttackCompleted)
+	// bAttackCompleted & 0 => 0이 되는 경우를 확인해야한다.
+	if (IsValid(Weapon) && Weapon->IsWeaponActive() && ActiveAttackCount <= 0)
 	{
 		UpdateWeaponEquipState();
 		UpdateWeaponState();
@@ -115,39 +117,45 @@ void URCombatComponent::UpdateWeaponState()
 	}
 }
 
-void URCombatComponent::InitializeSkills()
+void URCombatComponent::RefreshSkillData(const FRCharacterDataTable* Data)
 {
-	URDataManager* DataManager = URDataManager::Get(this);
-
-	check(DataManager);
-
-	TArray< FRSkillDataTable*> SkillDataTable;
-
-	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("101"))));
-	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("102"))));
-	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("103"))));
-	SkillDataTable.Add(DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, FName(TEXT("104"))));
-
-	for (int SkillIndex = 0; SkillIndex < SkillDataTable.Num(); ++SkillIndex)
+	if (nullptr != Data)
 	{
-		URSkillBase* SkillBase = NewObject<URSkillBase>(this, SkillDataTable[SkillIndex]->SkillClass);
+		const TMap<ERSkillType, FRComboSkillContainer>& ComboSkillContainer = Data->SkillContainer;
 
-		if (IsValid(SkillBase))
+		URDataManager* DataManager = URDataManager::Get(this);
+
+		check(DataManager);
+
+		for (const TPair<ERSkillType, FRComboSkillContainer>& Iterator : ComboSkillContainer)
 		{
-			ACharacter* Character = Cast<ACharacter>(GetOwner());
-
-			if (IsValid(Character))
+			for(const FName& IDIterator : Iterator.Value.SkillIDs)
 			{
-				// 스킬 초기화
-				SkillBase->Init(Character);
-				SkillBase->OnCooldownEventDelegate.AddUObject(this, &ThisClass::OnCooldownEventDelegate);
-				SkillBase->OnAttackCompleted.AddUObject(this, &ThisClass::OnAttackCompleted);
-				SkillBase->OnAttackStarted.AddUObject(this, &ThisClass::OnAttackStarted);
+				FRSkillDataTable* SkillData = DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, IDIterator);
+
+				if (nullptr != SkillData)
+				{
+					URSkillBase* SkillBase = NewObject<URSkillBase>(this, SkillData->SkillClass);
+
+					if (IsValid(SkillBase))
+					{
+						ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+						if (IsValid(Character))
+						{
+							// 스킬 초기화
+							SkillBase->Init(Character, SkillData->SkillType);
+							SkillBase->OnCooldownEventDelegate.AddUObject(this, &ThisClass::OnCooldownEventDelegate);
+							SkillBase->OnAttackCompleted.AddUObject(this, &ThisClass::OnAttackCompleted);
+							SkillBase->OnAttackStarted.AddUObject(this, &ThisClass::OnAttackStarted);
+						}
+
+						FRSkillContainer& SkillContainer = SkillSlots.FindOrAdd(SkillData->SkillType);
+						SkillContainer.Skills.Add(SkillBase);
+					}
+				}
 			}
-
-			FRSkillContainer& SkillContainer = SkillSlots.FindOrAdd(SkillDataTable[SkillIndex]->SkillType);
-
-			SkillContainer.Skills.Add(SkillBase);
+			
 		}
 	}
 }
@@ -183,7 +191,7 @@ void URCombatComponent::TryReserveNextCombo(FRSkillContainer& Container)
 		return;
 	}
 
-	int32 NextComboIndex = CurrentComboIndex + 1;
+	int32 NextComboIndex = (CurrentComboIndex + 1) % Container.Skills.Num();
 
 	if (false == Container.Skills.IsValidIndex(NextComboIndex))
 	{
@@ -197,6 +205,28 @@ void URCombatComponent::TryReserveNextCombo(FRSkillContainer& Container)
 	{
 		PendingComboSkill = Container.Skills[NextComboIndex];
 	}
+}
+
+void URCombatComponent::PlayNextCombo()
+{
+	if (PendingComboSkill.IsValid())
+	{
+		ERSkillType SkillType = PendingComboSkill->GetSkillType();
+
+		// 안끝났어. 예약된거 있어.
+		CurrentComboIndex = (CurrentComboIndex + 1) % SkillSlots[SkillType].Skills.Num();
+
+		TWeakObjectPtr<URSkillBase> NextSkill = PendingComboSkill;
+
+		PendingComboSkill = nullptr;
+
+		ExecuteAttack(NextSkill.Get());
+	}
+	else
+	{
+		// 콤보 공격이 없을 때
+		CurrentComboIndex = 0;
+	}
 
 }
 
@@ -204,41 +234,33 @@ void URCombatComponent::OnAttackStarted()
 {
 	if (IsValid(Weapon))
 	{
-		// 활성화만 관련있는게 아니라, 무기 이동하는데에 관련있다.
-		Weapon->ActivateWeapon();
+		if (false == Weapon->IsUnsable())
+		{
+			// 활성화만 관련있는게 아니라, 무기 이동하는데에 관련있다.
+			Weapon->ActivateWeapon();
+		}
 	}
-
-	// 항상 false로 만들어주어야한다.
-	bAttackCompleted &= 0;
 }
 
 void URCombatComponent::OnAttackCompleted()
 {
-	if (PendingComboSkill.IsValid())
-	{
-		// 안끝났어. 예약된거 있어.
-		CurrentComboIndex += 1;
+	UWorld* World = GetWorld();
 
-		TWeakObjectPtr<URSkillBase> NextSkill = PendingComboSkill;
-		PendingComboSkill = nullptr;
+	check(World);
 
-		ExecuteAttack(NextSkill.Get());
-	}
-	else
+	// 마지막으로 완료된 무기 시간 저장
+	LastAttackTime = World->GetTimeSeconds();
+
+	// 이때 이후로 카운트가 돌아야한다.
+	// 공격이 끝났음을 인지하고, 스킬 1 삭제를 진행한다.
+	-- ActiveAttackCount;
+
+	if (ActiveAttackCount <= 0)
 	{
+		// 모든 콤보가 끝났을 때 0으로 처리해준다. 
 		CurrentComboIndex = 0;
-
-		UWorld* World = GetWorld();
-
-		check(World);
-
-		// 마지막으로 완료된 무기 시간 저장
-		LastAttackTime = World->GetTimeSeconds();
-
-		// 이때 이후로 카운트가 돌아야한다.
-		bAttackCompleted |= 1;
+		ActiveAttackCount = 0;
 	}
-
 }
 
 void URCombatComponent::OnCooldownEventDelegate(URSkillBase* Skill)
@@ -256,6 +278,10 @@ void URCombatComponent::ExecuteAttack(URSkillBase* Skill)
 	
 	if (Skill->TryAttack())
 	{
+		// 스킬이 시작될 때마다 시작했음을 알린다.
+		// 마지막 값을 이동시키고, 0->1로 만든다.
+		ActiveAttackCount++;
+
 		ActiveSkills.Add(Skill);
 	}
 }

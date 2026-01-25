@@ -18,13 +18,14 @@ URSkillBase::URSkillBase()
 
 }
 
-void URSkillBase::Init(ACharacter* InOwner)
+void URSkillBase::Init(ACharacter* InOwner, ERSkillType InSkillType)
 {
 	// 데이터 초기화
 	OwnerCharacter = InOwner;
 	CurrentCooldownTimer = 0.f;
 	LastAttackAtteptTime = 0.f;
 	bCanBeActivated = true;
+	SkillType = InSkillType;
 
 	USkeletalMeshComponent* MeshComponent = OwnerCharacter->GetMesh();
 
@@ -41,13 +42,6 @@ bool URSkillBase::TryAttack()
 	check(World);
 
 	const double& CurrentTimeSeconds = World->GetTimeSeconds(); //현재 시간초 가져온다.
-
-	// 조작감을 위해서 입력
-	if (false == IsInputValid(CurrentTimeSeconds))
-	{
-		// 유효하지 않은 입력
-		return false;
-	}
 
 	// 유효한 입력이기 때문에, 마지막으로 공격을 시도한 시간 저장
 	LastAttackAtteptTime = CurrentTimeSeconds;
@@ -75,13 +69,6 @@ void URSkillBase::BindEvents()
 			CachedAnimInstance->Montage_SetEndDelegate(OnMonstageEnded, SkillMontage);
 		}
 	}
-}
-
-bool URSkillBase::IsInputValid(const double& NowTime)
-{
-	bool bValidInput = (NowTime - LastAttackAtteptTime) > InputThreshold;
-
-	return bValidInput;
 }
 
 void URSkillBase::Execute()

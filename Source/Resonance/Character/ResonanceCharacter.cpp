@@ -7,6 +7,8 @@
 
 // Newly Created Files
 #include "Components/RCombatComponent.h"
+#include "Game/RPlayerController.h"
+#include "Data/RCharacterDataTable.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -24,4 +26,29 @@ AResonanceCharacter::AResonanceCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	CombatComponent = CreateDefaultSubobject<URCombatComponent>(TEXT("CombatComponent"));
+}
+
+void AResonanceCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	ARPlayerController* PC = Cast<ARPlayerController>(GetController());
+
+	if (IsValid(PC))
+	{
+		PC->OnCharacterDataChanged.AddUObject(this, &ThisClass::RefreshData);
+	}
+}
+
+void AResonanceCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void AResonanceCharacter::RefreshData(const FRCharacterDataTable* CharacterData)
+{
+	if (IsValid(CombatComponent))
+	{
+		CombatComponent->RefreshSkillData(CharacterData);
+	}
 }

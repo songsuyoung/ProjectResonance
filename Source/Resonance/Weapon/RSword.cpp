@@ -30,7 +30,7 @@ void ARSword::UnEquip()
 	Super::UnEquip();
 }
 
-void ARSword::AttachToSocket(EWeaponAttachLocation AttachLocation)
+void ARSword::AttachToSocket(ERWeaponAttachLocation AttachLocation)
 {
 	Super::AttachToSocket(AttachLocation);
 

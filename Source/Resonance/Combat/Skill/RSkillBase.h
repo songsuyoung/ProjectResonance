@@ -5,6 +5,7 @@
 #include "RSkillBase.generated.h"
 
 class UAnimMontage;
+enum class ERSkillType : uint8;
 DECLARE_MULTICAST_DELEGATE(FAttackEventDelegate)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCooldownEventDelegate, URSkillBase*)
 
@@ -18,7 +19,9 @@ class RESONANCE_API URSkillBase : public UObject
 public:
 	URSkillBase();
 
-	void Init(ACharacter* InOwner);
+	const ERSkillType& GetSkillType() { return SkillType; }
+
+	void Init(ACharacter* InOwner, ERSkillType InSkillType);
 	bool CanUseSkill() { return bCanBeActivated; }
 	bool IsPlaying() const;
 	bool CanReserveCombo();
@@ -34,8 +37,7 @@ public:
 	virtual void Tick(const float& DeltaTime);
 
 protected:
-	
-	bool IsInputValid(const double& NowTime);
+
 	void Execute();
 	
 protected:
@@ -53,6 +55,8 @@ public:
 	FOnCooldownEventDelegate OnCooldownEventDelegate;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
+	ERSkillType SkillType;
 
 	// 스킬시 사용되어지는 몽타주
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
@@ -61,10 +65,6 @@ protected:
 	// 스킬 활성화-비활성화를 위한 쿨타임
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	float CoolTime;
-
-	// 조작감을 주기 위한 입력 임계값
-	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
-	float InputThreshold;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	FFloatRange ComboRangeThreshold;

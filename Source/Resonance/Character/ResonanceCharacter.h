@@ -8,6 +8,8 @@ class USpringArmComponent;
 class UCameraComponent;
 class URCombatComponent;
 
+struct FRCharacterDataTable;
+
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
@@ -25,6 +27,12 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE class URCombatComponent* GetCombatComponent() const { return CombatComponent; }
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
+	void RefreshData(const FRCharacterDataTable* CharacterData);
+
 protected:
 
 	/** Camera boom positioning the camera behind the character */

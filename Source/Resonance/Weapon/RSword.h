@@ -17,10 +17,10 @@ protected:
 	virtual void ActivateWeapon() override;
 	virtual void DeactivateWeapon() override;
 	virtual void UnEquip() override;
-	virtual void AttachToSocket(EWeaponAttachLocation AttachLocation) override;
+	virtual void AttachToSocket(ERWeaponAttachLocation AttachLocation) override;
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat")
-	TMap<EWeaponAttachLocation, FName> WeaponSocketName;
+	TMap<ERWeaponAttachLocation, FName> WeaponSocketName;
 
 };

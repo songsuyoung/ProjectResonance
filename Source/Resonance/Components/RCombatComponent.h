@@ -7,6 +7,7 @@
 class ARWeaponBase;
 class URSkillBase;
 enum class ERSkillType : uint8;
+struct FRCharacterDataTable;
 
 USTRUCT()
 struct FRSkillContainer
@@ -28,15 +29,17 @@ public:
 	URCombatComponent();
 
 	void Attack(const ERSkillType& SkillType);
+	void PlayNextCombo();
 
+
+	/* Set: 스킬 */
+	void RefreshSkillData(const FRCharacterDataTable* Data);
 protected:
 	/* 전투 */
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
-	/* 스킬 */
-	void InitializeSkills();
 	void OnCooldownEventDelegate(URSkillBase* Skill);
 	void ExecuteAttack(URSkillBase* Skill);
 	void TryReserveNextCombo(FRSkillContainer& Container);
@@ -101,7 +104,7 @@ protected:
 	// 위 ActiveSkill은 스킬을 발동하자 마자 바로 쿨타임을 돌도록 설계되어있어서
 	// 공격 완료와 맞지않는다.
 	UPROPERTY(Transient)
-	uint8 bAttackCompleted : 1;
+	int32 ActiveAttackCount;
 
 	// TODO: 수정 예정 
 	// 이유: 일반 공격에 대해서 콤보를 어떻게 구현할지 알앤디
