@@ -6,6 +6,7 @@
 
 class URDataManager;
 class URUIManagerBase;
+class UREventManager;
 
 UCLASS()
 class RESONANCE_API URGameInstance : public UGameInstance
@@ -16,7 +17,7 @@ public:
 	virtual void Init() override;
 
 	URDataManager* GetDataManager() { return DataManager; }
-
+	UREventManager* GetEventManager() { return EventManager; }
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "AssetClass")
@@ -28,5 +29,9 @@ protected:
 	TObjectPtr<URDataManager> DataManager;
 
 	UPROPERTY(Transient)
+	TObjectPtr<UREventManager> EventManager;
+
+	UPROPERTY(Transient)
 	TObjectPtr<URUIManagerBase> UIManager;
+
 };

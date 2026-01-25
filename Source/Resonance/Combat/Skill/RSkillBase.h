@@ -55,8 +55,6 @@ public:
 	FOnCooldownEventDelegate OnCooldownEventDelegate;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
-	ERSkillType SkillType;
 
 	// 스킬시 사용되어지는 몽타주
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
@@ -81,6 +79,9 @@ protected:
 
 	UPROPERTY(Transient)
 	uint8 bCanBeActivated : 1;
+
+	UPROPERTY(Transient)
+	ERSkillType SkillType;
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<ACharacter> OwnerCharacter;

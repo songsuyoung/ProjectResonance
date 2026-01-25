@@ -31,3 +31,9 @@ enum class ERElementType : uint8
 	Wind,
 	Water,
 };
+
+UENUM()
+enum class ERMessageType
+{
+	ShowUI,
+};

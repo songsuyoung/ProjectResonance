@@ -2,6 +2,7 @@
 
 // Newly Created File Names ..
 #include "System/RDataManager.h"
+#include "System/REventManager.h"
 
 void URGameInstance::Init()
 {
@@ -15,4 +16,6 @@ void URGameInstance::Init()
 	{
 		DataManager->Initialize();
 	}
+
+	EventManager = NewObject<UREventManager>(this, UREventManager::StaticClass());
 }
