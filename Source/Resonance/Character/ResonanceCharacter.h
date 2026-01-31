@@ -7,6 +7,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class URCombatComponent;
+class URHitCheckComponent;
 
 struct FRCharacterDataTable;
 
@@ -28,6 +29,7 @@ public:
 
 	FORCEINLINE class URCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
+	FORCEINLINE class URHitCheckComponent* GetHitCheckComponent() const { return HitCheckComponent; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
@@ -47,6 +49,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<URCombatComponent> CombatComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<URHitCheckComponent> HitCheckComponent;
+
 
 };
 

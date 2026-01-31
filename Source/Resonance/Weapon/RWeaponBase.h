@@ -45,6 +45,8 @@ public:
 	bool IsWeaponActive();
 	bool IsEquipped();
 
+	void GetHitCheckSocketLocation(TMap<FName, FVector>& OutSocketInfo);
+
 public:
 	virtual void ActivateWeapon();
 	virtual void DeactivateWeapon();
@@ -66,6 +68,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat")
 	TMap<ERWeaponAttachLocation, FName> SocketName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitCheck")
+	TArray<FName> HitCheckSocketName;
 
 protected:
 

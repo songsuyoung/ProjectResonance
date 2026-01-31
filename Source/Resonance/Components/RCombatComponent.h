@@ -28,6 +28,7 @@ class RESONANCE_API URCombatComponent : public UActorComponent
 public:
 	URCombatComponent();
 
+	ARWeaponBase* GetWeapon() const { return Weapon;  }
 	void Attack(const ERSkillType& SkillType);
 	void PlayNextCombo();
 

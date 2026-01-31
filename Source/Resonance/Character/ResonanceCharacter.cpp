@@ -3,10 +3,13 @@
 // UE 5.
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
+#include "Animation/AnimInstance.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Newly Created Files
 #include "Components/RCombatComponent.h"
+#include "Components/RHitCheckComponent.h"
 #include "Game/RPlayerController.h"
 #include "Data/RCharacterDataTable.h"
 
@@ -26,6 +29,7 @@ AResonanceCharacter::AResonanceCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	CombatComponent = CreateDefaultSubobject<URCombatComponent>(TEXT("CombatComponent"));
+	HitCheckComponent = CreateDefaultSubobject<URHitCheckComponent>(TEXT("HitCheckComponent"));
 }
 
 void AResonanceCharacter::PossessedBy(AController* NewController)
@@ -43,6 +47,13 @@ void AResonanceCharacter::PossessedBy(AController* NewController)
 void AResonanceCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (IsValid(AnimInstance))
+	{
+		AnimInstance->OnMontageStarted.AddDynamic(HitCheckComponent, &URHitCheckComponent::HandleMontageStarted);
+	} 
 }
 
 void AResonanceCharacter::RefreshData(const FRCharacterDataTable* CharacterData)
