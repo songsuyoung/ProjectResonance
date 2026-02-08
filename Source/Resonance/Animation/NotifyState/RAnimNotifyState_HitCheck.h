@@ -14,6 +14,7 @@ class RESONANCE_API URAnimNotifyState_HitCheck : public UAnimNotifyState
 	GENERATED_BODY()
 	
 public:
+
 	URAnimNotifyState_HitCheck();
 
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;
@@ -39,7 +40,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Resonance|DebugDraw")
 	uint8 bDebugDraw : 1;
 
-	UPROPERTY(EditAnywhere, Category = "Resonance|DebugDraw")
+	UPROPERTY(EditAnywhere, Category = "Resonance|Frame")
 	float FixedFrame;
 
 };

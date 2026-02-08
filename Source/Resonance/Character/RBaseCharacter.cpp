@@ -27,6 +27,7 @@ ARBaseCharacter::ARBaseCharacter()
 
 void ARBaseCharacter::PushStateGameTag(const FGameplayTag& StateTag)
 {
+
 	if (false == IsValid(StateContext))
 	{
 	//	StateContext = NewObject<URStateContext>(this, URStateContext::StaticClass());
@@ -41,11 +42,5 @@ void ARBaseCharacter::PushStateGameTag(const FGameplayTag& StateTag)
 
 void ARBaseCharacter::PopStateGameTag(const FGameplayTag& StateTag)
 {
-	//if (false == IsValid(StateContext))
-	//{
-	//	return;
-	//}
-
 	CurrentStateTags.RemoveTag(StateTag);
-	//StateContext->PopTag(StateTag);
 }

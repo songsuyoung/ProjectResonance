@@ -118,7 +118,6 @@ void URAnimNotifyState_HitCheck::NotifyTick(USkeletalMeshComponent* MeshComp, UA
 		check(World);
 		TArray<FOverlapResult> OutOverlaps;
 
-		// Capsule의 경우 가로로 눕혀있기 때문에, 회전 시켜주어야 함. Up으로 올린 후 계산을 진행해야함.
 		FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(10.f, HalfLength);
 
 		FCollisionQueryParams Params;
@@ -134,7 +133,6 @@ void URAnimNotifyState_HitCheck::NotifyTick(USkeletalMeshComponent* MeshComp, UA
 			CollisionShape,
 			Params
 		);
-
 
 		if (bDebugDraw)
 		{

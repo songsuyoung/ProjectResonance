@@ -26,5 +26,5 @@ protected:
 
 	UPROPERTY(Transient)
 	TObjectPtr<URStateContext> StateContext;
-	
+
 };
