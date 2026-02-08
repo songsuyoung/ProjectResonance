@@ -23,3 +23,18 @@ ARBaseCharacter::ARBaseCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
 }
+
+void ARBaseCharacter::PushStateGameTag(const FGameplayTag& StateTag)
+{
+	if (false == CurrentStateTags.HasTagExact(StateTag))
+	{
+		CurrentStateTags.AddTag(StateTag);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("[Skill/PushStateGameTag] %s"), *CurrentStateTags.ToString());
+}
+
+void ARBaseCharacter::PopStateGameTag(const FGameplayTag& StateTag)
+{
+	CurrentStateTags.RemoveTag(StateTag);
+}

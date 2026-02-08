@@ -12,13 +12,18 @@ enum class ERDataTableType : uint8
 
 ENUM_RANGE_BY_COUNT(ERDataTableType, ERDataTableType::Max)
 
-
+// Skill Type 도 콤보로 나눈다.
 UENUM()
 enum class ERSkillType : uint8
 {
 	None,
-	Default,			// 기본
+	Default,			// 없앨예정 -> 지금 오류가 너무많음. (스킬시스템 구현을 위해 잠시)
+	DefaultA,			// 기본 콤보 A->B->C->D..
+	DefaultB,
+	DefaultC,
+	DefaultD,
 	Heavy,				// 강공격
+	Plunge,				// 낙공
 	ActiveE,			// ESkill
 	ActiveQ,			// QSkill
 };
@@ -36,4 +41,13 @@ UENUM()
 enum class ERMessageType
 {
 	ShowUI,
+};
+
+UENUM()
+enum class ERInputContext : uint8
+{
+	Attack,
+	Hold,
+	SkillE,
+	SkillQ
 };

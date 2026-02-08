@@ -15,34 +15,10 @@
 URHeroComponent::URHeroComponent()
 	: Super()
 {
-	bWantsInitializeComponent = true;
-}
-
-void URHeroComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	PlayerController = Cast<ARPlayerController>(GetOwner());
-
-	if (PlayerController.IsValid())
-	{
-		OwnerPawn = Cast<ACharacter>(PlayerController->GetPawn());
-
-		PlayerController->OnCharacterDataChanged.AddUObject(this, &ThisClass::RefreshData);
-	}
-}
-
-void URHeroComponent::InitializeComponent()
-{
-	Super::InitializeComponent();
-}
-
-void URHeroComponent::RefreshData(const FRCharacterDataTable* Data)
-{
-	if (nullptr != Data)
-	{
-		InputHoldTime = Data->InputHoldTime;
-	}
+	// 초기화
+	InputHoldTime.Add({ ERInputContext::Attack, 0 });
+	InputHoldTime.Add({ ERInputContext::SkillE, 0 });
+	InputHoldTime.Add({ ERInputContext::SkillQ, 0 });
 }
 
 void URHeroComponent::SetupInputComponent()
@@ -64,8 +40,16 @@ void URHeroComponent::SetupInputComponent()
 			EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 			EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 			EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ThisClass::StartJump);
-			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Started, this, &ThisClass::OnAttackInputPressed, ERSkillType::Default);
+
+			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Started, this, &ThisClass::OnAttackInputPressed);
+			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Triggered, this, &ThisClass::OnAttackInputTriggered);
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Completed, this, &ThisClass::OnAttackInputReleased);
+
+			EnhancedInputComponent->BindAction(EInputAction, ETriggerEvent::Started, this, &ThisClass::OnSkillInputPressed, ERInputContext::SkillE);
+			EnhancedInputComponent->BindAction(EInputAction, ETriggerEvent::Completed, this, &ThisClass::OnSkillInputReleased, ERInputContext::SkillE);
+
+			EnhancedInputComponent->BindAction(QInputAction, ETriggerEvent::Started, this, &ThisClass::OnSkillInputPressed, ERInputContext::SkillQ);
+			EnhancedInputComponent->BindAction(QInputAction, ETriggerEvent::Completed, this, &ThisClass::OnSkillInputReleased, ERInputContext::SkillQ);
 		}
 	}
 }
@@ -108,61 +92,98 @@ void URHeroComponent::Look(const FInputActionValue& Value)
 
 void URHeroComponent::StartJump()
 {
-}
-
-void URHeroComponent::Attack(ERSkillType SkillType)
-{
 	if (OwnerPawn.IsValid())
 	{
-		AResonanceCharacter* LocalCharacter= Cast<AResonanceCharacter>(OwnerPawn);
-
-		if (IsValid(LocalCharacter))
-		{
-			URCombatComponent* CombatComponent = LocalCharacter->GetCombatComponent();
-
-			if (IsValid(CombatComponent))
-			{
-				CombatComponent->Attack(SkillType);
-			}
-		}
+		OwnerPawn->Jump();
 	}
 }
 
-void URHeroComponent::OnAttackInputPressed(ERSkillType SkillType)
+void URHeroComponent::OnAttackInputPressed()
 {
 	UWorld* World = GetWorld();
 
 	check(World);
 
-	AttackInputHoldTime = World->GetTimeSeconds();
+	InputHoldTime[ERInputContext::Attack] = World->GetTimeSeconds();
+	bFireHeavy = false;
+}
 
-	if (PendingSkillType == ERSkillType::None)
+void URHeroComponent::OnAttackInputTriggered()
+{
+	UWorld* World = GetWorld();
+
+	check(World);
+
+	float HoldTime = World->GetTimeSeconds() - InputHoldTime[ERInputContext::Attack];
+
+	if (false == bFireHeavy && HoldTime > InputThresholds[ERInputStrangth::Heavy])
 	{
-		PendingSkillType = SkillType;
+		AResonanceCharacter* ResonanceCharacter = Cast<AResonanceCharacter>(OwnerPawn);
+
+		if (IsValid(ResonanceCharacter))
+		{
+			ResonanceCharacter->RequestAttack(ERInputContext::Hold);
+		}
+
+		bFireHeavy = true;
 	}
 }
 
 void URHeroComponent::OnAttackInputReleased()
 {
-	if (false == InputHoldTime.Contains(PendingSkillType))
-	{
-		return;
-	}
-
 	UWorld* World = GetWorld();
 
 	check(World);
 
-	const float& HoldTime = World->GetTimeSeconds() - AttackInputHoldTime;
+	float HoldTime = World->GetTimeSeconds() - InputHoldTime[ERInputContext::Attack];
 
-	if (HoldTime >= InputHoldTime[PendingSkillType])
+	// 강공격이 이미 나갔으면 일반 공격은 실행되지않아야한다.
+	if (false == bFireHeavy && HoldTime > InputThresholds[ERInputStrangth::Light])
 	{
-		// 기본 공격 -> 강공격인지 확인, HoldTime이 강공격보다 클경우에 강공격 실행
+		AResonanceCharacter* ResonanceCharacter = Cast<AResonanceCharacter>(OwnerPawn);
 
-
-		// 공격 실행 
-		Attack(PendingSkillType);
-		PendingSkillType = ERSkillType::None;
+		if (IsValid(ResonanceCharacter))
+		{
+			ResonanceCharacter->RequestAttack(ERInputContext::Attack);
+		}
 	}
-
 }
+
+void URHeroComponent::OnSkillInputPressed(ERInputContext InputContext)
+{
+	UWorld* World = GetWorld();
+
+	check(World);
+
+	InputHoldTime[InputContext] = World->GetTimeSeconds();
+}
+
+void URHeroComponent::OnSkillInputReleased(ERInputContext InputContext)
+{
+	UWorld* World = GetWorld();
+
+	check(World);
+
+	float HoldTime = World->GetTimeSeconds() - InputHoldTime[InputContext];
+
+	if (HoldTime > InputThresholds[ERInputStrangth::Light])
+	{
+		AResonanceCharacter* ResonanceCharacter = Cast<AResonanceCharacter>(OwnerPawn);
+
+		if (IsValid(ResonanceCharacter))
+		{
+			ResonanceCharacter->RequestAttack(InputContext);
+		}
+	}
+}
+
+void URHeroComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (PlayerController.IsValid())
+	{
+		OwnerPawn = Cast<ACharacter>(PlayerController->GetPawn());
+	}
+}
+

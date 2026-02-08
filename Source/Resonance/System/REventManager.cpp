@@ -35,7 +35,7 @@ void UREventManager::Notify(ERMessageType Type, FRMessage* Message)
     while (nullptr != NextReceiver)
     {
         // GetValue -> UObject¸¦ ´øÁü.
-        IRMessageReceiver* Receiver = Cast<IRMessageReceiver>(NextReceiver->GetValue());
+        IRMessageReceiver* Receiver = Cast<IRMessageReceiver>(NextReceiver->GetValue().Get());
 
         if (nullptr == Receiver)
         {

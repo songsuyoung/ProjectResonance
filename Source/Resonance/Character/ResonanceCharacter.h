@@ -8,8 +8,9 @@ class USpringArmComponent;
 class UCameraComponent;
 class URCombatComponent;
 class URHitCheckComponent;
-
 struct FRCharacterDataTable;
+enum class ERSkillType :uint8;
+enum class ERInputContext : uint8;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -20,6 +21,9 @@ class AResonanceCharacter : public ARBaseCharacter
 
 public:
 	AResonanceCharacter();
+
+
+	void RequestAttack(ERInputContext InputConext);
 
 public:
 	/** Returns CameraBoom subobject **/
