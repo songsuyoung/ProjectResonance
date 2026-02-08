@@ -7,9 +7,17 @@
 class UInputAction;
 struct FInputActionValue;
 class UInputMappingContext;
-
+enum class ERInputContext : uint8;
 enum class ERSkillType : uint8;
 struct FRCharacterDataTable;
+
+// 입력체크는 스킬타입이 아닌, 약/강 으로 구분한다.
+UENUM()
+enum class ERInputStrangth : uint8
+{
+	Light, // 약한 입력
+	Heavy, // 강한 입력
+};
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class RESONANCE_API URHeroComponent : public UActorComponent
@@ -21,12 +29,7 @@ public:
 	URHeroComponent();
 
 	void SetupInputComponent();
-protected:
-	
-	virtual void BeginPlay() override;
-	virtual void InitializeComponent() override;
 
-	void RefreshData(const FRCharacterDataTable* Data);
 protected:
 
 	// 입력 처리
@@ -34,9 +37,18 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void StartJump();
 
-	void OnAttackInputPressed(ERSkillType SkillType);
+	void OnAttackInputPressed();
+	void OnAttackInputTriggered();
 	void OnAttackInputReleased();
-	void Attack(ERSkillType SkillType);
+
+
+	void OnSkillInputPressed(ERInputContext InputContext);
+	void OnSkillInputReleased(ERInputContext InputContext);
+
+protected:
+		
+	virtual void BeginPlay() override;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -56,6 +68,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> DefaultInputAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> EInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> QInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TMap<ERInputStrangth, float> InputThresholds;
 
 protected:
 
@@ -66,12 +86,9 @@ protected:
 	TWeakObjectPtr<class ACharacter> OwnerPawn;
 
 	UPROPERTY(Transient)
-	TMap<ERSkillType, float> InputHoldTime;
+	TMap<ERInputContext, float> InputHoldTime;
 
+	// 강공격이 나갔는지 아닌지 여부 확인
 	UPROPERTY(Transient)
-	float AttackInputHoldTime;
-
-	// 입력이 끝날 때 실행 -> 버리고 다음 입력을 대기한다.
-	UPROPERTY(Transient)
-	ERSkillType PendingSkillType;
+	uint8 bFireHeavy : 1;
 };

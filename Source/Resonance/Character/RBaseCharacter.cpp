@@ -1,6 +1,7 @@
 #include "Character/RBaseCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "System/RStateContext.h"
 
 ARBaseCharacter::ARBaseCharacter()
 {
@@ -22,4 +23,29 @@ ARBaseCharacter::ARBaseCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+}
+
+void ARBaseCharacter::PushStateGameTag(const FGameplayTag& StateTag)
+{
+	if (false == IsValid(StateContext))
+	{
+	//	StateContext = NewObject<URStateContext>(this, URStateContext::StaticClass());
+	}
+
+	if (false == StateContext->ContainTag(StateTag))
+	{
+		CurrentStateTags.AddTag(StateTag);
+	//	StateContext->PushTag(StateTag);
+	}
+}
+
+void ARBaseCharacter::PopStateGameTag(const FGameplayTag& StateTag)
+{
+	//if (false == IsValid(StateContext))
+	//{
+	//	return;
+	//}
+
+	CurrentStateTags.RemoveTag(StateTag);
+	//StateContext->PopTag(StateTag);
 }

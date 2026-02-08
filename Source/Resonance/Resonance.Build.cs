@@ -16,7 +16,11 @@ public class Resonance : ModuleRules
 			"Engine",
 			"InputCore",
 			"EnhancedInput",
-			"ResonanceClient"
+			"GameplayTags",
+			"ResonanceClient",
+			"Slate",
+			"SlateCore",
+			"UMG"
 		});
 	}
 }

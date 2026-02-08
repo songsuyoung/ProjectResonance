@@ -18,14 +18,13 @@ URSkillBase::URSkillBase()
 
 }
 
-void URSkillBase::Init(ACharacter* InOwner, ERSkillType InSkillType)
+void URSkillBase::Init(ACharacter* InOwner)
 {
 	// 데이터 초기화
 	OwnerCharacter = InOwner;
 	CurrentCooldownTimer = 0.f;
 	LastAttackAtteptTime = 0.f;
 	bCanBeActivated = true;
-	SkillType = InSkillType;
 
 	USkeletalMeshComponent* MeshComponent = OwnerCharacter->GetMesh();
 
@@ -132,7 +131,7 @@ void URSkillBase::Tick(const float& DeltaTime)
 
 void URSkillBase::PrepareAttack()
 {
-	OnAttackStarted.Broadcast();
+	OnAttackStarted.Broadcast(SkillTag);
 }
 
 void URSkillBase::Attack()
@@ -149,6 +148,6 @@ void URSkillBase::EndAttack(UAnimMontage* PlayingAnimMontage, bool bInterrupted)
 {
 	if (PlayingAnimMontage == SkillMontage)
 	{
-		OnAttackCompleted.Broadcast();
+		OnAttackCompleted.Broadcast(SkillTag);
 	}
 }

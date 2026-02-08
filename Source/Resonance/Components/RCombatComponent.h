@@ -2,12 +2,33 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "RCombatComponent.generated.h"
 
 class ARWeaponBase;
 class URSkillBase;
 enum class ERSkillType : uint8;
 struct FRCharacterDataTable;
+
+// 블루프린트화 시킬 수 있다.
+USTRUCT(BlueprintType)
+struct FRSkillTransition
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|To")
+	ERSkillType ToAction;
+
+	// 발동 조건
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
+	FGameplayTagContainer RequiredTags;
+
+	// 금지 조건
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
+	FGameplayTagContainer BlockedTags;
+};
 
 USTRUCT()
 struct FRSkillContainer
@@ -29,23 +50,23 @@ public:
 	URCombatComponent();
 
 	ARWeaponBase* GetWeapon() const { return Weapon;  }
-	void Attack(const ERSkillType& SkillType);
 	void PlayNextCombo();
-
 
 	/* Set: 스킬 */
 	void RefreshSkillData(const FRCharacterDataTable* Data);
+	void RequestTransition(const FGameplayTagContainer& CurrentTags);
 protected:
-	/* 전투 */
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
+	/* 전투 */
+	void Attack(URSkillBase* Skill);
 	void OnCooldownEventDelegate(URSkillBase* Skill);
 	void ExecuteAttack(URSkillBase* Skill);
-	void TryReserveNextCombo(FRSkillContainer& Container);
-	void OnAttackCompleted();
-	void OnAttackStarted();
+	void TryReserveNextCombo(URSkillBase* Skill);
+	void OnAttackCompleted(const FGameplayTag& EndSkillTag);
+	void OnAttackStarted(const FGameplayTag& ActiveSkillTag);
 	
 protected:
 	/* 무기 */
@@ -59,17 +80,21 @@ protected:
 	* TODO: 리팩토링 필요, 데이터 구조로 변경해야함. (데이터 매니저로 얻어올 수있도록)
 	* 무기 변경이 언제든 가능한 구조로 유연하게 수정 예정
 	*/
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UPROPERTY(EditDefaultsOnly, Category = "Stat|Class|Weapon")
 	TSubclassOf<ARWeaponBase> WeaponClass;
 
 	// 무기를 장착하고 나서, 활성화되어지는 시간
 	// 공격이 없으면, 무기를 넣는다.
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon|Stat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat|Weapon")
 	float ActivationDelay;
 
 	// 무기를 넣고나서, 무기가 비활성화 되어지는 시간
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon|Stat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat|Weapon")
 	float DeactivationDelay;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat|Skill")
+	TArray<FRSkillTransition> Transition;
 
 protected:
 
@@ -84,13 +109,13 @@ protected:
 	UPROPERTY(Transient)
 	TWeakObjectPtr<URSkillBase> PendingComboSkill;
 
-	// 실제 데이터용
-	// TMap, Default, 연타공격
-	// TMap, E공격
-	// TMap, Q공격
-	// 으로 나누어져야 한다.
+	// 현재활성화 스킬
 	UPROPERTY(Transient)
-	TMap<ERSkillType, FRSkillContainer> SkillSlots;
+	TWeakObjectPtr<URSkillBase> CurrentActiveSkill;
+
+	// 이를 일반 TMap으로 구분,
+	UPROPERTY(Transient)
+	TMap<ERSkillType, TObjectPtr<URSkillBase>> SkillSlots;
 
 	// 마지막 공격 이후에 공격하지 않은 채로 경과한 시간
 	// 만약, 경과한 시간이 ActivationDelay 보다 클 경우, 무기를 넣을 예정

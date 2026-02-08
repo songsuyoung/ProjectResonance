@@ -5,6 +5,7 @@
 #include "RHitCheckComponent.generated.h"
 
 struct FRWeaponSocketInfo;
+struct FOverlapResult;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RESONANCE_API URHitCheckComponent : public UActorComponent
@@ -15,20 +16,15 @@ public:
 	
 	URHitCheckComponent();
 
-	void ProcessAttackHit(AActor* Weapon);
-
-	UFUNCTION()
-	void HandleMontageStarted(UAnimMontage* Montage);
-protected:
-
-	virtual void BeginPlay() override;
-
-	void InternalProcessHitCheck(TSet<AActor*> OutOverlapActor, const TMap<FName, FVector>& CurrentOffset);
+	void ProcessAttackHit(const TArray<FOverlapResult>& InTarget);
 
 protected:
 
+	void InternalProcessHitCheck(const TArray<FOverlapResult>& InTarget);
+
+protected:
 
 	// 누적을 위한 위치 Offset
 	UPROPERTY(Transient)
-	TMap<FName, FVector> AccumulatedOffset;
+	TArray<FVector> AccumulatedOffset;
 };

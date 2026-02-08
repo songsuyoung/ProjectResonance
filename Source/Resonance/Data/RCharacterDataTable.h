@@ -25,7 +25,4 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "CharacterBase")
 	TMap<ERSkillType, FRComboSkillContainer> SkillContainer;
-
-	UPROPERTY(EditDefaultsOnly, Category = "CharacterBase|Input")
-	TMap<ERSkillType, float> InputHoldTime;
 };

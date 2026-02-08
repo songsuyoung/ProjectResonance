@@ -46,6 +46,7 @@ public:
 	bool IsEquipped();
 
 	void GetHitCheckSocketLocation(TMap<FName, FVector>& OutSocketInfo);
+	void GetHitCheckSocketLocation(TArray<FVector>& OutSocketInfo);
 
 public:
 	virtual void ActivateWeapon();

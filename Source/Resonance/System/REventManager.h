@@ -24,5 +24,5 @@ public:
 	void Notify(ERMessageType Type, FRMessage* Message = nullptr);
 protected:
 
-	TDoubleLinkedList<IRMessageReceiver*> Receivers;
+	TDoubleLinkedList<TWeakInterfacePtr<IRMessageReceiver>> Receivers;
 };
