@@ -11,12 +11,12 @@ enum class ERInputContext : uint8;
 enum class ERSkillType : uint8;
 struct FRCharacterDataTable;
 
-// ÀÔ·ÂÃ¼Å©´Â ½ºÅ³Å¸ÀÔÀÌ ¾Æ´Ñ, ¾à/°­ À¸·Î ±¸ºÐÇÑ´Ù.
+// ï¿½Ô·ï¿½Ã¼Å©ï¿½ï¿½ ï¿½ï¿½Å³Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½, ï¿½ï¿½/ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 UENUM()
 enum class ERInputStrangth : uint8
 {
-	Light, // ¾àÇÑ ÀÔ·Â
-	Heavy, // °­ÇÑ ÀÔ·Â
+	Light, // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
+	Heavy, // ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -32,7 +32,7 @@ public:
 
 protected:
 
-	// ÀÔ·Â Ã³¸®
+	// ï¿½Ô·ï¿½ Ã³ï¿½ï¿½
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void StartJump();
@@ -46,7 +46,8 @@ protected:
 	void OnSkillInputReleased(ERInputContext InputContext);
 
 protected:
-		
+	
+	bool TryExecuteJumpOrClimb(struct FHitResult& HitResult);
 	virtual void BeginPlay() override;
 
 protected:
@@ -54,7 +55,7 @@ protected:
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	/*
-	* TODO : µ¥ÀÌÅÍÈ­ ½ÃÄÑ µ¥ÀÌÅÍ ¸Å´ÏÀú·ÎºÎÅÍ ¾ò¾î¿Ã ¼ö ÀÖµµ·Ï ÇØ¾ßÇÑ´Ù.
+	* TODO : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å´ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ñ´ï¿½.
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> MoveInputAction;
@@ -88,7 +89,7 @@ protected:
 	UPROPERTY(Transient)
 	TMap<ERInputContext, float> InputHoldTime;
 
-	// °­°ø°ÝÀÌ ³ª°¬´ÂÁö ¾Æ´ÑÁö ¿©ºÎ È®ÀÎ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 	UPROPERTY(Transient)
 	uint8 bFireHeavy : 1;
 };

@@ -4,18 +4,17 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
+#include "DrawDebugHelpers.h"
 
 // Newly Created File 
 #include "Character/ResonanceCharacter.h"
-#include "Components/RCombatComponent.h"
 #include "Data/ResonanceEnums.h"
-#include "Data/RCharacterDataTable.h"
 #include "Game/RPlayerController.h"
 
 URHeroComponent::URHeroComponent()
 	: Super()
 {
-	// ÃÊ±âÈ­
+	// ï¿½Ê±ï¿½È­
 	InputHoldTime.Add({ ERInputContext::Attack, 0 });
 	InputHoldTime.Add({ ERInputContext::SkillE, 0 });
 	InputHoldTime.Add({ ERInputContext::SkillQ, 0 });
@@ -23,7 +22,7 @@ URHeroComponent::URHeroComponent()
 
 void URHeroComponent::SetupInputComponent()
 {
-	// ¾øÀ¸¸é Ä³½ºÆÃ ½Ãµµ¸¦ ÇØº»´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Ãµï¿½ï¿½ï¿½ ï¿½Øºï¿½ï¿½ï¿½.
 	PlayerController = Cast<ARPlayerController>(GetOwner());
 
 	if (PlayerController.IsValid())
@@ -92,9 +91,18 @@ void URHeroComponent::Look(const FInputActionValue& Value)
 
 void URHeroComponent::StartJump()
 {
-	if (OwnerPawn.IsValid())
+	AResonanceCharacter* OwnerCharacter = Cast<AResonanceCharacter>(OwnerPawn);
+	
+	if (false == IsValid(OwnerCharacter))
 	{
-		OwnerPawn->Jump();
+		return;
+	}
+	
+	bool bResult = OwnerCharacter->RequestClimb();
+
+	if (bResult == false)
+	{
+		OwnerCharacter->Jump();
 	}
 }
 
@@ -137,7 +145,7 @@ void URHeroComponent::OnAttackInputReleased()
 
 	float HoldTime = World->GetTimeSeconds() - InputHoldTime[ERInputContext::Attack];
 
-	// °­°ø°ÝÀÌ ÀÌ¹Ì ³ª°¬À¸¸é ÀÏ¹Ý °ø°ÝÀº ½ÇÇàµÇÁö¾Ê¾Æ¾ßÇÑ´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Æ¾ï¿½ï¿½Ñ´ï¿½.
 	if (false == bFireHeavy && HoldTime > InputThresholds[ERInputStrangth::Light])
 	{
 		AResonanceCharacter* ResonanceCharacter = Cast<AResonanceCharacter>(OwnerPawn);

@@ -8,6 +8,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class URCombatComponent;
 class URHitCheckComponent;
+class URClimbComponent;
 struct FRCharacterDataTable;
 enum class ERSkillType :uint8;
 enum class ERInputContext : uint8;
@@ -22,7 +23,7 @@ class AResonanceCharacter : public ARBaseCharacter
 public:
 	AResonanceCharacter();
 
-
+	bool RequestClimb();
 	void RequestAttack(ERInputContext InputConext);
 
 public:
@@ -38,7 +39,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 	void RefreshData(const FRCharacterDataTable* CharacterData);
-
+	void StartClimb();
 protected:
 
 	/** Camera boom positioning the camera behind the character */
@@ -57,6 +58,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<URHitCheckComponent> HitCheckComponent;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Climb")
+	TObjectPtr<URClimbComponent> ClimbComponent;
 };
 

@@ -8,6 +8,7 @@
 #include "Components/SkeletalMeshComponent.h"
 
 // Newly Created Files
+#include "Components/RClimbComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "Components/RCombatComponent.h"
 #include "Components/RHitCheckComponent.h"
@@ -31,6 +32,21 @@ AResonanceCharacter::AResonanceCharacter()
 
 	CombatComponent = CreateDefaultSubobject<URCombatComponent>(TEXT("CombatComponent"));
 	HitCheckComponent = CreateDefaultSubobject<URHitCheckComponent>(TEXT("HitCheckComponent"));
+	ClimbComponent = CreateDefaultSubobject<URClimbComponent>(TEXT("ClimbComponent"));
+}
+
+bool AResonanceCharacter::RequestClimb()
+{
+	if (IsValid(ClimbComponent))
+	{
+		return ClimbComponent->RequestClimb();
+	}
+	
+	return false;
+}
+
+void AResonanceCharacter::StartClimb()
+{
 }
 
 void AResonanceCharacter::RequestAttack(ERInputContext InputConext)
