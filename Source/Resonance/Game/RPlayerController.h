@@ -18,7 +18,9 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCharacterDataChanged,const FRCharacterDataTable*)
 	FOnCharacterDataChanged OnCharacterDataChanged;
 
-	// PawnÀÌ º¯°æµÉ ¶§ ¸¶´Ù µ¥ÀÌÅÍ°¡ º¯°æµÇ¾î Áø´Ù.
+	URHeroComponent* GetHeroComponent() { return HeroComponent; }
+	
+	// Pawnì´ ë³€ê²½ë  ë•Œ ë§ˆë‹¤ ë°ì´í„°ê°€ ë³€ê²½ë˜ì–´ ì§„ë‹¤.
 	void RefreshData(const FName& CharacterID);
 
 protected:

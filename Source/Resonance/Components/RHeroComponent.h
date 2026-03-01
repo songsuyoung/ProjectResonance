@@ -11,14 +11,15 @@ enum class ERInputContext : uint8;
 enum class ERSkillType : uint8;
 struct FRCharacterDataTable;
 
-// �Է�üũ�� ��ųŸ���� �ƴ�, ��/�� ���� �����Ѵ�.
+// 입력체크는 스킬타입이 아닌, 약/강 으로 구분한다.
 UENUM()
 enum class ERInputStrangth : uint8
 {
-	Light, // ���� �Է�
-	Heavy, // ���� �Է�
+	Light, // 약한 입력
+	Heavy, // 강한 입력
 };
 
+enum class ERActionContext : uint8;
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class RESONANCE_API URHeroComponent : public UActorComponent
 {
@@ -30,9 +31,12 @@ public:
 
 	void SetupInputComponent();
 
+	// 의존성 약화를 위해 델리게이트 생성
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnInputReceived, ERActionContext /*입력된 액션 값*/ )
+	FOnInputReceived OnInputReceived;
+	
 protected:
 
-	// �Է� ó��
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void StartJump();
@@ -47,16 +51,12 @@ protected:
 
 protected:
 	
-	bool TryExecuteJumpOrClimb(struct FHitResult& HitResult);
 	virtual void BeginPlay() override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
-
-	/*
-	* TODO : ������ȭ ���� ������ �Ŵ����κ��� ���� �� �ֵ��� �ؾ��Ѵ�.
-	*/
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> MoveInputAction;
 
@@ -89,7 +89,6 @@ protected:
 	UPROPERTY(Transient)
 	TMap<ERInputContext, float> InputHoldTime;
 
-	// �������� �������� �ƴ��� ���� Ȯ��
 	UPROPERTY(Transient)
 	uint8 bFireHeavy : 1;
 };

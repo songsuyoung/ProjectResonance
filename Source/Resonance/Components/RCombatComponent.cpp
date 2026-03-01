@@ -263,13 +263,13 @@ void URCombatComponent::OnAttackStarted(const FGameplayTag& ActiveSkillTag)
 		}
 	}
 
-	ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
+	/*ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
 
 	if (IsValid(BaseCharacter))
 	{
 		BaseCharacter->PushStateGameTag(ActiveSkillTag);
 		UE_LOG(LogTemp, Log, TEXT("[Skill/OnAttackStarted] %s"), *ActiveSkillTag.ToString());
-	}
+	}*/
 }
 
 void URCombatComponent::OnAttackCompleted(const FGameplayTag& EndSkillTag)
@@ -292,12 +292,12 @@ void URCombatComponent::OnAttackCompleted(const FGameplayTag& EndSkillTag)
 		ActiveAttackCount = 0;
 	}
 
-	ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
+	/*ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
 
 	if (IsValid(BaseCharacter))
 	{
 		BaseCharacter->PopStateGameTag(EndSkillTag);
-	}
+	}*/
 }
 
 void URCombatComponent::OnCooldownEventDelegate(URSkillBase* Skill)

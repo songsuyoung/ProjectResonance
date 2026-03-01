@@ -10,7 +10,7 @@ class URSkillBase;
 enum class ERSkillType : uint8;
 struct FRCharacterDataTable;
 
-// ºí·çÇÁ¸°Æ®È­ ½ÃÅ³ ¼ö ÀÖ´Ù.
+// ë¸”ë£¨í”„ë¦°íŠ¸í™” ì‹œí‚¬ ìˆ˜ ìˆë‹¤.
 USTRUCT(BlueprintType)
 struct FRSkillTransition
 {
@@ -21,11 +21,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|To")
 	ERSkillType ToAction;
 
-	// ¹ßµ¿ Á¶°Ç
+	// ë°œë™ ì¡°ê±´
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
 	FGameplayTagContainer RequiredTags;
 
-	// ±İÁö Á¶°Ç
+	// ê¸ˆì§€ ì¡°ê±´
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
 	FGameplayTagContainer BlockedTags;
 };
@@ -52,7 +52,7 @@ public:
 	ARWeaponBase* GetWeapon() const { return Weapon;  }
 	void PlayNextCombo();
 
-	/* Set: ½ºÅ³ */
+	/* Set: ìŠ¤í‚¬ */
 	void RefreshSkillData(const FRCharacterDataTable* Data);
 	void RequestTransition(const FGameplayTagContainer& CurrentTags);
 protected:
@@ -60,7 +60,7 @@ protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
-	/* ÀüÅõ */
+	/* ì „íˆ¬ */
 	void Attack(URSkillBase* Skill);
 	void OnCooldownEventDelegate(URSkillBase* Skill);
 	void ExecuteAttack(URSkillBase* Skill);
@@ -69,26 +69,26 @@ protected:
 	void OnAttackStarted(const FGameplayTag& ActiveSkillTag);
 	
 protected:
-	/* ¹«±â */
+	/* ë¬´ê¸° */
 	void InitializeWeapon();
 	void UpdateWeaponEquipState();
 	void UpdateWeaponState();
 protected:
 
 	/*
-	* ÇÁ·ÎÅäÅ¸ÀÔ
-	* TODO: ¸®ÆÑÅä¸µ ÇÊ¿ä, µ¥ÀÌÅÍ ±¸Á¶·Î º¯°æÇØ¾ßÇÔ. (µ¥ÀÌÅÍ ¸Å´ÏÀú·Î ¾ò¾î¿Ã ¼öÀÖµµ·Ï)
-	* ¹«±â º¯°æÀÌ ¾ğÁ¦µç °¡´ÉÇÑ ±¸Á¶·Î À¯¿¬ÇÏ°Ô ¼öÁ¤ ¿¹Á¤
+	* í”„ë¡œí† íƒ€ì…
+	* TODO: ë¦¬íŒ©í† ë§ í•„ìš”, ë°ì´í„° êµ¬ì¡°ë¡œ ë³€ê²½í•´ì•¼í•¨. (ë°ì´í„° ë§¤ë‹ˆì €ë¡œ ì–»ì–´ì˜¬ ìˆ˜ìˆë„ë¡)
+	* ë¬´ê¸° ë³€ê²½ì´ ì–¸ì œë“  ê°€ëŠ¥í•œ êµ¬ì¡°ë¡œ ìœ ì—°í•˜ê²Œ ìˆ˜ì • ì˜ˆì •
 	*/
 	UPROPERTY(EditDefaultsOnly, Category = "Stat|Class|Weapon")
 	TSubclassOf<ARWeaponBase> WeaponClass;
 
-	// ¹«±â¸¦ ÀåÂøÇÏ°í ³ª¼­, È°¼ºÈ­µÇ¾îÁö´Â ½Ã°£
-	// °ø°İÀÌ ¾øÀ¸¸é, ¹«±â¸¦ ³Ö´Â´Ù.
+	// ë¬´ê¸°ë¥¼ ì¥ì°©í•˜ê³  ë‚˜ì„œ, í™œì„±í™”ë˜ì–´ì§€ëŠ” ì‹œê°„
+	// ê³µê²©ì´ ì—†ìœ¼ë©´, ë¬´ê¸°ë¥¼ ë„£ëŠ”ë‹¤.
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat|Weapon")
 	float ActivationDelay;
 
-	// ¹«±â¸¦ ³Ö°í³ª¼­, ¹«±â°¡ ºñÈ°¼ºÈ­ µÇ¾îÁö´Â ½Ã°£
+	// ë¬´ê¸°ë¥¼ ë„£ê³ ë‚˜ì„œ, ë¬´ê¸°ê°€ ë¹„í™œì„±í™” ë˜ì–´ì§€ëŠ” ì‹œê°„
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat|Weapon")
 	float DeactivationDelay;
 
@@ -101,39 +101,39 @@ protected:
 	UPROPERTY(Transient)
 	TObjectPtr<ARWeaponBase> Weapon;
 
-	// ÄğÅ¸ÀÓ °ü¸®¿ë
+	// ì¿¨íƒ€ì„ ê´€ë¦¬ìš©
 	UPROPERTY(Transient)
 	TArray<TWeakObjectPtr<URSkillBase>> ActiveSkills;
 
-	// ÄŞº¸¿ë
+	// ì½¤ë³´ìš©
 	UPROPERTY(Transient)
 	TWeakObjectPtr<URSkillBase> PendingComboSkill;
 
-	// ÇöÀçÈ°¼ºÈ­ ½ºÅ³
+	// í˜„ì¬í™œì„±í™” ìŠ¤í‚¬
 	UPROPERTY(Transient)
 	TWeakObjectPtr<URSkillBase> CurrentActiveSkill;
 
-	// ÀÌ¸¦ ÀÏ¹İ TMapÀ¸·Î ±¸ºĞ,
+	// ì´ë¥¼ ì¼ë°˜ TMapìœ¼ë¡œ êµ¬ë¶„,
 	UPROPERTY(Transient)
 	TMap<ERSkillType, TObjectPtr<URSkillBase>> SkillSlots;
 
-	// ¸¶Áö¸· °ø°İ ÀÌÈÄ¿¡ °ø°İÇÏÁö ¾ÊÀº Ã¤·Î °æ°úÇÑ ½Ã°£
-	// ¸¸¾à, °æ°úÇÑ ½Ã°£ÀÌ ActivationDelay º¸´Ù Å¬ °æ¿ì, ¹«±â¸¦ ³ÖÀ» ¿¹Á¤
+	// ë§ˆì§€ë§‰ ê³µê²© ì´í›„ì— ê³µê²©í•˜ì§€ ì•Šì€ ì±„ë¡œ ê²½ê³¼í•œ ì‹œê°„
+	// ë§Œì•½, ê²½ê³¼í•œ ì‹œê°„ì´ ActivationDelay ë³´ë‹¤ í´ ê²½ìš°, ë¬´ê¸°ë¥¼ ë„£ì„ ì˜ˆì •
 	UPROPERTY(Transient)
 	double LastAttackTime;
 
 	UPROPERTY(Transient)
 	double LastUnequipTime;
 
-	// ÇöÀç´Â true/false·Î °¡´ÉÇÏÁö¸¸, ½ºÅ³ÀÌ ´Ã¾î³ª°Ô µÈ´Ù¸é
-	// bit ·Î °¢ ½ºÅ³ÀÇ °ø°İÀÌ ³¡³µ´ÂÁö ¾Æ´ÑÁö
-	// À§ ActiveSkillÀº ½ºÅ³À» ¹ßµ¿ÇÏÀÚ ¸¶ÀÚ ¹Ù·Î ÄğÅ¸ÀÓÀ» µ¹µµ·Ï ¼³°èµÇ¾îÀÖ¾î¼­
-	// °ø°İ ¿Ï·á¿Í ¸ÂÁö¾Ê´Â´Ù.
+	// í˜„ì¬ëŠ” true/falseë¡œ ê°€ëŠ¥í•˜ì§€ë§Œ, ìŠ¤í‚¬ì´ ëŠ˜ì–´ë‚˜ê²Œ ëœë‹¤ë©´
+	// bit ë¡œ ê° ìŠ¤í‚¬ì˜ ê³µê²©ì´ ëë‚¬ëŠ”ì§€ ì•„ë‹Œì§€
+	// ìœ„ ActiveSkillì€ ìŠ¤í‚¬ì„ ë°œë™í•˜ì ë§ˆì ë°”ë¡œ ì¿¨íƒ€ì„ì„ ëŒë„ë¡ ì„¤ê³„ë˜ì–´ìˆì–´ì„œ
+	// ê³µê²© ì™„ë£Œì™€ ë§ì§€ì•ŠëŠ”ë‹¤.
 	UPROPERTY(Transient)
 	int32 ActiveAttackCount;
 
-	// TODO: ¼öÁ¤ ¿¹Á¤ 
-	// ÀÌÀ¯: ÀÏ¹İ °ø°İ¿¡ ´ëÇØ¼­ ÄŞº¸¸¦ ¾î¶»°Ô ±¸ÇöÇÒÁö ¾Ë¾Øµğ
+	// TODO: ìˆ˜ì • ì˜ˆì • 
+	// ì´ìœ : ì¼ë°˜ ê³µê²©ì— ëŒ€í•´ì„œ ì½¤ë³´ë¥¼ ì–´ë–»ê²Œ êµ¬í˜„í• ì§€ ì•Œì•¤ë””
 	UPROPERTY(Transient)
 	int32 CurrentComboIndex;
 };

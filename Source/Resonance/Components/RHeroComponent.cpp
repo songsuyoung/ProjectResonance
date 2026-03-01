@@ -4,17 +4,18 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
-#include "DrawDebugHelpers.h"
 
 // Newly Created File 
 #include "Character/ResonanceCharacter.h"
+#include "Components/RCombatComponent.h"
 #include "Data/ResonanceEnums.h"
+#include "Data/RCharacterDataTable.h"
 #include "Game/RPlayerController.h"
 
 URHeroComponent::URHeroComponent()
 	: Super()
 {
-	// �ʱ�ȭ
+	// 초기화
 	InputHoldTime.Add({ ERInputContext::Attack, 0 });
 	InputHoldTime.Add({ ERInputContext::SkillE, 0 });
 	InputHoldTime.Add({ ERInputContext::SkillQ, 0 });
@@ -22,7 +23,7 @@ URHeroComponent::URHeroComponent()
 
 void URHeroComponent::SetupInputComponent()
 {
-	// ������ ĳ���� �õ��� �غ���.
+	// 없으면 캐스팅 시도를 해본다.
 	PlayerController = Cast<ARPlayerController>(GetOwner());
 
 	if (PlayerController.IsValid())
@@ -91,19 +92,7 @@ void URHeroComponent::Look(const FInputActionValue& Value)
 
 void URHeroComponent::StartJump()
 {
-	AResonanceCharacter* OwnerCharacter = Cast<AResonanceCharacter>(OwnerPawn);
-	
-	if (false == IsValid(OwnerCharacter))
-	{
-		return;
-	}
-	
-	bool bResult = OwnerCharacter->RequestClimb();
-
-	if (bResult == false)
-	{
-		OwnerCharacter->Jump();
-	}
+	OnInputReceived.Broadcast(ERActionContext::Action_Jump);
 }
 
 void URHeroComponent::OnAttackInputPressed()
@@ -145,7 +134,7 @@ void URHeroComponent::OnAttackInputReleased()
 
 	float HoldTime = World->GetTimeSeconds() - InputHoldTime[ERInputContext::Attack];
 
-	// �������� �̹� �������� �Ϲ� ������ ��������ʾƾ��Ѵ�.
+	// 강공격이 이미 나갔으면 일반 공격은 실행되지않아야한다.
 	if (false == bFireHeavy && HoldTime > InputThresholds[ERInputStrangth::Light])
 	{
 		AResonanceCharacter* ResonanceCharacter = Cast<AResonanceCharacter>(OwnerPawn);
@@ -194,4 +183,3 @@ void URHeroComponent::BeginPlay()
 		OwnerPawn = Cast<ACharacter>(PlayerController->GetPawn());
 	}
 }
-

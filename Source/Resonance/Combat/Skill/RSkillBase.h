@@ -11,8 +11,8 @@ enum class ERSkillType : uint8;
 DECLARE_MULTICAST_DELEGATE_OneParam(FAttackEventDelegate,const FGameplayTag&)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCooldownEventDelegate, URSkillBase*)
 
-// ´ÜÀÏ Ã¥ÀÓÀÇ ¿øÄ¢¿¡ µû¶ó, ½ºÅ³ ³»ºÎ¿¡¼­ ÄğÅ¸ÀÓ, °ø°İ½ÃÀÛ/³¡/ÁøÇà Áß ¸ğµÎ¸¦ °ü¸®ÇÑ´Ù.
-// ºí·çÇÁ¸°Æ®·Î ¸¸µé ¼ö ÀÖÀ½.
+// ë‹¨ì¼ ì±…ì„ì˜ ì›ì¹™ì— ë”°ë¼, ìŠ¤í‚¬ ë‚´ë¶€ì—ì„œ ì¿¨íƒ€ì„, ê³µê²©ì‹œì‘/ë/ì§„í–‰ ì¤‘ ëª¨ë‘ë¥¼ ê´€ë¦¬í•œë‹¤.
+// ë¸”ë£¨í”„ë¦°íŠ¸ë¡œ ë§Œë“¤ ìˆ˜ ìˆìŒ.
 UCLASS(Abstract)
 class RESONANCE_API URSkillBase : public UObject
 {
@@ -28,14 +28,14 @@ public:
 	bool IsPlaying() const;
 	bool CanReserveCombo();
 
-	// ±¸Á¶Ã¼·Î Context ³Ñ±æ ¿¹Á¤
+	// êµ¬ì¡°ì²´ë¡œ Context ë„˜ê¸¸ ì˜ˆì •
 	bool TryAttack();
 
-	// CombatComponent ¿¡¼­ È°¼ºÈ­ ½ºÅ³ÀÇ TickÀ» °ü¸®ÇØÁÖ¾î¾ß ÇÑ´Ù.
-	// ÄğÅ¸ÀÓ µ¿ÀÛ	
-	// ºñÈ°¼ºÈ­µÈ ½ºÅ³¿¡¼­ µ¿ÀÛ
-	// Tick -> Å¸ÀÌ¸Ó·Î º¯°æ Àü ¼º´É Ã¼Å© È®ÀÎÇØº¼ ÇÊ¿ä°¡ ÀÖÀ½.
-	// Å¸ÀÌ¸ÓÀÇ °æ¿ì ¿ùµå¸¦ ÀÌµ¿ÇÏ°Å³ª, È£ÃâµÇÁö¾Ê´Â °æ¿ìµµ Á¸ÀçÇÏ´ÂÁöÀÇ ¿©ºÎ¸¦ È®ÀÎÇØºÁ¾ßÇÏ±â ¶§¹®ÀÓ.
+	// CombatComponent ì—ì„œ í™œì„±í™” ìŠ¤í‚¬ì˜ Tickì„ ê´€ë¦¬í•´ì£¼ì–´ì•¼ í•œë‹¤.
+	// ì¿¨íƒ€ì„ ë™ì‘	
+	// ë¹„í™œì„±í™”ëœ ìŠ¤í‚¬ì—ì„œ ë™ì‘
+	// Tick -> íƒ€ì´ë¨¸ë¡œ ë³€ê²½ ì „ ì„±ëŠ¥ ì²´í¬ í™•ì¸í•´ë³¼ í•„ìš”ê°€ ìˆìŒ.
+	// íƒ€ì´ë¨¸ì˜ ê²½ìš° ì›”ë“œë¥¼ ì´ë™í•˜ê±°ë‚˜, í˜¸ì¶œë˜ì§€ì•ŠëŠ” ê²½ìš°ë„ ì¡´ì¬í•˜ëŠ”ì§€ì˜ ì—¬ë¶€ë¥¼ í™•ì¸í•´ë´ì•¼í•˜ê¸° ë•Œë¬¸ì„.
 	virtual void Tick(const float& DeltaTime);
 
 protected:
@@ -50,19 +50,19 @@ protected:
 
 public:
 
-	// ¼±¾ğÀº ÇÑ¹ø¸¸ ÁøÇàÇÑ´Ù.
-	// °ø°İ°ú °ü·ÃµÈ µ¨¸®°ÔÀÌÆ®ÀÓÀ» ¸í½Ã
+	// ì„ ì–¸ì€ í•œë²ˆë§Œ ì§„í–‰í•œë‹¤.
+	// ê³µê²©ê³¼ ê´€ë ¨ëœ ë¸ë¦¬ê²Œì´íŠ¸ì„ì„ ëª…ì‹œ
 	FAttackEventDelegate OnAttackStarted;
 	FAttackEventDelegate OnAttackCompleted;
 	FOnCooldownEventDelegate OnCooldownEventDelegate;
 
 protected:
 
-	// ½ºÅ³½Ã »ç¿ëµÇ¾îÁö´Â ¸ùÅ¸ÁÖ
+	// ìŠ¤í‚¬ì‹œ ì‚¬ìš©ë˜ì–´ì§€ëŠ” ëª½íƒ€ì£¼
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	TObjectPtr<UAnimMontage> SkillMontage;
 
-	// ½ºÅ³ È°¼ºÈ­-ºñÈ°¼ºÈ­¸¦ À§ÇÑ ÄğÅ¸ÀÓ
+	// ìŠ¤í‚¬ í™œì„±í™”-ë¹„í™œì„±í™”ë¥¼ ìœ„í•œ ì¿¨íƒ€ì„
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	float CoolTime;
 
@@ -74,11 +74,11 @@ protected:
 
 protected:
 
-	// ÄğÅ¸ÀÓ ´©Àû ½Ã°£
+	// ì¿¨íƒ€ì„ ëˆ„ì  ì‹œê°„
 	UPROPERTY(Transient)
 	float CurrentCooldownTimer;
 
-	// ½ºÅ³À» ½ÃµµÇÑ ½Ã°£
+	// ìŠ¤í‚¬ì„ ì‹œë„í•œ ì‹œê°„
 	UPROPERTY(Transient)
 	double LastAttackAtteptTime;
 

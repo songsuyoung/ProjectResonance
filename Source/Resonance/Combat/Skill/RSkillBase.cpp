@@ -20,7 +20,7 @@ URSkillBase::URSkillBase()
 
 void URSkillBase::Init(ACharacter* InOwner)
 {
-	// µ¥ÀÌÅÍ ÃÊ±âÈ­
+	// ë°ì´í„° ì´ˆê¸°í™”
 	OwnerCharacter = InOwner;
 	CurrentCooldownTimer = 0.f;
 	LastAttackAtteptTime = 0.f;
@@ -40,9 +40,9 @@ bool URSkillBase::TryAttack()
 
 	check(World);
 
-	const double& CurrentTimeSeconds = World->GetTimeSeconds(); //ÇöÀç ½Ã°£ÃÊ °¡Á®¿Â´Ù.
+	const double& CurrentTimeSeconds = World->GetTimeSeconds(); //í˜„ì¬ ì‹œê°„ì´ˆ ê°€ì ¸ì˜¨ë‹¤.
 
-	// À¯È¿ÇÑ ÀÔ·ÂÀÌ±â ¶§¹®¿¡, ¸¶Áö¸·À¸·Î °ø°İÀ» ½ÃµµÇÑ ½Ã°£ ÀúÀå
+	// ìœ íš¨í•œ ì…ë ¥ì´ê¸° ë•Œë¬¸ì—, ë§ˆì§€ë§‰ìœ¼ë¡œ ê³µê²©ì„ ì‹œë„í•œ ì‹œê°„ ì €ì¥
 	LastAttackAtteptTime = CurrentTimeSeconds;
 
 	if (false == bCanBeActivated)
@@ -72,12 +72,12 @@ void URSkillBase::BindEvents()
 
 void URSkillBase::Execute()
 {
-	// ½ºÅ³À» »ç¿ëÇÏ°í ÄğÅ¸ÀÓÀÌ µ¹ ¼ö ÀÖµµ·Ï º¯°æ
+	// ìŠ¤í‚¬ì„ ì‚¬ìš©í•˜ê³  ì¿¨íƒ€ì„ì´ ëŒ ìˆ˜ ìˆë„ë¡ ë³€ê²½
 	bCanBeActivated = false;
 
-	// °ø°İ ½ÃÀÛ Àü
+	// ê³µê²© ì‹œì‘ ì „
 	PrepareAttack();
-	// °ø°İ ÁøÇà
+	// ê³µê²© ì§„í–‰
 	Attack();
 }
 
@@ -109,21 +109,21 @@ void URSkillBase::Tick(const float& DeltaTime)
 {
 	if (bCanBeActivated)
 	{
-		// ¾ÆÁ÷ »ç¿ëÇÏÁö ¾Ê¾ÒÁö¸¸, »ç¿ë °¡´ÉÇÑ ½ºÅ³ÀÌ´Ù.
-		// Áï, ÄğÅ¸ÀÓÀÌ ³¡³µ´Ù.
+		// ì•„ì§ ì‚¬ìš©í•˜ì§€ ì•Šì•˜ì§€ë§Œ, ì‚¬ìš© ê°€ëŠ¥í•œ ìŠ¤í‚¬ì´ë‹¤.
+		// ì¦‰, ì¿¨íƒ€ì„ì´ ëë‚¬ë‹¤.
 		return;
 	}
 
 	CurrentCooldownTimer += DeltaTime;
 	
-	// ½ÇÁ¦ °è¼Ó ´Ş¶óÁö´Â ¿ùµåÀÇ ½Ã°£¿¡ ¸¶Áö¸·À¸·Î °ø°İÀÌ ÁøÇàµÈ ½Ã°£ È®ÀÎ
-	// ÀåÂøÇÑ °æ¿ì -> °ø°İ ÈÄ ÀÏÁ¤ ½Ã°£ µÚ UnEquip ¿¹Á¤
+	// ì‹¤ì œ ê³„ì† ë‹¬ë¼ì§€ëŠ” ì›”ë“œì˜ ì‹œê°„ì— ë§ˆì§€ë§‰ìœ¼ë¡œ ê³µê²©ì´ ì§„í–‰ëœ ì‹œê°„ í™•ì¸
+	// ì¥ì°©í•œ ê²½ìš° -> ê³µê²© í›„ ì¼ì • ì‹œê°„ ë’¤ UnEquip ì˜ˆì •
 	bCanBeActivated = CurrentCooldownTimer >= CoolTime;
 
 	if (bCanBeActivated)
 	{
-		// ÄğÅ¸ÀÓÀÌ ÀüºÎ µ¹¾ÒÀ½.
-		// UI È°¼ºÈ­ ÇØÁØ´Ù.
+		// ì¿¨íƒ€ì„ì´ ì „ë¶€ ëŒì•˜ìŒ.
+		// UI í™œì„±í™” í•´ì¤€ë‹¤.
 		OnCooldownEventDelegate.Broadcast(this);
 	}
 

@@ -4,7 +4,7 @@
 #include "UObject/NoExportTypes.h"
 #include "RAttackAction.generated.h"
 
-// ºí·ç ÇÁ¸°Æ®·Î ÆÄ»ı °¡´É
+// ë¸”ë£¨ í”„ë¦°íŠ¸ë¡œ íŒŒìƒ ê°€ëŠ¥
 UCLASS(Blueprintable)
 class RESONANCE_API URAttackAction : public UPrimaryDataAsset
 {
@@ -12,11 +12,11 @@ class RESONANCE_API URAttackAction : public UPrimaryDataAsset
 	
 public:
 
-	//TODO : µ¥ÀÌÅÍÈ­ ½ÃÅ³ ¿¹Á¤
+	//TODO : ë°ì´í„°í™” ì‹œí‚¬ ì˜ˆì •
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	TObjectPtr<class UAnimMontage> AnimMontage;
 
-	// ¾î¶² µ¥ÀÌÅÍ Å¸ÀÔÀÎÁö Á¤ÀÇÇØ¾ßÇÑ´Ù.
-	// ¿¹¸¦ µé¾î '½ºÅ³'ÀÌ¶ó°í »ı°¢ÇÏ¸é ÆíÇÏ´Ù.
+	// ì–´ë–¤ ë°ì´í„° íƒ€ì…ì¸ì§€ ì •ì˜í•´ì•¼í•œë‹¤.
+	// ì˜ˆë¥¼ ë“¤ì–´ 'ìŠ¤í‚¬'ì´ë¼ê³  ìƒê°í•˜ë©´ í¸í•˜ë‹¤.
 };

@@ -14,7 +14,7 @@ enum class ERSkillType :uint8;
 enum class ERInputContext : uint8;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-
+enum class ERActionContext : uint8;
 UCLASS(config=Game)
 class AResonanceCharacter : public ARBaseCharacter
 {
@@ -24,8 +24,7 @@ public:
 	AResonanceCharacter();
 
 	bool RequestClimb();
-	void RequestAttack(ERInputContext InputConext);
-
+	void RequestAttack(ERInputContext InputConext);;
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -40,6 +39,8 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	void RefreshData(const FRCharacterDataTable* CharacterData);
 	void StartClimb();
+	void OnInputReceived(ERActionContext ActionContext);
+	
 protected:
 
 	/** Camera boom positioning the camera behind the character */

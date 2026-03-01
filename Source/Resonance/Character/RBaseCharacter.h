@@ -5,8 +5,7 @@
 #include "GameplayTagContainer.h"
 #include "RBaseCharacter.generated.h"
 
-class URStateContext;
-
+class URActionStateComponent;
 UCLASS()
 class RESONANCE_API ARBaseCharacter : public ACharacter
 {
@@ -15,16 +14,11 @@ class RESONANCE_API ARBaseCharacter : public ACharacter
 public:
 	ARBaseCharacter();
 
-	void PushStateGameTag(const FGameplayTag& StateTag);
-	void PopStateGameTag(const FGameplayTag& StateTag);
-
+	
 protected:
 
-	// Ä³¸¯ÅÍÀÇ ÀüÃ¼ »óÅÂ¸¦ °ü¸®ÇÒ ¿¹Á¤
-	UPROPERTY(Transient)
-	FGameplayTagContainer CurrentStateTags;
-
-	UPROPERTY(Transient)
-	TObjectPtr<URStateContext> StateContext;
-
+	// ìºë¦­í„°ì˜ ì „ì²´ ìƒíƒœë¥¼ ê´€ë¦¬í•  ì˜ˆì •
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<URActionStateComponent> ActionStateComponent;
+	
 };

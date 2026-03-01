@@ -1,5 +1,6 @@
 #include "Character/RBaseCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/RActionStateComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "System/RStateContext.h"
 
@@ -11,9 +12,9 @@ ARBaseCharacter::ARBaseCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	// 1ÀÎÄªÀÌ ¾Æ´Ñ 3ÀÎÄª ¸ðµå
+	// 1ì¸ì¹­ì´ ì•„ë‹Œ 3ì¸ì¹­ ëª¨ë“œ
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	// È¸Àü ¼Óµµ
+	// íšŒì „ ì†ë„
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 
 	GetCharacterMovement()->JumpZVelocity = 700.f;
@@ -23,24 +24,5 @@ ARBaseCharacter::ARBaseCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
-}
-
-void ARBaseCharacter::PushStateGameTag(const FGameplayTag& StateTag)
-{
-
-	if (false == IsValid(StateContext))
-	{
-	//	StateContext = NewObject<URStateContext>(this, URStateContext::StaticClass());
-	}
-
-	if (false == StateContext->ContainTag(StateTag))
-	{
-		CurrentStateTags.AddTag(StateTag);
-	//	StateContext->PushTag(StateTag);
-	}
-}
-
-void ARBaseCharacter::PopStateGameTag(const FGameplayTag& StateTag)
-{
-	CurrentStateTags.RemoveTag(StateTag);
+	ActionStateComponent = CreateDefaultSubobject<URActionStateComponent>(TEXT("ActionStateComponent"));
 }

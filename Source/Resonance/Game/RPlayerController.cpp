@@ -14,15 +14,15 @@ ARPlayerController::ARPlayerController(const FObjectInitializer& ObjectInitializ
 	HeroComponent = CreateDefaultSubobject<URHeroComponent>("HeroComponent");
 }
 
-// PlayerController´Â ÀÔ·ÂÃ³¸®¿Í Ä³¸¯ÅÍ »çÀÌÀÇ Áß°£´Ù¸® ¿ªÇÒ
+// PlayerControllerëŠ” ì…ë ¥ì²˜ë¦¬ì™€ ìºë¦­í„° ì‚¬ì´ì˜ ì¤‘ê°„ë‹¤ë¦¬ ì—­í• 
 void ARPlayerController::RefreshData(const FName& CharacterID)
 {
-	// ÇÃ·¹ÀÌ¾îºíÇÑ Ä³¸¯ÅÍÀÇ ID°ªÀ¸·Î µ¥ÀÌÅÍ Å×ÀÌºí °¡Á®¿Â´Ù.
+	// í”Œë ˆì´ì–´ë¸”í•œ ìºë¦­í„°ì˜ IDê°’ìœ¼ë¡œ ë°ì´í„° í…Œì´ë¸” ê°€ì ¸ì˜¨ë‹¤.
 	URDataManager* DataManager = URDataManager::Get(this);
 
 	check(DataManager);
 
-	// Hero Component Á¤¸®
+	// Hero Component ì •ë¦¬
 	const FRCharacterDataTable* CharacterDataTable = DataManager->GetDataTableRow<FRCharacterDataTable>(ERDataTableType::CharacterData, CharacterID);
 
 	if (nullptr != CharacterDataTable)
@@ -35,7 +35,7 @@ void ARPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Ã¹ ½ÃÀÛÀÌ 101¹ø
+	// ì²« ì‹œì‘ì´ 101ë²ˆ
 	RefreshData(FName(TEXT("101")));
 }
 

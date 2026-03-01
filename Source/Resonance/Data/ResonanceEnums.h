@@ -12,18 +12,18 @@ enum class ERDataTableType : uint8
 
 ENUM_RANGE_BY_COUNT(ERDataTableType, ERDataTableType::Max)
 
-// Skill Type µµ ÄŞº¸·Î ³ª´«´Ù.
+// Skill Type ë„ ì½¤ë³´ë¡œ ë‚˜ëˆˆë‹¤.
 UENUM()
 enum class ERSkillType : uint8
 {
 	None,
-	Default,			// ¾ø¾Ù¿¹Á¤ -> Áö±İ ¿À·ù°¡ ³Ê¹«¸¹À½. (½ºÅ³½Ã½ºÅÛ ±¸ÇöÀ» À§ÇØ Àá½Ã)
-	DefaultA,			// ±âº» ÄŞº¸ A->B->C->D..
+	Default,			// ì—†ì•¨ì˜ˆì • -> ì§€ê¸ˆ ì˜¤ë¥˜ê°€ ë„ˆë¬´ë§ìŒ. (ìŠ¤í‚¬ì‹œìŠ¤í…œ êµ¬í˜„ì„ ìœ„í•´ ì ì‹œ)
+	DefaultA,			// ê¸°ë³¸ ì½¤ë³´ A->B->C->D..
 	DefaultB,
 	DefaultC,
 	DefaultD,
-	Heavy,				// °­°ø°İ
-	Plunge,				// ³«°ø
+	Heavy,				// ê°•ê³µê²©
+	Plunge,				// ë‚™ê³µ
 	ActiveE,			// ESkill
 	ActiveQ,			// QSkill
 };
@@ -50,4 +50,20 @@ enum class ERInputContext : uint8
 	Hold,
 	SkillE,
 	SkillQ
+};
+
+UENUM()
+enum class ERActionContext : uint8
+{
+	None,
+	// ìºë¦­í„° í–‰ë™ ê´€ë ¨
+	Action_Run,
+	Action_Jump,
+	
+	// ìŠ¤í‚¬ ê´€ë ¨
+	Action_Default_0,
+	Action_Default_1,
+	Action_Default_2,
+	Action_Default_3,
+	
 };

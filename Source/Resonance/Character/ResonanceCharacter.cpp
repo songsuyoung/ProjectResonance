@@ -8,9 +8,11 @@
 #include "Components/SkeletalMeshComponent.h"
 
 // Newly Created Files
+#include "Components/RActionStateComponent.h"
 #include "Components/RClimbComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "Components/RCombatComponent.h"
+#include "Components/RHeroComponent.h"
 #include "Components/RHitCheckComponent.h"
 #include "Game/RPlayerController.h"
 #include "Data/RCharacterDataTable.h"
@@ -68,14 +70,14 @@ void AResonanceCharacter::RequestAttack(ERInputContext InputConext)
 		break;
 	}
 
-	PushStateGameTag(InputTag);
+	/*PushStateGameTag(InputTag);
 
 	if (IsValid(CombatComponent))
 	{
 		CombatComponent->RequestTransition(CurrentStateTags);
 	}
 
-	PopStateGameTag(InputTag);
+	PopStateGameTag(InputTag);*/
 }
 
 void AResonanceCharacter::PossessedBy(AController* NewController)
@@ -94,6 +96,23 @@ void AResonanceCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ARPlayerController* PC = Cast<ARPlayerController>(GetController());
+
+	if (IsValid(PC))
+	{
+		URHeroComponent* HeroComponent = PC->GetHeroComponent();
+		
+		ensure(HeroComponent);
+		
+		HeroComponent->OnInputReceived.AddUObject(this, &ThisClass::OnInputReceived);
+	}
+	
+	if (IsValid(ActionStateComponent))
+	{
+		FOnGameplayTagChanged& Event = ActionStateComponent->RegisterGameplayTagEvent(ERActionContext::Action_Jump);
+		
+		Event.AddUObject(this, &ThisClass::Jump);
+	}
 }
 
 void AResonanceCharacter::RefreshData(const FRCharacterDataTable* CharacterData)
@@ -101,5 +120,13 @@ void AResonanceCharacter::RefreshData(const FRCharacterDataTable* CharacterData)
 	if (IsValid(CombatComponent))
 	{
 		CombatComponent->RefreshSkillData(CharacterData);
+	}
+}
+
+void AResonanceCharacter::OnInputReceived(ERActionContext ActionContext)
+{
+	if (IsValid(ActionStateComponent))
+	{
+		ActionStateComponent->PushState(ActionContext);		
 	}
 }
