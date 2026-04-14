@@ -31,7 +31,44 @@ void URStateContext::ExecuteContext(FGameplayTagContainer& InContainer)
 		//모두 취소
 		InContainer.RemoveTags(Condition.CurrentTags);
 	}
+	Execute();
 	
 	// 현재 컨테이너에서 InContainer를 뒤에 부착한다.
 	InContainer.AppendTags(Condition.CurrentTags);
+}
+
+AActor* URStateContext::GetOuterActor()
+{
+	UObject* Outer = GetOuter();
+	
+	if (false == IsValid(Outer))
+	{
+		return nullptr;
+	}
+	AActor* OuterActor = Cast<AActor>(Outer);
+	
+	if (false == IsValid(OuterActor))
+	{
+		return nullptr;
+	}
+	
+	return OuterActor;
+}
+
+FVector URStateContext::GetOuterLocation()
+{
+	UObject* Outer = GetOuter();
+	
+	if (false == IsValid(Outer))
+	{
+		return FVector::ZeroVector;
+	}
+	AActor* OuterActor = Cast<AActor>(Outer);
+	
+	if (false == IsValid(OuterActor))
+	{
+		return FVector::ZeroVector;
+	}
+	
+	return OuterActor->GetActorLocation();
 }

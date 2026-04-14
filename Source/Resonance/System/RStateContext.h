@@ -27,7 +27,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTagContainer CancelTags;	
 	
-	// 발동 조건
+	// 발동 조건`
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTagContainer RequiredTags;
 
@@ -51,7 +51,14 @@ public:
 	// Condition 여부를 확인 예정
 	bool CanTransition(const FGameplayTagContainer& InContainer);
 	void ExecuteContext(FGameplayTagContainer& InContainer);
-
+	virtual void Execute() { }
+	
+protected:
+	
+	AActor* GetOuterActor();
+	FVector GetOuterLocation();
+	
+	
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")

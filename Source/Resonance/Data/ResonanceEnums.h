@@ -59,6 +59,7 @@ enum class ERActionContext : uint8
 	// 캐릭터 행동 관련
 	Action_Run,
 	Action_Jump,
+	Action_Interact,
 	
 	// 스킬 관련
 	Action_Default_0,

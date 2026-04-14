@@ -6,6 +6,7 @@
 
 class URDataManager;
 class URUIManagerBase;
+class URWayPointManager;
 class UREventManager;
 
 UCLASS()
@@ -18,6 +19,7 @@ public:
 
 	URDataManager* GetDataManager() { return DataManager; }
 	UREventManager* GetEventManager() { return EventManager; }
+	URWayPointManager* GetWayPointManager() { return WayPointManager; }
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "AssetClass")
@@ -31,6 +33,9 @@ protected:
 	UPROPERTY(Transient)
 	TObjectPtr<UREventManager> EventManager;
 
+	UPROPERTY(Transient)
+	TObjectPtr<URWayPointManager> WayPointManager;
+	
 	UPROPERTY(Transient)
 	TObjectPtr<URUIManagerBase> UIManager;
 

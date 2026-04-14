@@ -40,11 +40,12 @@ void URHeroComponent::SetupInputComponent()
 			EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
 			EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 			EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ThisClass::StartJump);
+			EnhancedInputComponent->BindAction(InteractionInputAction, ETriggerEvent::Completed, this, &ThisClass::Interact);
 
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Started, this, &ThisClass::OnAttackInputPressed);
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Triggered, this, &ThisClass::OnAttackInputTriggered);
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Completed, this, &ThisClass::OnAttackInputReleased);
-
+			
 			EnhancedInputComponent->BindAction(EInputAction, ETriggerEvent::Started, this, &ThisClass::OnSkillInputPressed, ERInputContext::SkillE);
 			EnhancedInputComponent->BindAction(EInputAction, ETriggerEvent::Completed, this, &ThisClass::OnSkillInputReleased, ERInputContext::SkillE);
 
@@ -93,6 +94,11 @@ void URHeroComponent::Look(const FInputActionValue& Value)
 void URHeroComponent::StartJump()
 {
 	OnInputReceived.Broadcast(ERActionContext::Action_Jump);
+}
+
+void URHeroComponent::Interact()
+{
+	OnInputReceived.Broadcast(ERActionContext::Action_Interact);
 }
 
 void URHeroComponent::OnAttackInputPressed()

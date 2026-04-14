@@ -1,6 +1,7 @@
 #include "System/RGameInstance.h"
 
 // Newly Created File Names ..
+#include "RWayPointManager.h"
 #include "System/RDataManager.h"
 #include "System/REventManager.h"
 
@@ -18,4 +19,5 @@ void URGameInstance::Init()
 	}
 
 	EventManager = NewObject<UREventManager>(this, UREventManager::StaticClass());
+	WayPointManager = NewObject<URWayPointManager>(this, URWayPointManager::StaticClass());
 }
