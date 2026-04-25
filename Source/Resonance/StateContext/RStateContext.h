@@ -16,7 +16,19 @@ UObject 는 UWorld, Time, Replicate 불가능
 	- 등록할 때 같이 있어선 안되는 태그
 	- 등록될 때 부착되는 태그
 */
+UENUM(Blueprintable)
+enum class ERContextInstancePolicty : uint8
+{
+	Single, // 중첩 실행 불가능
+	Multiple, // 중첩 실행 가능
+};
 
+UENUM(Blueprintable)
+enum class ERContextExecutionType : uint8
+{
+	Instance,	// 단일 종료
+	Sustained,  // 명시적 종료를 호출 할 때까지 지속
+};
 USTRUCT(BlueprintType)
 struct FRTransitionCondition
 {
@@ -48,19 +60,38 @@ class RESONANCE_API URStateContext : public UObject
 	
 public:
 
+	// 생성 시 호출
+	virtual void Initialize(AActor* InOwner) { }
+	
 	// Condition 여부를 확인 예정
 	bool CanTransition(const FGameplayTagContainer& InContainer);
 	void ExecuteContext(FGameplayTagContainer& InContainer);
+	virtual void OnTick(float DeltaTime) { }
 	virtual void Execute() { }
 	
-protected:
+	virtual bool OnEnter() { return true; }
+	virtual void OnExit() { }
 	
-	AActor* GetOuterActor();
-	FVector GetOuterLocation();
-	
-	
+public:
+	bool IsCancel(const FGameplayTagContainer& CancelContainer);
+	int32 GetPriority() { return Priority; }
+	bool CanTick() { return bCanTick; }
+	FGameplayTagContainer GetCancelTags() { return Condition.CancelTags; }
+
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
 	FRTransitionCondition Condition;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
+	ERContextExecutionType ExecutionType;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
+	ERContextInstancePolicty InstancePolicy;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
+	int32 Priority;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
+	uint8 bCanTick : 1;
 };

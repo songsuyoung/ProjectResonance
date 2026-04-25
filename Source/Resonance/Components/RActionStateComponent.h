@@ -29,6 +29,9 @@ public:
 
 protected:
 	
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+protected:
+	
 	// 미리 StateContext를 만들어야 한다.
 	// TSubclassOf (로딩될 때 모두 클래스 로딩을 선언=>비동기로딩 ㄴㄴ)
 	// 이때 사용할 Enum값 정의, (Input에 의해 전달될 예정)
@@ -38,6 +41,9 @@ protected:
 	
 	UPROPERTY(Transient)
 	TMap<ERActionContext, TObjectPtr<URStateContext>> ActionContexts;
+	
+	UPROPERTY(Transient)
+	TArray<TWeakObjectPtr<URStateContext>> CurrentActionContexts;
 	
 	// 실행 중인 Container
 	UPROPERTY(Transient)

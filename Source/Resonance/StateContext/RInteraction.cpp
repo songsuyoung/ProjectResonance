@@ -6,6 +6,15 @@
 #include "Engine/OverlapResult.h"
 #include "Interface/RInteractable.h"
 
+void URInteraction::Initialize(AActor* InOwner)
+{
+	OwnerCharacter = Cast<ACharacter>(InOwner);
+	
+	float HalfRange = SearchFOV / 2.f;
+	// Degree -> Radian 으로 변경
+	SearchRadianRange = FMath::Cos(FMath::DegreesToRadians(HalfRange));
+}
+
 void URInteraction::Execute()
 {
 	UWorld* World = GetWorld();
@@ -15,8 +24,6 @@ void URInteraction::Execute()
 	TArray<FOverlapResult> OverlapResult;
 	FCollisionQueryParams CollisionParams;
 
-	OwnerCharacter = Cast<ACharacter>(GetOuterActor());
-	
 	if (false == OwnerCharacter.IsValid())
 	{
 		return;
@@ -24,9 +31,11 @@ void URInteraction::Execute()
 	
 	CollisionParams.AddIgnoredActor(OwnerCharacter.Get());
 
+	FVector CenterLocation = OwnerCharacter->GetActorLocation();
+	
 	bool bRes = World->OverlapMultiByChannel(
 		OverlapResult,
-		GetOuterLocation(),
+		CenterLocation,
 		FQuat::Identity,
 		ECollisionChannel::ECC_Visibility,
 		FCollisionShape::MakeSphere(SearchRange),
@@ -36,7 +45,7 @@ void URInteraction::Execute()
 	// UI를 띄운다. => 이지만, 지금은 DebugDraw를 그린다.
 	DrawDebugSphere(
 		World,
-		GetOuterLocation(),
+		CenterLocation,
 		SearchRange,
 		10.f,
 		FColor::Green,
@@ -46,6 +55,14 @@ void URInteraction::Execute()
 	
 	if (bRes)
 	{
+		OverlapResult.Sort([CenterLocation](const FOverlapResult& A, const FOverlapResult& B)
+		{
+			float ADist = FVector::DistSquared(A.GetActor()->GetActorLocation() ,CenterLocation);
+			float BDist = FVector::DistSquared(B.GetActor()->GetActorLocation(), CenterLocation);
+			
+			return ADist < BDist;
+		});
+		
 		for (int32 Index = 0; Index < OverlapResult.Num(); Index++)
 		{
 			IRInteractable* Interactable = Cast<IRInteractable>(OverlapResult[Index].GetActor());
@@ -53,13 +70,8 @@ void URInteraction::Execute()
 			// 거리 안에 들어옴.
 			if (nullptr != Interactable)
 			{
-				float HalfRange = SearchFOV / 2.f;
-				
-				// Degree -> Radian 으로 변경
-				float SearchRadianRange = FMath::Cos(FMath::DegreesToRadians(HalfRange));
-				
 				// 두 벡터
-				FVector DiffVector = OverlapResult[Index].GetActor()->GetActorLocation() - OwnerCharacter->GetActorLocation();
+				FVector DiffVector = OverlapResult[Index].GetActor()->GetActorLocation() - CenterLocation;
 				
 				// 정규화
 				DiffVector.Normalize();

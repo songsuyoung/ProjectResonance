@@ -13,7 +13,6 @@
 #include "Game/RPlayerController.h"
 
 URHeroComponent::URHeroComponent()
-	: Super()
 {
 	// 초기화
 	InputHoldTime.Add({ ERInputContext::Attack, 0 });
@@ -42,6 +41,9 @@ void URHeroComponent::SetupInputComponent()
 			EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ThisClass::StartJump);
 			EnhancedInputComponent->BindAction(InteractionInputAction, ETriggerEvent::Completed, this, &ThisClass::Interact);
 
+			EnhancedInputComponent->BindAction(RunInputAction, ETriggerEvent::Started, this, &ThisClass::Run, ERActionContext::Action_Run_Pressed);
+			EnhancedInputComponent->BindAction(RunInputAction, ETriggerEvent::Completed, this, &ThisClass::Run, ERActionContext::Action_Run_Released);
+
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Started, this, &ThisClass::OnAttackInputPressed);
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Triggered, this, &ThisClass::OnAttackInputTriggered);
 			EnhancedInputComponent->BindAction(DefaultInputAction, ETriggerEvent::Completed, this, &ThisClass::OnAttackInputReleased);
@@ -55,26 +57,14 @@ void URHeroComponent::SetupInputComponent()
 	}
 }
 
+void URHeroComponent::Run(ERActionContext ActionContext)
+{
+	OnInputReceived.Broadcast(ActionContext);
+}
 
 void URHeroComponent::Move(const FInputActionValue& Value)
 {
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (PlayerController.IsValid())
-	{
-		const FRotator Rotation = PlayerController->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		if (OwnerPawn.IsValid())
-		{
-			OwnerPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
-			OwnerPawn->AddMovementInput(RightDirection, MovementVector.X);
-		}
-	}
+	OnInputReceived.Broadcast(ERActionContext::Action_Move);
 }
 
 void URHeroComponent::Look(const FInputActionValue& Value)

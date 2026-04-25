@@ -57,7 +57,9 @@ enum class ERActionContext : uint8
 {
 	None,
 	// 캐릭터 행동 관련
-	Action_Run,
+	Action_Move,
+	Action_Run_Pressed,
+	Action_Run_Released,
 	Action_Jump,
 	Action_Interact,
 	
@@ -66,5 +68,4 @@ enum class ERActionContext : uint8
 	Action_Default_1,
 	Action_Default_2,
 	Action_Default_3,
-	
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "System/RStateContext.h"
+#include "RStateContext.h"
 #include "RInteraction.generated.h"
 
 class ACharacter;
@@ -13,7 +13,8 @@ class RESONANCE_API URInteraction : public URStateContext
 	GENERATED_BODY()
 	
 public:
-
+	virtual void Initialize(AActor* InOwner) override;
+	
 	virtual void Execute() override;
 	
 protected:
@@ -27,6 +28,9 @@ protected:
 	float SearchFOV;
 	
 protected:
+	
+	UPROPERTY(Transient)
+	float SearchRadianRange;
 	
 	UPROPERTY(Transient)
 	TWeakObjectPtr<ACharacter> OwnerCharacter;

@@ -2,7 +2,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/RActionStateComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "System/RStateContext.h"
 
 ARBaseCharacter::ARBaseCharacter()
 {
