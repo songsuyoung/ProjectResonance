@@ -5,7 +5,7 @@
 
 bool FRFileHelper::WriteStringToJson(const FString& JsonPath, const FString& JsonData)
 {
-	FString AbsolutePath = FPaths::ProjectContentDir() + TEXT("JsonFile/") + JsonPath;
+	FString AbsolutePath = FPaths::ProjectContentDir() + TEXT("JsonFile") + JsonPath;
 	FPaths::NormalizeFilename(AbsolutePath);
 
 	return FFileHelper::SaveStringToFile(JsonData, *AbsolutePath, FFileHelper::EEncodingOptions::ForceUTF8WithoutBOM);
@@ -13,7 +13,7 @@ bool FRFileHelper::WriteStringToJson(const FString& JsonPath, const FString& Jso
 
 bool FRFileHelper::ReadStringFromJson(const FString& JsonPath, FString& OutJsonData)
 {
-	FString AbsolutePath = FPaths::ProjectContentDir() + TEXT("{\"JsonFile\":") + JsonPath;
+	FString AbsolutePath = FPaths::ProjectContentDir() + TEXT("JsonFile") + JsonPath;
 	FPaths::NormalizeFilename(AbsolutePath);
 
 	if (false == FPlatformFileManager::Get().GetPlatformFile().FileExists(*AbsolutePath))

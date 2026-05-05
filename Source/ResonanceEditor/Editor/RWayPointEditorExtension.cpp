@@ -64,7 +64,7 @@ void FRWayPointEditorExtension::CreateButton(FToolBarBuilder& Builder)
 
 			FString JsonValue;
 			FJsonObjectConverter::UStructToJsonObjectString(WayPointArray, JsonValue);
-			FRFileHelper::WriteStringToJson(TEXT("WayPoint.json"), JsonValue);
+			FRFileHelper::WriteStringToJson(TEXT("/WayPoint.json"), JsonValue);
 		}))
 	);
 }

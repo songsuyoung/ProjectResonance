@@ -1,5 +1,7 @@
 #include "Actor/RWayPointActor.h"
 
+#include "System/RWayPointManager.h"
+
 ARWayPointActor::ARWayPointActor()
 {
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
@@ -14,6 +16,14 @@ void ARWayPointActor::Interact(AActor* OtherActor)
 	}
 	
 	UE_LOG(LogTemp, Log, TEXT("[WayPoint] Find"));
+	
+	URWayPointManager* WayPointManager = URWayPointManager::Get(this);
+	
+	ensure(WayPointManager);
+	
+	const FRWayPoint& WayPoint = WayPointManager->GetRandomPoint();
+	
+	OtherActor->TeleportTo(WayPoint.Location, WayPoint.Rotation);
 }
 
 FRWayPoint ARWayPointActor::GetSerializedData() const

@@ -21,7 +21,9 @@ public class Resonance : ModuleRules
 			"ResonanceClient",
 			"Slate",
 			"SlateCore",
-			"UMG"
+			"UMG",
+			"JsonUtilities",
+			"Json"
 		});
 	}
 }
