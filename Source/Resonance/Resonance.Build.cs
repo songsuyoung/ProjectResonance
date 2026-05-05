@@ -6,9 +6,10 @@ public class Resonance : ModuleRules
 {
 	public Resonance(ReadOnlyTargetRules Target) : base(Target)
 	{
+		PrivateDependencyModuleNames.AddRange(new string[] { "ResonanceCore" });
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicIncludePaths.AddRange(new string[] { "Resonance" });
+		PublicIncludePaths.AddRange(new string[] { "Resonance", "ResonanceCore" });
 
         PublicDependencyModuleNames.AddRange(new string[] { 
 			"Core",

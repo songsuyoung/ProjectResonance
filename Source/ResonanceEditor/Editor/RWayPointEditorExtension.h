@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
+
 class RESONANCEEDITOR_API FRWayPointEditorExtension : public IModuleInterface
 {
 public:

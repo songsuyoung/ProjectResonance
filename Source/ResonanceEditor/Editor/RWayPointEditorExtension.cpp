@@ -1,5 +1,9 @@
 #include "Editor/RWayPointEditorExtension.h"
+#include "EngineUtils.h"
+#include "JsonObjectConverter.h"
 #include "LevelEditor.h"
+#include "Game/Interface/RWayPointSerializable.h"
+#include "System/RFileHelper.h"
 #define LOCTEXT_NAMESPACE "FRWayPointEditorExtension"
 
 IMPLEMENT_MODULE(FRWayPointEditorExtension, FRWayPointEditorExtension);
@@ -37,10 +41,32 @@ void FRWayPointEditorExtension::CreateButton(FToolBarBuilder& Builder)
 	Builder.AddToolBarButton(
 		FUIAction(FExecuteAction::CreateLambda([]()
 		{
-			UE_LOG(LogTemp, Log, TEXT("FMenuBuilderExtension::CreateButton() Click!"));
-		})
-		)
-		);
+			if (false == IsValid(GEditor))
+			{
+				return;
+			}
+			
+			// 엔진 상에서 월드를 가져온다.
+			UWorld* World = GEditor->GetEditorWorldContext().World();
+
+			check(World);
+
+			FRWayPointArray WayPointArray;
+			for (TActorIterator<AActor> It(World); It; ++It)
+			{
+				if (It->Implements<URWayPointSerializable>())
+				{
+					IRWayPointSerializable* WayPointSerializable = Cast<IRWayPointSerializable>(*It);
+
+					WayPointArray.WayPointData.Add(WayPointSerializable->GetSerializedData());
+				}
+			}
+
+			FString JsonValue;
+			FJsonObjectConverter::UStructToJsonObjectString(WayPointArray, JsonValue);
+			FRFileHelper::WriteStringToJson(TEXT("WayPoint.json"), JsonValue);
+		}))
+	);
 }
 
 #undef LOCTEXT_NAMESPACE

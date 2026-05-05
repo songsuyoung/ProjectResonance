@@ -14,6 +14,10 @@ public class ResonanceEditor : ModuleRules
             "LevelEditor",
             "Slate",
             "SlateCore",
+            "ResonanceCore",
+            "UnrealEd",
+            "Json",
+            "JsonUtilities"
         });
     }
 }

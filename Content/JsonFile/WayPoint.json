@@ -1,0 +1,32 @@
+{
+	"wayPointData": [
+		{
+			"location":
+			{
+				"x": 850,
+				"y": 1370,
+				"z": 0
+			},
+			"rotation":
+			{
+				"pitch": 0,
+				"yaw": 0,
+				"roll": 0
+			}
+		},
+		{
+			"location":
+			{
+				"x": 2150,
+				"y": 2680,
+				"z": 200.25009999999747
+			},
+			"rotation":
+			{
+				"pitch": 0,
+				"yaw": 0,
+				"roll": 0
+			}
+		}
+	]
+}
