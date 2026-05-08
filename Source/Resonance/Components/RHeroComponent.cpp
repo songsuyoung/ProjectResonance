@@ -137,7 +137,8 @@ void URHeroComponent::OnAttackInputReleased()
 
 		if (IsValid(ResonanceCharacter))
 		{
-			ResonanceCharacter->RequestAttack(ERInputContext::Attack);
+			OnInputReceived.Broadcast(ERActionContext::Action_Attack);
+		//	ResonanceCharacter->RequestAttack(ERInputContext::Attack);
 		}
 	}
 }

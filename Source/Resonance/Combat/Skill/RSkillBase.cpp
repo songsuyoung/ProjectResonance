@@ -83,6 +83,11 @@ void URSkillBase::Execute()
 
 bool URSkillBase::IsPlaying() const
 {
+	if (false == CachedAnimInstance.IsValid())
+	{
+		return false;
+	}
+	
 	return CachedAnimInstance->IsAnyMontagePlaying();
 }
 

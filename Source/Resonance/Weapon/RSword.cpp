@@ -10,7 +10,8 @@
 ARSword::ARSword()
 	: Super()
 {
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	MeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComponent"));
+	MeshComponent->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
 }
 
 void ARSword::ActivateWeapon()
@@ -48,7 +49,7 @@ void ARSword::AttachToSocket(ERWeaponAttachLocation AttachLocation)
 
 			const FVector& WeaponLocation = MeshComponent->GetSocketLocation(Socket);
 
-			// µÎ Â÷ÀÌ¸¸Å­ Offset °ªÀ» ÀÌµ¿½ÃÄÑÁØ´Ù.
+			// ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½Å­ Offset ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
 			const FVector& OffsetWorld = CharacterLocation - WeaponLocation;
 
 			AddActorWorldOffset(OffsetWorld);
