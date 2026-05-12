@@ -6,9 +6,11 @@
 #include "Engine/OverlapResult.h"
 #include "Interface/RInteractable.h"
 
-void URInteraction::Initialize(AActor* InOwner)
+void URInteraction::Initialize(URActionStateComponent* InActionStateComponent)
 {
-	OwnerCharacter = Cast<ACharacter>(InOwner);
+	Super::Initialize(InActionStateComponent);
+	
+	OwnerCharacter = Cast<ACharacter>(GetOuter());
 	
 	float HalfRange = SearchFOV / 2.f;
 	// Degree -> Radian 으로 변경

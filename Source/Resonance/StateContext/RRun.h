@@ -13,7 +13,8 @@ class RESONANCE_API URRun : public URStateContext
 	
 public:
 	URRun();
-	virtual void Initialize(AActor* InOwner) override;
+	virtual void Initialize(URActionStateComponent* InActionStateComponent) override;
+	
 	virtual void Execute() override;
 	virtual void OnExit() override;
 	

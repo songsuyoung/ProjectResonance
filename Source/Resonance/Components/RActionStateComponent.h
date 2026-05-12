@@ -15,6 +15,24 @@ struct FRDelegateInfo
 	FOnGameplayTagChanged	OnNewOrRemove;
 };
 
+USTRUCT(BlueprintType)
+struct FRStateContextClassContainer
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Input | Action")
+	TArray<TSubclassOf<URStateContext>> ActionContextClasses;
+};
+
+USTRUCT(BlueprintType)
+struct FRStateContextContainer
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(Transient)
+	TArray<TObjectPtr<URStateContext>> ActionContexts;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RESONANCE_API URActionStateComponent : public UActorComponent
 {
@@ -24,7 +42,8 @@ public:
 	URActionStateComponent();
 	
 	void PushState(const ERActionContext& InputState);
-	bool FindState(const ERActionContext& InputState);
+	FGameplayTagContainer& GetActiveGameplayTagContainer() { return Container; }
+	URStateContext* FindState(const ERActionContext& InputState);
 	FOnGameplayTagChanged& RegisterGameplayTagEvent(const ERActionContext& InputState);
 
 protected:
@@ -36,11 +55,11 @@ protected:
 	// TSubclassOf (로딩될 때 모두 클래스 로딩을 선언=>비동기로딩 ㄴㄴ)
 	// 이때 사용할 Enum값 정의, (Input에 의해 전달될 예정)
 	UPROPERTY(EditDefaultsOnly, Category = "Input | Action")
-	TMap<ERActionContext, TSubclassOf<URStateContext>> ActionContextClass; 
+	TMap<ERActionContext, FRStateContextClassContainer> ActionContextClass; 
 protected:
 	
 	UPROPERTY(Transient)
-	TMap<ERActionContext, TObjectPtr<URStateContext>> ActionContexts;
+	TMap<ERActionContext, FRStateContextContainer> ActionContexts;
 	
 	UPROPERTY(Transient)
 	TArray<TWeakObjectPtr<URStateContext>> CurrentActionContexts;

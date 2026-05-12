@@ -52,6 +52,8 @@ public:
 	FGameplayTagContainer CurrentTags;
 };
 
+class URActionStateComponent;
+
 // 블루프린트화 시킬 수 있다.
 UCLASS(Blueprintable)
 class RESONANCE_API URStateContext : public UObject
@@ -61,7 +63,7 @@ class RESONANCE_API URStateContext : public UObject
 public:
 
 	// 생성 시 호출
-	virtual void Initialize(AActor* InOwner) { }
+	virtual void Initialize(URActionStateComponent* InActionStateComponent);
 	
 	// Condition 여부를 확인 예정
 	bool CanTransition(const FGameplayTagContainer& InContainer);
@@ -70,7 +72,7 @@ public:
 	virtual void Execute() { }
 	
 	virtual bool OnEnter() { return true; }
-	virtual void OnExit() { }
+	virtual void OnExit();
 	
 public:
 	bool IsCancel(const FGameplayTagContainer& CancelContainer);
@@ -94,4 +96,10 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill|Condition")
 	uint8 bCanTick : 1;
+	
+	
+protected:
+	
+	UPROPERTY(Transient)
+	TWeakObjectPtr<URActionStateComponent> ActionStateComponent;
 };

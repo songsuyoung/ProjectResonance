@@ -9,11 +9,11 @@ URRun::URRun()
 	ExecutionType = ERContextExecutionType::Sustained;
 }
 
-void URRun::Initialize(AActor* InOwner)
+void URRun::Initialize(URActionStateComponent* InActionStateComponent)
 {
-	Super::Initialize(InOwner);
+	Super::Initialize(InActionStateComponent);
 	
-	CharacterRef = Cast<ACharacter>(InOwner);
+	CharacterRef = Cast<ACharacter>(GetOuter());
 		
 	if (CharacterRef.IsValid())
 	{

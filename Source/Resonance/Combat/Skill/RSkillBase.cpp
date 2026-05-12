@@ -136,7 +136,7 @@ void URSkillBase::Tick(const float& DeltaTime)
 
 void URSkillBase::PrepareAttack()
 {
-	OnAttackStarted.Broadcast(SkillTag);
+	OnAttackStarted.Broadcast();
 }
 
 void URSkillBase::Attack()
@@ -153,6 +153,6 @@ void URSkillBase::EndAttack(UAnimMontage* PlayingAnimMontage, bool bInterrupted)
 {
 	if (PlayingAnimMontage == SkillMontage)
 	{
-		OnAttackCompleted.Broadcast(SkillTag);
+		OnAttackCompleted.Broadcast();
 	}
 }

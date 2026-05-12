@@ -3,11 +3,11 @@
 #include "EnhancedPlayerInput.h"
 #include "GameFramework/Character.h"
 
-void URMove::Initialize(AActor* InOwner)
+void URMove::Initialize(URActionStateComponent* InActionStateComponent)
 {
-	Super::Initialize(InOwner);
-	
-	CharacterRef = Cast<ACharacter>(InOwner);
+	Super::Initialize(InActionStateComponent);
+		
+	CharacterRef = Cast<ACharacter>(GetOuter());
 	
 	if (CharacterRef.IsValid())
 	{

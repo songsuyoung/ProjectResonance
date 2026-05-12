@@ -124,6 +124,7 @@ void URCombatComponent::UpdateWeaponState()
 	}
 }
 
+/*
 void URCombatComponent::RefreshSkillData(const FRCharacterDataTable* Data)
 {
 	if (nullptr != Data)
@@ -165,39 +166,7 @@ void URCombatComponent::RefreshSkillData(const FRCharacterDataTable* Data)
 		}
 	}
 }
-// 실제로 가고싶은 방향성이 전달되어짐 
-// 현재 실행가능한지를 확인해야함.
-// 현재 실행중인 Action이 무엇인지 확인하고 FromAction -> ToAction 가능한지 여부 확인. 
-void URCombatComponent::RequestTransition(const FGameplayTagContainer& CurrentTags)
-{
-	ERSkillType Result = ERSkillType::None;
-
-	for (int32 TransitionIndex = 0; TransitionIndex < Transition.Num(); TransitionIndex++)
-	{
-		// 돌면서 Ok 값 찾기
-		// 하나라도 가지고 있으면 안된다.
-		if (Transition[TransitionIndex].BlockedTags.HasAny(CurrentTags))
-		{
-			continue;
-		}
-
-		// 필요한 조건을 전부 가지고 있다면,
-		if (Transition[TransitionIndex].RequiredTags.HasAll(CurrentTags))
-		{
-			//갈 수 있는 상태 찾음
-			Result = Transition[TransitionIndex].ToAction;
-			break;
-		}
-	}
-
-	if (false == SkillSlots.Contains(Result))
-	{
-		// 실패
-		return;
-	}
-
-	Attack(SkillSlots[Result]);
-}
+*/
 
 void URCombatComponent::Attack(URSkillBase* Skill)
 {
@@ -205,7 +174,7 @@ void URCombatComponent::Attack(URSkillBase* Skill)
 	{
 		return;
 	}
-
+	
 	// 어떤 애니메이션이든지 실행중인지 확인
 	bool bIsPlaying = Skill->IsPlaying();
 	
@@ -222,6 +191,13 @@ void URCombatComponent::Attack(URSkillBase* Skill)
 
 }
 
+void URCombatComponent::InitSkillData(URSkillBase* SkillBase)
+{
+	SkillBase->OnCooldownEventDelegate.AddUObject(this, &ThisClass::OnCooldownEventDelegate);
+	SkillBase->OnAttackCompleted.AddUObject(this, &ThisClass::OnAttackCompleted);
+	SkillBase->OnAttackStarted.AddUObject(this, &ThisClass::OnAttackStarted);
+}
+
 void URCombatComponent::TryReserveNextCombo(URSkillBase* Skill)
 {
 	// 초기종료 : CurrentActiveSkill 자체가 없음 안된다.
@@ -230,7 +206,7 @@ void URCombatComponent::TryReserveNextCombo(URSkillBase* Skill)
 	{
 		return;
 	}
-
+	
 	PendingComboSkill = Skill;
 }
 
@@ -252,7 +228,7 @@ void URCombatComponent::PlayNextCombo()
 
 }
 
-void URCombatComponent::OnAttackStarted(const FGameplayTag& ActiveSkillTag)
+void URCombatComponent::OnAttackStarted()
 {
 	if (IsValid(Weapon))
 	{
@@ -262,17 +238,9 @@ void URCombatComponent::OnAttackStarted(const FGameplayTag& ActiveSkillTag)
 			Weapon->ActivateWeapon();
 		}
 	}
-
-	/*ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
-
-	if (IsValid(BaseCharacter))
-	{
-		BaseCharacter->PushStateGameTag(ActiveSkillTag);
-		UE_LOG(LogTemp, Log, TEXT("[Skill/OnAttackStarted] %s"), *ActiveSkillTag.ToString());
-	}*/
 }
 
-void URCombatComponent::OnAttackCompleted(const FGameplayTag& EndSkillTag)
+void URCombatComponent::OnAttackCompleted()
 {
 	UWorld* World = GetWorld();
 
@@ -291,13 +259,6 @@ void URCombatComponent::OnAttackCompleted(const FGameplayTag& EndSkillTag)
 		CurrentComboIndex = 0;
 		ActiveAttackCount = 0;
 	}
-
-	/*ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
-
-	if (IsValid(BaseCharacter))
-	{
-		BaseCharacter->PopStateGameTag(EndSkillTag);
-	}*/
 }
 
 void URCombatComponent::OnCooldownEventDelegate(URSkillBase* Skill)
@@ -320,14 +281,5 @@ void URCombatComponent::ExecuteAttack(URSkillBase* Skill)
 		ActiveAttackCount++;
 		ActiveSkills.Add(Skill);
 		CurrentActiveSkill = Skill;
-
-		FRShowUIMessage UIMessage;
-		UIMessage.TextValue = Skill->GetSkillTag().ToString();
-
-		UREventManager* EventManager = UREventManager::Get(this);
-
-		check(EventManager);
-
-		EventManager->Notify(UIMessage.MessageType, &UIMessage);
 	}
 }

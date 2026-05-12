@@ -15,7 +15,7 @@ class RESONANCE_API URMove : public URStateContext
 	GENERATED_BODY()
 	
 public:
-	virtual void Initialize(AActor* InOwner) override;
+	virtual void Initialize(URActionStateComponent* InActionStateComponent) override;
 	virtual void Execute() override;
 	
 protected:

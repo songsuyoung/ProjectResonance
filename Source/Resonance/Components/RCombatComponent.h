@@ -52,21 +52,22 @@ public:
 	ARWeaponBase* GetWeapon() const { return Weapon;  }
 	void PlayNextCombo();
 
+	/* 전투 */
+	void Attack(URSkillBase* Skill);
 	/* Set: 스킬 */
-	void RefreshSkillData(const FRCharacterDataTable* Data);
-	void RequestTransition(const FGameplayTagContainer& CurrentTags);
+	void InitSkillData(URSkillBase* SkillBase);
+	//void RefreshSkillData(const FRCharacterDataTable* Data);
+	
+	void OnCooldownEventDelegate(URSkillBase* Skill);
+	void OnAttackCompleted();
+	void OnAttackStarted();
 protected:
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
-	/* 전투 */
-	void Attack(URSkillBase* Skill);
-	void OnCooldownEventDelegate(URSkillBase* Skill);
 	void ExecuteAttack(URSkillBase* Skill);
 	void TryReserveNextCombo(URSkillBase* Skill);
-	void OnAttackCompleted(const FGameplayTag& EndSkillTag);
-	void OnAttackStarted(const FGameplayTag& ActiveSkillTag);
 	
 protected:
 	/* 무기 */

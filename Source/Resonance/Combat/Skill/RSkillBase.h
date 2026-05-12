@@ -8,7 +8,7 @@
 class UAnimMontage;
 enum class ERSkillType : uint8;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FAttackEventDelegate,const FGameplayTag&)
+DECLARE_MULTICAST_DELEGATE(FAttackEventDelegate)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnCooldownEventDelegate, URSkillBase*)
 
 // 단일 책임의 원칙에 따라, 스킬 내부에서 쿨타임, 공격시작/끝/진행 중 모두를 관리한다.
@@ -20,9 +20,7 @@ class RESONANCE_API URSkillBase : public UObject
 
 public:
 	URSkillBase();
-
-	virtual FGameplayTag GetSkillTag() { return SkillTag; }
-
+	
 	void Init(ACharacter* InOwner);
 	bool CanUseSkill() { return bCanBeActivated; }
 	bool IsPlaying() const;
@@ -68,10 +66,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
 	FFloatRange ComboRangeThreshold;
-
-	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
-	FGameplayTag SkillTag;
-
 protected:
 
 	// 쿨타임 누적 시간

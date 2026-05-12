@@ -1,5 +1,12 @@
 #include "StateContext/RStateContext.h"
 
+#include "Components/RActionStateComponent.h"
+
+void URStateContext::Initialize(URActionStateComponent* InActionStateComponent)
+{
+	ActionStateComponent = InActionStateComponent;
+}
+
 // ActionStateComponent 로부터 현재 가지고 있는 모든 StateTags를 넘겨 받는다.
 bool URStateContext::CanTransition(const FGameplayTagContainer& InContainer)
 {
@@ -44,6 +51,17 @@ void URStateContext::ExecuteContext(FGameplayTagContainer& InContainer)
 		OnExit();
 		InContainer.RemoveTags(Condition.CurrentTags);
 	}
+}
+
+void URStateContext::OnExit()
+{
+	if (false == ActionStateComponent.IsValid())
+	{
+		return;
+	}
+	
+	FGameplayTagContainer& ActiveContainer = ActionStateComponent->GetActiveGameplayTagContainer();
+	ActiveContainer.RemoveTags(Condition.CurrentTags);
 }
 
 bool URStateContext::IsCancel(const FGameplayTagContainer& CancelContainer)
