@@ -57,6 +57,7 @@ void URActionStateComponent::PushState(const ERActionContext& InputState)
 		{
 			CurrentActionContexts.RemoveSwap(RemoveActionContext);
 		}
+		
 		// Container에서 취소하면 안되고, 실제 CancelTag를 CurrentTag로 가지고 있는 모든 ActionContext를 가져와서 취소하도록 변경해야함.
 		ActivatableStatContext->ExecuteContext(Container);
 		CurrentActionContexts.Add(ActivatableStatContext);
@@ -93,6 +94,7 @@ URStateContext* URActionStateComponent::FindState(const ERActionContext& InputSt
 	{
 		if (ActionContext->CanTransition(Container))
 		{
+			UE_LOG(LogTemp, Log, TEXT("[Skill|ActionState] %s"), *Container.ToString());
 			return ActionContext;
 		}
 	}

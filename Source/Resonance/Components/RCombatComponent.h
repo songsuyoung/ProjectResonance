@@ -54,9 +54,6 @@ public:
 
 	/* 전투 */
 	void Attack(URSkillBase* Skill);
-	/* Set: 스킬 */
-	void InitSkillData(URSkillBase* SkillBase);
-	//void RefreshSkillData(const FRCharacterDataTable* Data);
 	
 	void OnCooldownEventDelegate(URSkillBase* Skill);
 	void OnAttackCompleted();
@@ -74,8 +71,7 @@ protected:
 	void InitializeWeapon();
 	void UpdateWeaponEquipState();
 	void UpdateWeaponState();
-protected:
-
+protected: 
 	/*
 	* 프로토타입
 	* TODO: 리팩토링 필요, 데이터 구조로 변경해야함. (데이터 매니저로 얻어올 수있도록)
@@ -132,9 +128,4 @@ protected:
 	// 공격 완료와 맞지않는다.
 	UPROPERTY(Transient)
 	int32 ActiveAttackCount;
-
-	// TODO: 수정 예정 
-	// 이유: 일반 공격에 대해서 콤보를 어떻게 구현할지 알앤디
-	UPROPERTY(Transient)
-	int32 CurrentComboIndex;
 };

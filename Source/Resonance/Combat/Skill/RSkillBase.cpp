@@ -144,15 +144,12 @@ void URSkillBase::Attack()
 	if (OwnerCharacter.IsValid())
 	{
 		OwnerCharacter->PlayAnimMontage(SkillMontage);
-
+		
 		BindEvents();
 	}
 }
 
 void URSkillBase::EndAttack(UAnimMontage* PlayingAnimMontage, bool bInterrupted)
 {
-	if (PlayingAnimMontage == SkillMontage)
-	{
-		OnAttackCompleted.Broadcast();
-	}
+	OnAttackCompleted.Broadcast();
 }

@@ -39,4 +39,6 @@ void URDefaultAttack::Execute()
 	}
 	
 	CombatComponent->Attack(SkillObject);
+	
+	UE_LOG(LogTemp, Log, TEXT("[Skill|Object] %s"), *SkillObject->GetName());
 }

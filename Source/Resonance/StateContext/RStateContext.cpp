@@ -62,6 +62,8 @@ void URStateContext::OnExit()
 	
 	FGameplayTagContainer& ActiveContainer = ActionStateComponent->GetActiveGameplayTagContainer();
 	ActiveContainer.RemoveTags(Condition.CurrentTags);
+	
+	UE_LOG(LogTemp, Log, TEXT("[Skill|RemoveTag] %s"), *Condition.CurrentTags.ToString());
 }
 
 bool URStateContext::IsCancel(const FGameplayTagContainer& CancelContainer)
