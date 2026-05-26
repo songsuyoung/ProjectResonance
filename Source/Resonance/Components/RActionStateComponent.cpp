@@ -18,7 +18,7 @@ void URActionStateComponent::PushState(const ERActionContext& InputState)
 		if (nullptr != NewStateContextClassContainer)
 		{
 			FRStateContextContainer NewStateContextContainer;
-			
+			 
 			for (const auto& NewStateActionContextClass : NewStateContextClassContainer->ActionContextClasses)
 			{
 				URStateContext* NewStateContext = NewObject<URStateContext>(GetOwner(), *NewStateActionContextClass);
@@ -30,6 +30,7 @@ void URActionStateComponent::PushState(const ERActionContext& InputState)
 		}
 	}
 	
+	// CanTransition을 통해 실행시킬 수 있는지 확인
 	URStateContext* ActivatableStatContext = FindState(InputState);
 	
 	if (nullptr != ActivatableStatContext)
@@ -60,7 +61,6 @@ void URActionStateComponent::PushState(const ERActionContext& InputState)
 		
 		// Container에서 취소하면 안되고, 실제 CancelTag를 CurrentTag로 가지고 있는 모든 ActionContext를 가져와서 취소하도록 변경해야함.
 		ActivatableStatContext->ExecuteContext(Container);
-		CurrentActionContexts.Add(ActivatableStatContext);
 		RegisterGameplayTagEvent(InputState).Broadcast();
 	}
 }
@@ -90,16 +90,17 @@ URStateContext* URActionStateComponent::FindState(const ERActionContext& InputSt
 		return nullptr;
 	}
 	
+	URStateContext* NextActionContext = nullptr;
+	
 	for (const auto& ActionContext : ActionContexts[InputState].ActionContexts)
 	{
 		if (ActionContext->CanTransition(Container))
 		{
-			UE_LOG(LogTemp, Log, TEXT("[Skill|ActionState] %s"), *Container.ToString());
-			return ActionContext;
+			NextActionContext = ActionContext;
 		}
 	}
 	
-	return nullptr;
+	return NextActionContext;
 }
 
 FOnGameplayTagChanged& URActionStateComponent::RegisterGameplayTagEvent(const ERActionContext& InputState)
@@ -107,4 +108,14 @@ FOnGameplayTagChanged& URActionStateComponent::RegisterGameplayTagEvent(const ER
 	FRDelegateInfo& DelegateInfo = EventMap.FindOrAdd(InputState);
 	
 	return DelegateInfo.OnNewOrRemove;
+}
+
+void URActionStateComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	ActionContexts.Empty();
+	CurrentActionContexts.Empty();
+	Container.Reset();
+	EventMap.Empty();
 }

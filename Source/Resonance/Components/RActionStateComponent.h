@@ -47,7 +47,7 @@ public:
 	FOnGameplayTagChanged& RegisterGameplayTagEvent(const ERActionContext& InputState);
 
 protected:
-	
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 protected:
 	
@@ -65,7 +65,7 @@ protected:
 	TArray<TWeakObjectPtr<URStateContext>> CurrentActionContexts;
 	
 	// 실행 중인 Container
-	UPROPERTY(Transient)
+	UPROPERTY(Transient, BlueprintReadOnly)
 	FGameplayTagContainer Container;
 	
 	TMap<ERActionContext, FRDelegateInfo> EventMap;

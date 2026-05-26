@@ -21,10 +21,14 @@ class RESONANCE_API URSkillBase : public UObject
 public:
 	URSkillBase();
 	
-	void Init(ACharacter* InOwner);
+	void Init(ACharacter* InOwner, ERSkillType InSkillType);
+	void SetNextSkill(URSkillBase* InNextSkill) { NextSkill = InNextSkill; }
+	URSkillBase* GetNextSkill() const { return NextSkill; }
+	
 	bool CanUseSkill() { return bCanBeActivated; }
 	bool IsPlaying() const;
 	bool CanReserveCombo();
+	ERSkillType GetSkillType() { return SkillType; }
 
 	// 구조체로 Context 넘길 예정
 	bool TryAttack();
@@ -78,7 +82,13 @@ protected:
 
 	UPROPERTY(Transient)
 	uint8 bCanBeActivated : 1;
-
+	
+	UPROPERTY(Transient)
+	ERSkillType SkillType;
+	
+	UPROPERTY(Transient)
+	TObjectPtr<URSkillBase> NextSkill;
+	
 	UPROPERTY(Transient)
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 

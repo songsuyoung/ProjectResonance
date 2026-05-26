@@ -6,6 +6,9 @@
 
 // Newly Created File 
 #include "Combat/Skill/RSkillBase.h"
+#include "Data/RCharacterDataTable.h"
+#include "Data/RSkillDataTable.h"
+#include "System/RDataManager.h"
 #include "Weapon/RWeaponBase.h"
 
 URCombatComponent::URCombatComponent()
@@ -52,6 +55,51 @@ void URCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 		UpdateWeaponEquipState();
 		UpdateWeaponState();
 	}
+}
+
+void URCombatComponent::Attack(const ERSkillType& SkillType)
+{
+	// 스킬이 발동 했을 때 활성화 스킬로 이동 시킴.
+	if (bCanPlayNextCombo)
+	{
+		//활성화 스킬의 다음 스킬로 이동
+		if (CurrentActiveSkill.IsValid())
+		{
+			TryReserveNextCombo(CurrentActiveSkill->GetNextSkill());
+		}
+	}
+	else
+	{
+		// 현재 들어온 SkillType이 무엇인지 확인하고,
+		URSkillBase* Skill = SkillSlots.FindOrAdd(SkillType);
+	
+		if (false == IsValid(Skill))
+		{
+			return;
+		}
+		
+		// 어느 애니메이션이든지 실행되지않고 있다면,
+		bool bIsPlaying = Skill->IsPlaying();
+		
+		if (bIsPlaying)
+		{
+			return;
+		}
+		
+		// 현재 스킬 실행
+		ExecuteAttack(Skill);
+	}
+}
+
+void URCombatComponent::TryReserveNextCombo(URSkillBase* NextSkill)
+{
+	// 이미 예약되어 있음.
+	if (PendingComboSkill.IsValid())
+	{
+		return;
+	}
+	
+	PendingComboSkill = NextSkill;
 }
 
 void URCombatComponent::InitializeWeapon()
@@ -114,50 +162,81 @@ void URCombatComponent::UpdateWeaponState()
 	}
 }
 
-void URCombatComponent::Attack(URSkillBase* Skill)
+void URCombatComponent::RefreshSkillData(const FRCharacterDataTable* Data)
 {
-	if (false == IsValid(Skill))
+	if (nullptr != Data)
 	{
-		return;
-	}
-	
-	// 어떤 애니메이션이든지 실행중인지 확인
-	bool bIsPlaying = Skill->IsPlaying();
-	
-	if (bIsPlaying)
-	{
-		// 이미 어떤 무언가, 즉 어떤 스킬이든간 돌고 있다면, 
-		TryReserveNextCombo(Skill);
-	}
-	else
-	{
-		//스킬을 실행
-		ExecuteAttack(Skill);
-	}
+		const TMap<ERSkillType, FRComboSkillContainer>& ComboSkillContainer = Data->SkillContainer;
 
-}
+		URDataManager* DataManager = URDataManager::Get(this);
 
-void URCombatComponent::TryReserveNextCombo(URSkillBase* Skill)
-{
-	// 초기종료 : CurrentActiveSkill 자체가 없음 안된다.
-	// 이미 예약되어 있음.
-	if (false == CurrentActiveSkill.IsValid() || PendingComboSkill.IsValid())
-	{
-		return;
+		check(DataManager);
+		
+		// TArray SkillOrder로 정렬 수행
+		for (const TPair<ERSkillType, FRComboSkillContainer>& Iterator : ComboSkillContainer)
+		{
+			FRComboSkillContainer SkillTemp = Iterator.Value;
+			SkillTemp.SkillContainer.Sort([](const FRComboSkill& ASkill, const FRComboSkill& BSkill)
+			{
+				//오름 차순 정렬
+				return ASkill.SkillOrder < BSkill.SkillOrder;
+			});
+			
+			URSkillBase* PreSkillBase = nullptr;
+			for(const auto& IDIterator : SkillTemp.SkillContainer)
+			{
+				FRSkillDataTable* SkillData = DataManager->GetDataTableRow<FRSkillDataTable>(ERDataTableType::SkillData, IDIterator.SkillID);
+
+				if (nullptr != SkillData)
+				{
+					URSkillBase* SkillBase = NewObject<URSkillBase>(this, SkillData->SkillClass);
+
+					if (IsValid(SkillBase))
+					{
+						ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+						if (IsValid(Character))
+						{
+							// 스킬 초기화
+							SkillBase->Init(Character, Iterator.Key);
+							SkillBase->OnCooldownEventDelegate.AddUObject(this, &ThisClass::OnCooldownEventDelegate);
+							SkillBase->OnAttackCompleted.AddUObject(this, &ThisClass::OnAttackCompleted);
+							SkillBase->OnAttackStarted.AddUObject(this, &ThisClass::OnAttackStarted);
+						}
+
+						if (IsValid(PreSkillBase))
+						{
+							// 이전 스킬이 있는경우에는 다음 스킬에 등록. 마지막 스킬은 nullptr
+							PreSkillBase->SetNextSkill(SkillBase);
+						}
+						else {
+							// 첫 스킬은 처음이기때문에 스킬에 등록
+							SkillSlots.Add(Iterator.Key, SkillBase);
+						}
+						
+						PreSkillBase = SkillBase;
+					}
+				}
+			}
+		}
 	}
-	
-	PendingComboSkill = Skill;
 }
 
 void URCombatComponent::PlayNextCombo()
 {
 	if (PendingComboSkill.IsValid())
 	{
+		// 안끝났어. 예약된거 있어.
 		TWeakObjectPtr<URSkillBase> NextSkill = PendingComboSkill;
 
+		UE_LOG(LogTemp, Log, TEXT("[Skill] %s"), *NextSkill->GetName());
 		PendingComboSkill = nullptr;
 
 		ExecuteAttack(NextSkill.Get());
+	}
+	else
+	{
+		CurrentActiveSkill = nullptr;
 	}
 }
 

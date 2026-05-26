@@ -66,7 +66,7 @@ public:
 	virtual void Initialize(URActionStateComponent* InActionStateComponent);
 	
 	// Condition 여부를 확인 예정
-	bool CanTransition(const FGameplayTagContainer& InContainer);
+	virtual bool CanTransition(const FGameplayTagContainer& InContainer);
 	void ExecuteContext(FGameplayTagContainer& InContainer);
 	virtual void OnTick(float DeltaTime) { }
 	virtual void Execute() { }

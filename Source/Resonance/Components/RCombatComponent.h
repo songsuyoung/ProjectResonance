@@ -50,21 +50,29 @@ public:
 	URCombatComponent();
 
 	ARWeaponBase* GetWeapon() const { return Weapon;  }
-	void PlayNextCombo();
-
+	
+	
 	/* 전투 */
-	void Attack(URSkillBase* Skill);
+	void Attack(const ERSkillType& SkillType);
+	
+	void RefreshSkillData(const FRCharacterDataTable* Data);
+	void SetCanPlayNextCombo(bool bToggle) { bCanPlayNextCombo = bToggle; }
+	bool CanPlayNextCombo() { return bCanPlayNextCombo; }
+	void PlayNextCombo();
+	
 	
 	void OnCooldownEventDelegate(URSkillBase* Skill);
 	void OnAttackCompleted();
 	void OnAttackStarted();
 protected:
+
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
+	
 	void ExecuteAttack(URSkillBase* Skill);
-	void TryReserveNextCombo(URSkillBase* Skill);
+	void TryReserveNextCombo(URSkillBase* NextSkill);
 	
 protected:
 	/* 무기 */
@@ -112,7 +120,7 @@ protected:
 
 	// 이를 일반 TMap으로 구분,
 	UPROPERTY(Transient)
-	TMap<ERSkillType, TObjectPtr<URSkillBase>> SkillSlots;
+	TMap<ERSkillType, URSkillBase*> SkillSlots;
 
 	// 마지막 공격 이후에 공격하지 않은 채로 경과한 시간
 	// 만약, 경과한 시간이 ActivationDelay 보다 클 경우, 무기를 넣을 예정
@@ -128,4 +136,7 @@ protected:
 	// 공격 완료와 맞지않는다.
 	UPROPERTY(Transient)
 	int32 ActiveAttackCount;
+	
+	UPROPERTY(Transient)
+	uint8 bCanPlayNextCombo : 1;
 };

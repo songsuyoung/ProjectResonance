@@ -18,14 +18,15 @@ URSkillBase::URSkillBase()
 
 }
 
-void URSkillBase::Init(ACharacter* InOwner)
+void URSkillBase::Init(ACharacter* InOwner, ERSkillType InSkillType)
 {
 	// 데이터 초기화
 	OwnerCharacter = InOwner;
 	CurrentCooldownTimer = 0.f;
 	LastAttackAtteptTime = 0.f;
 	bCanBeActivated = true;
-
+	SkillType = InSkillType;
+	
 	USkeletalMeshComponent* MeshComponent = OwnerCharacter->GetMesh();
 
 	if (IsValid(MeshComponent))

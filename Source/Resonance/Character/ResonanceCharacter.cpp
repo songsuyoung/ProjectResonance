@@ -117,10 +117,10 @@ void AResonanceCharacter::BeginPlay()
 
 void AResonanceCharacter::RefreshData(const FRCharacterDataTable* CharacterData)
 {
-	/*if (IsValid(CombatComponent))
+	if (IsValid(CombatComponent))
 	{
 		CombatComponent->RefreshSkillData(CharacterData);
-	}*/
+	}
 }
 
 void AResonanceCharacter::OnInputReceived(ERActionContext ActionContext)

@@ -5,14 +5,28 @@
 #include "RCharacterDataTable.generated.h"
 
 USTRUCT(BlueprintType)
+struct FRComboSkill
+{
+	GENERATED_BODY()
+
+public:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
+	int32 SkillOrder;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
+	FName SkillID;
+};
+
+USTRUCT(BlueprintType)
 struct FRComboSkillContainer
 {
 	GENERATED_BODY()
 
 public:
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "SkillBase")
-	TArray<FName> SkillIDs;
+	TArray<FRComboSkill> SkillContainer;
 };
 
 USTRUCT(BlueprintType)
