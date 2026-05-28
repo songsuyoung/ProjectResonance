@@ -1,12 +1,24 @@
-#include "Character/RNPCCharacter.h"
+#include "RNPCCharacter.h"
 
+// UE 5.
+#include "Components/StateTreeComponent.h"
+
+// 
 #include "NPC/Action/RActionData.h"
+
+ARNPCCharacter::ARNPCCharacter()
+	: Super()
+{
+	StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>(TEXT("StateTreeComponent"));
+	
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+}
 
 void ARNPCCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	ExecuteAction();
+	// ExecuteAction();
 }
 
 void ARNPCCharacter::ExecuteAction()

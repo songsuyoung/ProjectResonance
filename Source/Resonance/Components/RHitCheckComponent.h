@@ -16,15 +16,14 @@ public:
 	
 	URHitCheckComponent();
 
-	void ProcessAttackHit(const TArray<FOverlapResult>& InTarget);
+	void ProcessAttackHit(const TArray<FHitResult>& InTarget);
 
 protected:
 
-	void InternalProcessHitCheck(const TArray<FOverlapResult>& InTarget);
+	void InternalProcessHitCheck(const TArray<FHitResult>& InTarget);
 
 protected:
 
-	// 누적을 위한 위치 Offset
 	UPROPERTY(Transient)
 	TArray<FVector> AccumulatedOffset;
 };

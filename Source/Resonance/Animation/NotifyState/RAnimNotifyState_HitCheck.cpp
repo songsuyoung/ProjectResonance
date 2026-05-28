@@ -2,7 +2,7 @@
 
 // UE
 #include "DrawDebugHelpers.h"
-#include "Engine/OverlapResult.h"
+#include "CollisionShape.h"
 
 // New Created Files...
 #include "Character/ResonanceCharacter.h"
@@ -13,7 +13,8 @@
 URAnimNotifyState_HitCheck::URAnimNotifyState_HitCheck()
 	: Super()
 	, bDebugDraw(true)
-	, FixedFrame(60.f)
+	, CollisionHalfLength(50.f)
+	, DiffDist(60.f)
 {
 }
 
@@ -41,126 +42,108 @@ void URAnimNotifyState_HitCheck::NotifyBegin(USkeletalMeshComponent* MeshComp, U
 	{
 		Weapon = CombatComponent->GetWeapon();
 	}
-
-	if (Weapon.IsValid())
-	{
-		Weapon->GetHitCheckSocketLocation(PrePoint);
-	}
+	
+	// ì´ˆê¸°í™”
+	World = MeshComp->GetWorld();
+	PrevBoneTransform = MeshComp->GetSocketTransform(Weapon->GetSocketName(ERWeaponAttachLocation::Hand), RTS_World);
+	
+	Params.AddIgnoredActor(Weapon.Get());
+	Params.AddIgnoredActor(MeshComp->GetOwner());
 }
 
 void URAnimNotifyState_HitCheck::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
-
-	if (false == IsValid(MeshComp))
-	{
-		return;
-	}
-	// ¸Å Æ½¸¶´Ù CurrentPoint°¡ Á¸Àç.
-	TArray<FVector> CurrentPoint;
-
-	if (Weapon.IsValid())
-	{
-		Weapon->GetHitCheckSocketLocation(CurrentPoint);
-	}
-
-	if (PrePoint.Num() < 2 || CurrentPoint.Num() < 2 || PrePoint == CurrentPoint)
-	{
-		// 2°³º¸´Ù ÀÛÀº °æ¿ì´Â ¾øÀ½.
-		return;
-	}
-
-	const float FixedFPS = 1.f / FMath::Max(1.f, FixedFrame); // 1ÃÊ´ç 60ÇÁ·¹ÀÓ 0.0166
-
-	// ¹Ý¿Ã¸² ÁøÇà, 1¹øÀº ½ÇÇàµÇ¾î¾ß ÇÑ´Ù.
-	const int32 Count = FMath::Max(1, FMath::CeilToInt(FrameDeltaTime / FixedFPS));
-
-	for (int FrameIndex = 0; FrameIndex < Count; FrameIndex++)
-	{
-		// 0 - 1.0
-		float Alpha = float(FrameIndex + 1) / (float)Count;
-
-		// ÇöÀç À§Ä¡ - ÀÌÀü À§Ä¡¿¡ ´ëÇØ º¸°£ ÁøÇà 
-		// ¼±Çüº¸°£ÀÇ °æ¿ì ±¸Çü¾Æ´Ñ ¼±ÇüÀ¸·Î ÁøÇàµÇ±â ¶§¹®¿¡ ³»ºÎ ¾ÈÂÊÀ¸·Î °áÁ¤µÈ´Ù.
-		FVector BeginPoint = FMath::Lerp(PrePoint[0], CurrentPoint[0], Alpha); // Ä®¸Ó¸® ºÎºÐ
-
-		// ¹æÇâ ±æÀÌ º¸°£
-		// Slerp¸¦ ÅëÇØ ÀÌÀü ÇÁ·¹ÀÓÀÇ ¹«±â °¢µµ¿Í ÇöÀç ÇÁ·¹ÀÓÀÇ °¢µµ »çÀÌ¸¦ º¸°£
-
-		FVector StartDirVec = (PrePoint[1] - PrePoint[0]).GetSafeNormal();
-		FVector EndDirVec = (CurrentPoint[1] - CurrentPoint[0]).GetSafeNormal();
-
-		FQuat StartQuat = StartDirVec.Rotation().Quaternion();
-		FQuat EndQuat = EndDirVec.Rotation().Quaternion();
 	
-		FQuat InterpRot = FQuat::Slerp(StartQuat, EndQuat, Alpha); 
-		FQuat FinalRot = FRotationMatrix::MakeFromZ(InterpRot.GetForwardVector()).ToQuat();
+	if (false == Weapon.IsValid())
+	{
+		return;
+	}
+	
+	FTransform PrevWorldTF = PrevBoneTransform;
+	FTransform CurrWorldTF = MeshComp->GetSocketTransform(Weapon->GetSocketName(ERWeaponAttachLocation::Hand), RTS_World);
 
-		// Ä®ÀÇ º¤ÅÍ¹æÇâ°ú Ä¸½¶°ú ´Ù¸§ 90µµ È¸ÀüÇØÁÖ¾î¾ß ÇÑ´Ù.
-		///// ¹æÇâ º¸°£ (È¸Àü ±¸°£À» º¸°£ ÇØÁÙ ¶§¿¡´Â Slerp »ç¿ëÇØ¾ßÇÔ
+	TArray<FVector> PreLocations;
+	PreLocations.Add(PrevWorldTF.GetLocation());
+	PreLocations.Add(PrevWorldTF.GetLocation() + PrevWorldTF.GetUnitAxis(EAxis::X) * CollisionHalfLength);
+	PreLocations.Add(PrevWorldTF.GetLocation() + PrevWorldTF.GetUnitAxis(EAxis::X) * CollisionHalfLength * 2.f);
 
-		// ±æÀÌ º¸°£ : ÀÌÀ¯ - º¸°£¿¡ ÀÇÇØ¼­ Ä®ÀÇ ¼ÒÄÏ ÁöÁ¡ÀÌ Âª¾ÆÁö´Â ¹®Á¦°¡ Á¸Àç
-		// ÀÌÀü À§Ä¡ - ÇöÀç À§Ä¡ °£ÀÇ ±æÀÌ º¸°£À¸·Î Âª¾ÆÁö´Â ¹®Á¦Á¡ ÇØ°á 
-		float BeginLength = FVector::Distance(PrePoint[0], PrePoint[1]);
-		float EndLength = FVector::Distance(CurrentPoint[0], CurrentPoint[1]);
+	float Dist = FVector::Dist(PrevWorldTF.GetLocation(), CurrWorldTF.GetLocation());
+	int32 NumSteps = FMath::Max(1, FMath::FloorToInt(Dist / DiffDist));
 
-		float HalfLength = FMath::Lerp(BeginLength, EndLength, Alpha) * 0.5f;
+	for (int Step = 1; Step <= NumSteps; Step++)
+	{
+		float Alpha = (float)Step / (float)NumSteps;
+		FTransform LerpWorldTF;
+		LerpWorldTF.Blend(PrevWorldTF, CurrWorldTF, Alpha);
 
-		////// ±æÀÌ º¸°£
-		
-		// Áß¾Ó À§Ä¡
-		// °è»êÀÌ ºü¸£·Á¸é, ³ª´°¼À º¸´Ù *ÀÌ ºü¸§À» ¾Ë¾Æ¾ß ÇÑ´Ù.
-		const FVector Origin = BeginPoint + (FinalRot.GetUpVector() * HalfLength);
+		TArray<FVector> LerpLocations;
+		LerpLocations.Add(LerpWorldTF.GetLocation());
+		LerpLocations.Add(LerpWorldTF.GetLocation() + LerpWorldTF.GetUnitAxis(EAxis::X) * CollisionHalfLength);
+		LerpLocations.Add(LerpWorldTF.GetLocation() + LerpWorldTF.GetUnitAxis(EAxis::X) * CollisionHalfLength * 2.f);
 
+		TryHitCheck(LerpLocations[0], LerpLocations[2]);
 
-		UWorld* World = MeshComp->GetWorld();
+		for (int i = 0; i < PreLocations.Num(); i++)
+			TryHitCheck(PreLocations[i], LerpLocations[i]);
 
-		check(World);
-		TArray<FOverlapResult> OutOverlaps;
+		for (int i = 0; i < PreLocations.Num() - 1; i++)
+			TryHitCheck(PreLocations[i], LerpLocations[i + 1]);
 
-		FCollisionShape CollisionShape = FCollisionShape::MakeCapsule(10.f, HalfLength);
-
-		FCollisionQueryParams Params;
-
-		Params.AddIgnoredActor(Weapon.Get());
-		Params.AddIgnoredActor(MeshComp->GetOwner());
-		bool bResult = World->OverlapMultiByChannel
-		(
-			OutOverlaps,
-			Origin,
-			FinalRot,
-			ECollisionChannel::ECC_Visibility,
-			CollisionShape,
-			Params
-		);
-
-		if (bDebugDraw)
-		{
-			DrawDebugCapsule(
-				World,
-				Origin,
-				HalfLength,
-				10,
-				FinalRot,
-				FColor::MakeRandomColor(),
-				false,
-				10.f
-			);
-		}
-
+		PreLocations = LerpLocations;
 	}
 
-	PrePoint = MoveTemp(CurrentPoint);
+	PrevBoneTransform = CurrWorldTF;
 }
 
 void URAnimNotifyState_HitCheck::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	PrePoint.Empty();
-
 	if (HitCheckComponent.IsValid())
 	{
 		HitCheckComponent->ProcessAttackHit(Target);
 	}
+}
+
+bool URAnimNotifyState_HitCheck::TryHitCheck(const FVector& StartLocation, const FVector& TargetLocation)
+{
+	bool bResult = false;
+
+	if (false == World.IsValid() || false == Weapon.IsValid())
+	{
+		return bResult;
+	}
+	
+	TArray<FHitResult> HitResults;
+	
+	bResult = World->SweepMultiByChannel(
+		HitResults,
+		StartLocation,
+		TargetLocation,
+		FQuat::Identity,
+		ECC_Visibility,
+		FCollisionShape(),
+		Params
+	);
+
+	if (bDebugDraw)
+	{
+		DrawDebugLine(
+			World.Get(),
+			StartLocation,
+			TargetLocation,
+			FColor::Red,
+			false,
+			10.f);	
+	}
+
+	if (false == bResult)
+	{
+		return bResult;
+	}
+	
+	Target.Append(HitResults);
+	
+	return bResult;
 }

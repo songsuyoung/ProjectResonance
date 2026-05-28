@@ -2,11 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
+#include "CollisionQueryParams.h"
 #include "RAnimNotifyState_HitCheck.generated.h"
 
 class URHitCheckComponent;
 class ARWeaponBase;
-struct FOverlapResult;
 
 UCLASS()
 class RESONANCE_API URAnimNotifyState_HitCheck : public UAnimNotifyState
@@ -22,25 +22,34 @@ public:
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
 
 protected:
+	
+	bool TryHitCheck(const FVector& StartLocation, const FVector& TargetLocation);
+protected:
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<URHitCheckComponent> HitCheckComponent;
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<ARWeaponBase> Weapon;
-
+	
 	UPROPERTY(Transient)
-	TArray<FVector> PrePoint;
-
+	TWeakObjectPtr<UWorld> World;
+	
 	UPROPERTY(Transient)
-	TArray<FOverlapResult> Target;
+	TArray<FHitResult> Target;
+
+	FCollisionQueryParams Params;
+	
+	FTransform PrevBoneTransform;
 
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "Resonance|DebugDraw")
 	uint8 bDebugDraw : 1;
 
-	UPROPERTY(EditAnywhere, Category = "Resonance|Frame")
-	float FixedFrame;
-
+	UPROPERTY(EditAnywhere, Category = "Resonance|CollisionLength")
+	float CollisionHalfLength;
+	
+	UPROPERTY(EditAnywhere, Category = "Resonance|Dist")
+	float DiffDist;
 };

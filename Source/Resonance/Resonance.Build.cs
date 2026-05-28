@@ -23,7 +23,9 @@ public class Resonance : ModuleRules
 			"SlateCore",
 			"UMG",
 			"JsonUtilities",
-			"Json"
+			"Json",
+			"GameplayStateTreeModule",
+			"AIModule"
 		});
 	}
 }

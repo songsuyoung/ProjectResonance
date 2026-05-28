@@ -11,25 +11,25 @@ UENUM()
 enum class ERWeaponAttachLocation : uint8
 {
 	None,
-	Hand,		/* ¼Õ¿¡ Áö°í ÀÖ´Â °Í */
-	Holster,	/*ÈÞ´ëÇÏ¸é¼­ ÇÊ¿äÇÒ ¶§ ºü¸£°í ½±°Ô ²¨³¾ ¼ö ÀÖµµ·Ï ¸¸µå´Â °Í*/
+	Hand,		/* ï¿½Õ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ */
+	Holster,	/*ï¿½Þ´ï¿½ï¿½Ï¸é¼­ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½*/
 };
 
 UENUM()
 enum class ERWeaponActiveState : uint8
 {
-	Inactive,	/*ºñÈ°¼ºÈ­*/
-	Active		/*È°¼ºÈ­*/
+	Inactive,	/*ï¿½ï¿½È°ï¿½ï¿½È­*/
+	Active		/*È°ï¿½ï¿½È­*/
 };
 
 UENUM()
 enum class ERWeaponEquipState : uint8
 {
-	Unequipped,	/*¹ÌÀåÂøÁß*/
-	Equipped,	/*ÀåÂøÁß*/
+	Unequipped,	/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
+	Equipped,	/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 };
 
-// ÆÑÅä¸® ¸Þ¼Òµå ÆÐÅÏ ÀÀ¿ë
+// ï¿½ï¿½ï¿½ä¸® ï¿½Þ¼Òµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 UCLASS(Abstract)
 class RESONANCE_API ARWeaponBase : public AActor
 {
@@ -47,7 +47,7 @@ public:
 
 	void GetHitCheckSocketLocation(TMap<FName, FVector>& OutSocketInfo);
 	void GetHitCheckSocketLocation(TArray<FVector>& OutSocketInfo);
-
+	FName GetSocketName(ERWeaponAttachLocation AttachLocation) { return SocketName[AttachLocation]; }
 public:
 	virtual void ActivateWeapon();
 	virtual void DeactivateWeapon();
@@ -59,11 +59,9 @@ protected:
 
 protected:
 
-	/* °øÅë º¯¼ö ¼±¾ð */
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Mesh")
 	TObjectPtr<UMeshComponent> MeshComponent;
 
-	// ¹«±âÀÇ ±âº» °ø°Ý·Â
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stat")
 	float BaseAttackDamage;
 

@@ -12,13 +12,12 @@ URHitCheckComponent::URHitCheckComponent()
 
 }
 
-void URHitCheckComponent::ProcessAttackHit(const TArray<FOverlapResult>& InTarget)
+void URHitCheckComponent::ProcessAttackHit(const TArray<FHitResult>& InTarget)
 {
 	TSet<AActor*> TargetActor;
-	TArray<FOverlapResult> OverlapResults;
-
-
-	for (const FOverlapResult& Target : InTarget)
+	TArray<FHitResult> OverlapResults;
+	
+	for (const FHitResult& Target : InTarget)
 	{
 		if (false == TargetActor.Contains(Target.GetActor()))
 		{
@@ -30,9 +29,9 @@ void URHitCheckComponent::ProcessAttackHit(const TArray<FOverlapResult>& InTarge
 	InternalProcessHitCheck(OverlapResults);
 }
 
-void URHitCheckComponent::InternalProcessHitCheck(const TArray<FOverlapResult>& InTarget)
+void URHitCheckComponent::InternalProcessHitCheck(const TArray<FHitResult>& InTarget)
 {
-	// Ã³¸®ÇÑ´Ù.
+	// Ã³ï¿½ï¿½ï¿½Ñ´ï¿½.
 }
 
 

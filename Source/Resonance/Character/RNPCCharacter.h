@@ -4,12 +4,16 @@
 #include "Character/RBaseCharacter.h"
 #include "RNPCCharacter.generated.h"
 class URActionData;
+class UStateTreeComponent;
+
 UCLASS()
 class RESONANCE_API ARNPCCharacter : public ARBaseCharacter
 {
 	GENERATED_BODY()
 	
 public:
+	ARNPCCharacter();
+	
 	virtual void BeginPlay() override;
 	
 protected:
@@ -18,6 +22,10 @@ protected:
 	FName GetActionName();
 	
 protected:
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UStateTreeComponent> StateTreeComponent;
+	
 	UPROPERTY(EditInstanceOnly, Category = "Action")
 	TArray<TSubclassOf<URActionData>> ActionDataClass;
 	
