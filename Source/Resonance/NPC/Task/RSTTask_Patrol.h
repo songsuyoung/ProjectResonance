@@ -8,6 +8,7 @@
 class ARBaseCharacter;
 class AAIController;
 class USplineComponent;
+struct FSplinePoint;
 
 using namespace EPathFollowingResult;
 
@@ -17,23 +18,37 @@ class RESONANCE_API URSTTask_Patrol : public UStateTreeTaskBlueprintBase
 	GENERATED_BODY()
 
 public:
-	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition);
+	URSTTask_Patrol(const FObjectInitializer& ObjectInitializer);
 	
-	void ReceiveMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
+	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition);
+
+	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 protected:
 	
-	UPROPERTY(Transient, BlueprintReadOnly, Category = Context)
-	TWeakObjectPtr<ARBaseCharacter> OwnerCharacter;
+	UFUNCTION()
+	void ReceiveMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 	
-	UPROPERTY(Transient, BlueprintReadOnly, Category = Context)
+protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<AAIController> AIController;
 	
-	UPROPERTY(Transient, BlueprintReadOnly)
-	TWeakObjectPtr<USplineComponent> SplineComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
+	TWeakObjectPtr<APawn> OwnerCharacter;
 	
-	UPROPERTY(Transient, BlueprintReadOnly)
-	int32 SplinePointIndex;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USplineComponent> SplineComponent;
 	
-	UPROPERTY(Transient, BlueprintReadOnly)
-	int32 LastSplinePointIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
+	float AcceptableRadius;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
+	float SlowDownRadius;
+	
+protected:
+	UPROPERTY(Transient)
+	TArray<FSplinePoint> SplinePoints;
+	
+	UPROPERTY(Transient)
+	int32 CurrentSplineIndex;
 };

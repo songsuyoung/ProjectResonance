@@ -25,7 +25,8 @@ public class Resonance : ModuleRules
 			"JsonUtilities",
 			"Json",
 			"GameplayStateTreeModule",
-			"AIModule"
+			"AIModule",
+			"NavigationSystem"
 		});
 	}
 }
