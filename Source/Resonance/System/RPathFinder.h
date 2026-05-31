@@ -45,7 +45,7 @@ public:
 	// 현재 캐릭터의 위치 -> 목적지 까지의 위치를 담은 벡터 전달
 	TArray<FVector> FindPath(const FVector& StartLocation, const FVector& Destination);
 protected:
-	
+	TArray<double> Dijkstra(int32 StartIndex);
 	void MakeGraph();
 protected:
 	// Spawn에 사용되는 ActorPoint는 이중 관리 필요

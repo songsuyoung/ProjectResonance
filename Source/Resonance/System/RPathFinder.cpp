@@ -114,25 +114,25 @@ TArray<FVector> URPathFinder::FindPath(const FVector& StartLocation, const FVect
 		
 		for (int32 Index = 0; Index < GraphNode[CurrentNode.Key].Cost.Num(); Index++)
 		{
+			int32 NeighborIndex = Index; // 실제 이웃 노드
 			const double NewCost = CurrentNode.Value + GraphNode[CurrentNode.Key].Cost[Index];
-			
-			// 갈 곳이 없음.
-			if (NewCost >= MAX_FLT || Visited[Index])
+    
+			if (NewCost >= MAX_FLT || Visited[NeighborIndex])
 			{
 				continue;
 			}
-			
-			if (Distance[Index] > NewCost)
+    
+			if (Distance[NeighborIndex] > NewCost)
 			{
-				Previous[Index] = CurrentNode.Key;
-				Distance[Index] = NewCost;
-				OpenList.HeapPush(TPair<int32, double>(Index, Index),FNodeComparator());
+				Previous[NeighborIndex] = CurrentNode.Key;
+				Distance[NeighborIndex] = NewCost;
+				OpenList.HeapPush(TPair<int32, double>(NeighborIndex, NewCost), FNodeComparator());
 			}
 		}
 	}
 	
 	// 포함되어있지 않으면, 실패한 경우
-	if (false == Previous.Contains(RouteIndex.Value))
+	if (Previous[RouteIndex.Value] == -1 && RouteIndex.Key != RouteIndex.Value)
 	{
 		return TArray<FVector>();
 	}
@@ -148,7 +148,7 @@ TArray<FVector> URPathFinder::FindPath(const FVector& StartLocation, const FVect
 		int32 PrevIndex = Previous[Index];
 		if (PrevIndex == -1) break;
 		
-		/*UNavigationPath* NavPath = NavigationSystem->FindPathToLocationSynchronously(
+		UNavigationPath* NavPath = NavigationSystem->FindPathToLocationSynchronously(
 			GetWorld(),
 			Locations[Index],
 			Locations[PrevIndex]
@@ -157,7 +157,8 @@ TArray<FVector> URPathFinder::FindPath(const FVector& StartLocation, const FVect
 		if (IsValid(NavPath))
 		{
 			RoutePoints.Append(NavPath->PathPoints);
-		}*/
+		}
+		
 		RoutePoints.Add(Locations[Index]);
 		
 		Index = PrevIndex;	
@@ -174,7 +175,7 @@ void URPathFinder::MakeGraph()
 	GraphNode.SetNum(Locations.Num());
 	for (int32 RowIndex = 0; RowIndex < Locations.Num(); RowIndex++)
 	{
-		GraphNode[RowIndex].Cost.Init(FLT_MAX, Locations.Num());
+		GraphNode[RowIndex].Cost.Init(DBL_MAX, Locations.Num());
 	}
 	
 	UWorld* World = GEditor->GetEditorWorldContext().World();
@@ -191,20 +192,83 @@ void URPathFinder::MakeGraph()
 	{
 		for (int ColIndex = RowIndex + 1; ColIndex < Locations.Num(); ColIndex++)
 		{
-			// 네비게이션 시스템을 사용해서 현재 위치에서 다음 위치로 갈 수 있는지 여부를 확인
-			// 갈 수 없다면 FLT_MAX 취급
-			ANavigationData* NavData = NavigationSystem->GetDefaultNavDataInstance();
+			UNavigationPath* NavPath = NavigationSystem->FindPathToLocationSynchronously(
+				World,
+				Locations[RowIndex],
+				Locations[ColIndex]
+			);
+			
+			float HeightDiff = FMath::Abs(Locations[RowIndex].Z - Locations[ColIndex].Z);
+			float HorizontalDist = FVector::Dist2D(Locations[RowIndex], Locations[ColIndex]);
 
-			// 실제 경로 비용이 필요한 경우
-			FPathFindingQuery Query(nullptr, *NavData, Locations[RowIndex], Locations[ColIndex]);
-			FPathFindingResult PathResult = NavigationSystem->FindPathSync(Query);
-
-			if (PathResult.IsSuccessful())
+			// 수평 거리가 0이면 나누기 방지
+			// Tangent를 수행했을 때 60도 크기는 갈 수 없음으로 인지
+			if (HorizontalDist < KINDA_SMALL_NUMBER)
 			{
-				float PathCost = PathResult.Path->GetCost();
+				continue;
+			}
+
+			if ((HeightDiff / HorizontalDist) > 1.5f)
+			{
+				continue;
+			}
+			
+			if (IsValid(NavPath))
+			{
+				double PathCost = NavPath->GetPathCost();
+				
 				GraphNode[RowIndex].Cost[ColIndex] = PathCost;
 				GraphNode[ColIndex].Cost[RowIndex] = PathCost;
 			}
 		}
 	}
+	
+	for (int32 i = 0; i < GraphNode.Num(); i++)
+	{
+		for (int32 j = 0; j < GraphNode[i].Cost.Num(); j++)
+		{
+			if (GraphNode[i].Cost[j] < MAX_FLT)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Edge: %d -> %d, Cost: %f"), i, j, GraphNode[i].Cost[j]);
+			}
+		}
+	}
+}
+
+// 다익스트라 - 특정 노드에서 모든 노드까지 최단 비용 반환
+TArray<double> URPathFinder::Dijkstra(int32 StartIndex)
+{
+    int32 NodeCount = Locations.Num();
+    TArray<double> Distance;
+    Distance.Init(DBL_MAX, NodeCount);
+    Distance[StartIndex] = 0.0;
+
+    TArray<bool> Visited;
+    Visited.Init(false, NodeCount);
+
+    TArray<TPair<int32, double>> OpenList;
+    OpenList.HeapPush({StartIndex, 0.0}, FNodeComparator());
+
+    while (!OpenList.IsEmpty())
+    {
+        TPair<int32, double> Current;
+        OpenList.HeapPop(Current, FNodeComparator());
+
+        if (Visited[Current.Key]) continue;
+        Visited[Current.Key] = true;
+
+        for (int32 Index = 0; Index < GraphNode[Current.Key].Cost.Num(); Index++)
+        {
+            if (GraphNode[Current.Key].Cost[Index] >= DBL_MAX) continue;
+
+            double NewCost = Current.Value + GraphNode[Current.Key].Cost[Index];
+            if (Distance[Index] > NewCost)
+            {
+                Distance[Index] = NewCost;
+                OpenList.HeapPush({Index, NewCost}, FNodeComparator());
+            }
+        }
+    }
+
+    return Distance;
 }
