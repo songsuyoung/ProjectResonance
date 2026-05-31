@@ -10,6 +10,7 @@
 //
 #include "Character/RBaseCharacter.h"
 #include "Data/ResonanceStructs.h"
+#include "System/RPathFinder.h"
 
 
 URSTTask_Patrol::URSTTask_Patrol(const FObjectInitializer& ObjectInitializer)
@@ -43,30 +44,48 @@ EStateTreeRunStatus URSTTask_Patrol::EnterState(FStateTreeExecutionContext& Cont
 	// 초기화
 	SplinePoints.Empty();
 	CurrentSplineIndex = 0;
-	
-	UNavigationSystemV1* NavigationSystemV1 = UNavigationSystemV1::GetNavigationSystem(this);
+
+	const FRPatrolRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPatrolRoutePayload>();
+
+	/*UNavigationSystemV1* NavigationSystemV1 = UNavigationSystemV1::GetNavigationSystem(this);
 	
 	check(NavigationSystemV1);
-	
-	const FRPatrolRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPatrolRoutePayload>();
-	
-	AIController->ReceiveMoveCompleted.AddDynamic(this, &ThisClass::ReceiveMoveCompleted);
-	AIController->MoveToLocation(Payload.Destination, 50.f);
 	
 	UNavigationPath* Path = NavigationSystemV1->FindPathToLocationSynchronously(
 		this, 
 		OwnerCharacter->GetActorLocation(),
 		Payload.Destination
-		);
+		);*/
+	URPathFinder* PathFinder = URPathFinder::Get(this);
+	check(PathFinder);
 	
-	const TArray<FVector>& PathPoints = Path->PathPoints;
+	const TArray<FVector>& Locations = PathFinder->FindPath(OwnerCharacter->GetActorLocation(), Payload.Destination);
 	
-	SplineComponent->SetSplinePoints(PathPoints, ESplineCoordinateSpace::World);
+	SplineComponent->SetSplinePoints(Locations, ESplineCoordinateSpace::World);
 	
 	// SplineComponent로부터 가져온다.
 	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); Index++)
 	{
 		SplinePoints.Add(SplineComponent->GetSplinePointAt(Index, ESplineCoordinateSpace::World));
+	}
+	
+	const int32 SampleCount = 100; // 촘촘할수록 곡선처럼 보임
+	const float TotalLength = SplineComponent->GetSplineLength();
+	const float Step = TotalLength / SampleCount;
+
+	for (int32 Index = 0; Index < SampleCount; Index++)
+	{
+		FVector Start = SplineComponent->GetLocationAtDistanceAlongSpline(Step * Index, ESplineCoordinateSpace::World);
+		FVector End = SplineComponent->GetLocationAtDistanceAlongSpline(Step * (Index + 1), ESplineCoordinateSpace::World);
+
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 10.f, 0, 2.f);
+	}
+
+	// 포인트 위치도 같이 표시
+	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); Index++)
+	{
+		FVector PointLocation = SplineComponent->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+		DrawDebugSphere(GetWorld(), PointLocation, 20.f, 8, FColor::Green, false, 10.f);
 	}
 	
 	return EStateTreeRunStatus::Running;
@@ -101,7 +120,7 @@ EStateTreeRunStatus URSTTask_Patrol::Tick(FStateTreeExecutionContext& Context, c
 	
 	float RemainingDistance = FVector::Dist2D(CurrentLocation, TargetLocation);
 		
-		// 거리를 1cm씩 나눈다.
+	// 거리를 SlowDownRadius씩 나눈다.
 	float ScaleValue = FMath::Clamp(RemainingDistance/SlowDownRadius, 0.f,1.0f);
 	
 	OwnerCharacter->AddMovementInput(Direction, ScaleValue);
@@ -112,9 +131,4 @@ EStateTreeRunStatus URSTTask_Patrol::Tick(FStateTreeExecutionContext& Context, c
 	}
 	
 	return EStateTreeRunStatus::Running;
-}
-
-void URSTTask_Patrol::ReceiveMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
-{
-	FinishTask(true);
 }

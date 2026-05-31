@@ -23,6 +23,7 @@ class RESONANCE_API ARPatrolActor : public AActor
 public:	
 	ARPatrolActor();
 
+	ERPatrolPointType GetPatrolPointType() { return PatrolPointType; }
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")

@@ -23,11 +23,7 @@ public:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition);
 
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
-protected:
-	
-	UFUNCTION()
-	void ReceiveMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
-	
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")

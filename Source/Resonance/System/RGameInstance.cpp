@@ -1,6 +1,7 @@
 #include "System/RGameInstance.h"
 
 // Newly Created File Names ..
+#include "System/RPathFinder.h"
 #include "RWayPointManager.h"
 #include "System/RDataManager.h"
 #include "System/REventManager.h"
@@ -21,9 +22,15 @@ void URGameInstance::Init()
 
 	EventManager = NewObject<UREventManager>(this, UREventManager::StaticClass());
 	WayPointManager = NewObject<URWayPointManager>(this, URWayPointManager::StaticClass());
+	PathFinder = NewObject<URPathFinder>(this, URPathFinder::StaticClass());
 	
 	if (IsValid(WayPointManager))
 	{
 		WayPointManager->Initialize();
+	}
+	
+	if (IsValid(PathFinder))
+	{
+		PathFinder->Init();
 	}
 }

@@ -8,6 +8,7 @@ class URDataManager;
 class URUIManagerBase;
 class URWayPointManager;
 class UREventManager;
+class URPathFinder;
 
 UCLASS()
 class RESONANCE_API URGameInstance : public UGameInstance
@@ -20,6 +21,7 @@ public:
 	URDataManager* GetDataManager() { return DataManager; }
 	UREventManager* GetEventManager() { return EventManager; }
 	URWayPointManager* GetWayPointManager() { return WayPointManager; }
+	URPathFinder* GetPathFinder() { return PathFinder; }	
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "AssetClass")
@@ -27,6 +29,9 @@ protected:
 
 protected:
 
+	UPROPERTY(Transient)
+	TObjectPtr<URPathFinder> PathFinder;
+	
 	UPROPERTY(Transient)
 	TObjectPtr<URDataManager> DataManager;
 
