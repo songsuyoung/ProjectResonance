@@ -11,11 +11,13 @@ public:
 	static void Bake(UWorld* World);
 };
 
+struct FRTransformDataArray;
+
 // PathGraph 전용 (구체화)
 class FRPathGraphBaker
 {
 public:
-	static void Bake(UWorld* World, float LimitedDistance, float MaxSlopeTangent);
+	static void Bake(UWorld* World, FRTransformDataArray& PathDataArray, float LimitedDistance, float MaxSlopeTangent);
 	
 protected:
 	

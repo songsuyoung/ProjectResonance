@@ -12,7 +12,7 @@ ARPathPointActor::ARPathPointActor()
 
 FRTransformData ARPathPointActor::GetSerializedData() const
 {
-	return FRTransformData(GetActorTransform());
+	return FRTransformData(PathPointType, GetTransform());
 }
 
 ERBakeType ARPathPointActor::GetBakeType() const

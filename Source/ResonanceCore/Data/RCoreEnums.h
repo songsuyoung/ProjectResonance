@@ -7,3 +7,14 @@ enum class ERBakeType : uint8
 	WarpPoint,
 	PathPoint,
 };
+
+
+UENUM(BlueprintType)
+enum class ERPathPointType : uint8
+{
+	Spawn,       // NPC 스폰 지점
+	Destination, // 목적지
+	Waypoint,    // 경유지
+	Walk,        // 걷는 구간
+	Run,         // 뛰는 구간
+};

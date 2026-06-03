@@ -1,5 +1,6 @@
 #include "RBaker.h"
 
+// 
 #include "REditorUtils.h"
 #include "Data/RCoreEnums.h"
 #include "Data/RCoreStructs.h"
@@ -15,26 +16,23 @@ void FRTransformBaker::Bake(UWorld* World)
 	for (IRBakeable* WayPoint : WayPoints)
 	{
 		FRTransformDataArray& TransformDataArray = BakeDataGroup.BakeDataMap.FindOrAdd(WayPoint->GetBakeType());
-				
 		TransformDataArray.TransformData.Add(WayPoint->GetSerializedData());
 	}
 
+	if (BakeDataGroup.BakeDataMap.Contains(ERBakeType::PathPoint))
+	{
+		FRPathGraphBaker::Bake(World, BakeDataGroup.BakeDataMap[ERBakeType::PathPoint], 500.f, 0.25f);
+	}
+	
 	FREditorUtils::SerializeAndSave(BakeDataGroup, TEXT("/BakeData.json"));
 }
 
-void FRPathGraphBaker::Bake(UWorld* World, float LimitedDistance, float MaxSlopeTangent)
+void FRPathGraphBaker::Bake(UWorld* World, FRTransformDataArray& PathDataArray, float LimitedDistance, float MaxSlopeTangent)
 {
-	TArray<IRBakeable*> Bakeables = FREditorUtils::CollectActorsWithInterface(World);
-	
 	TArray<FVector> Locations;
-	for (IRBakeable* Bakeable : Bakeables)
+	for (const auto& TransformData : PathDataArray.TransformData)
 	{
-		if (ERBakeType::PathPoint != Bakeable->GetBakeType())
-		{
-			continue;
-		}
-		
-		Locations.Add(Bakeable->GetSerializedData().Tansform.GetLocation());
+		Locations.Add(TransformData.Tansform.GetLocation());
 	}
 	
 	MakeGraph(Locations, LimitedDistance, MaxSlopeTangent);
@@ -93,7 +91,7 @@ void FRPathGraphBaker::MakeGraph(const TArray<FVector>& Locations, float Limited
 			}
 
 			GraphNode.AdjacencyList[RIndex].Edges.Add({CIndex, Dist});
-			GraphNode.AdjacencyList[RIndex].Edges.Add({RIndex, Dist});
+			GraphNode.AdjacencyList[CIndex].Edges.Add({RIndex, Dist});
 			
 			// 노드 생성 기준
 			DrawDebugLine(World, StartLocation, EndLocation, FColor::Blue, false, 10.f, 0, 2.f);

@@ -1,12 +1,11 @@
 #include "Editor/RBakeEditorExtension.h"
-#include "EngineUtils.h"
-#include "JsonObjectConverter.h"
+
+// UE 5.
 #include "LevelEditor.h"
+
+//
 #include "RBaker.h"
 #include "REditorUtils.h"
-#include "Data/RCoreStructs.h"
-#include "Game/Interface/RBakeable.h"
-#include "System/RFileHelper.h"
 #define LOCTEXT_NAMESPACE "FRWayPointEditorExtension"
 
 IMPLEMENT_MODULE(FRBakeEditorExtension, FRBakeEditorExtension);
@@ -52,7 +51,6 @@ void FRBakeEditorExtension::CreateButton(FToolBarBuilder& Builder)
 			UWorld* World = FREditorUtils::GetEditorWorld();
 	
 			FRTransformBaker::Bake(World);
-			FRPathGraphBaker::Bake(World, 500.f, 0.25f);
 		}))
 	);
 }

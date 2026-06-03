@@ -3,12 +3,16 @@
 #include "RCoreStructs.generated.h"
 
 enum class ERBakeType : uint8;
+enum class ERPathPointType : uint8;
 
 USTRUCT()
 struct RESONANCECORE_API FRTransformData
 {
 	GENERATED_BODY()
 public:
+	
+	UPROPERTY()
+	ERPathPointType PathPointType;
 	
 	UPROPERTY()
 	FTransform Tansform;

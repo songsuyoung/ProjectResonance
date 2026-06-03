@@ -36,7 +36,7 @@ void ARWayPointActor::Interact(AActor* OtherActor)
 
 FRTransformData ARWayPointActor::GetSerializedData() const
 {
-	return FRTransformData(GetActorTransform());
+	return FRTransformData(ERPathPointType::Waypoint, GetActorTransform());
 }
 
 ERBakeType ARWayPointActor::GetBakeType() const

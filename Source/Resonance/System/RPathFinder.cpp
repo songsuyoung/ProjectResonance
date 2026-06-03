@@ -8,7 +8,6 @@
 // 
 #include "RBakeDataManager.h"
 #include "RGameInstance.h"
-#include "Actor/RPathPointActor.h"
 #include "Data/RCoreEnums.h"
 #include "System/RFileHelper.h"
 
@@ -36,11 +35,21 @@ void URPathFinder::Initialize()
 	
 	check(BakeDataManager);
 	
-	bool bResult = BakeDataManager->GetLocationData(ERBakeType::PathPoint, Locations);
+	const FRBakeDataGroup& BakeDataGroup = BakeDataManager->GetBakeDataGroup();
 	
-	if (false == bResult)
+	if (false == BakeDataGroup.BakeDataMap.Contains(ERBakeType::PathPoint))
 	{
 		return;
+	}
+	
+	const FRTransformDataArray& PathDataArray = BakeDataGroup.BakeDataMap[ERBakeType::PathPoint];
+	
+	for (int32 Index = 0; Index < PathDataArray.TransformData.Num(); Index++)
+	{
+		Locations.Add(PathDataArray.TransformData[Index].Tansform.GetLocation());
+		FRRoutePointContainer& RoutePointContainer = TypedPatrolPoints.FindOrAdd(PathDataArray.TransformData[Index].PathPointType);
+		
+		RoutePointContainer.PointIndex.Add(Index);
 	}
 	
 	FString OutResult;
@@ -192,6 +201,71 @@ TArray<FVector> URPathFinder::FindPath_Internal(const int32& StartIndex, const i
 	Algo::Reverse(RoutePoints);
 	
 	return RoutePoints;
+}
+
+TArray<FVector> URPathFinder::FindPath_Circuit(const FVector& StartLocation)
+{
+	TArray<FVector> Path;
+	// 가장 가까운 노드 인덱스를 가져온다.
+	int32 StartIndex = GetNearestNodeIndex(StartLocation);
+
+	int32 NextIndex = FMath::RandRange(0, GraphNode.AdjacencyList[StartIndex].Edges.Num() - 1);
+	int32 RealDirIndex = GraphNode.AdjacencyList[StartIndex].Edges[NextIndex].Index; //실제 인덱스가 저장되어있음
+	if (false == Locations.IsValidIndex(RealDirIndex))
+	{
+		return Path;
+	}
+	
+	int32 PrevIndex = StartIndex;
+	// Direction과 가장 일치하는 방향으로 이동한다.
+	FVector NextLocation = Locations[RealDirIndex];
+	FVector Direction = (NextLocation- StartLocation).GetSafeNormal();
+	
+	Path.Add(NextLocation);
+	
+	while (RealDirIndex != StartIndex)
+	{
+		float MaxDot = -1.f;
+		
+		for (int32 Index = 0; Index < GraphNode.AdjacencyList[RealDirIndex].Edges.Num(); Index++)
+		{
+			int32 CandidateIndex =  GraphNode.AdjacencyList[RealDirIndex].Edges[Index].Index; //실제 인덱스가 저장되어있음
+			if (false == Locations.IsValidIndex(CandidateIndex))
+			{
+				return TArray<FVector>();
+			}
+			
+			// 이전으로 돌아가지 않도록 한다.
+			if (CandidateIndex == PrevIndex)
+			{
+				continue;
+			}
+			
+			FVector CandidateLocation  = Locations[CandidateIndex];
+			FVector NextDir = (CandidateLocation - Path.Last()).GetSafeNormal();
+			// Direction과 가장 일치하는 방향으로 이동한다.
+			float Result = FVector::DotProduct(Direction, NextDir);
+			
+			if (MaxDot < Result)
+			{
+				MaxDot = Result;
+				RealDirIndex = CandidateIndex;
+				NextLocation = CandidateLocation;
+			}
+		}
+
+		// 모든 과정이 끝나고, 다음 이동 할 때 
+		if (Path.Contains(NextLocation))
+		{
+			return TArray<FVector>();
+		}
+		
+		PrevIndex = RealDirIndex;
+		Direction = (NextLocation - Path.Last()).GetSafeNormal();
+		Path.Add(NextLocation);
+	}
+
+	return Path;
 }
 
 int32 URPathFinder::PickDestination()
