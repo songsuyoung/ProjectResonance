@@ -1,6 +1,7 @@
 #include "Actor/RWayPointActor.h"
 
-#include "System/RWayPointManager.h"
+#include "Data/RCoreEnums.h"
+#include "System/RBakeDataManager.h"
 
 ARWayPointActor::ARWayPointActor()
 {
@@ -17,20 +18,30 @@ void ARWayPointActor::Interact(AActor* OtherActor)
 	
 	UE_LOG(LogTemp, Log, TEXT("[WayPoint] Find"));
 	
-	URWayPointManager* WayPointManager = URWayPointManager::Get(this);
+	URBakeDataManager* WayPointManager = URBakeDataManager::Get(this);
 	
 	ensure(WayPointManager);
 	
-	const FRWayPoint& WayPoint = WayPointManager->GetRandomPoint();
+	FRTransformData WayPoint;
+	bool bResult = WayPointManager->GetRandomTransformData(ERBakeType::WarpPoint, WayPoint);
 	
-	OtherActor->TeleportTo(WayPoint.Location, WayPoint.Rotation);
+	if (false == bResult)
+	{
+		// 데이터가 없어서 실패한 경우
+		return;
+	}
+	
+	OtherActor->TeleportTo(WayPoint.Tansform.GetLocation(), WayPoint.Tansform.GetRotation().Rotator());
 }
 
-FRWayPoint ARWayPointActor::GetSerializedData() const
+FRTransformData ARWayPointActor::GetSerializedData() const
 {
-	FRWayPoint WayPoint(GetActorLocation(), GetActorRotation());
-	
-	return WayPoint;
+	return FRTransformData(GetActorTransform());
+}
+
+ERBakeType ARWayPointActor::GetBakeType() const
+{
+	return ERBakeType::WarpPoint;
 }
 
 void ARWayPointActor::BeginPlay()

@@ -1,34 +1,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/RCoreStructs.h"
 #include "UObject/NoExportTypes.h"
 #include "RPathFinder.generated.h"
 
-enum class ERPatrolPointType : uint8;
-USTRUCT(BlueprintType)
+enum class ERPathPointType : uint8;
+USTRUCT()
 struct FRRoutePointContainer
 {
 	GENERATED_BODY()
 public:
 	
 	UPROPERTY(Transient)
-	TArray<FVector> Location;
+	TArray<int32> PointIndex;
 };
 
-USTRUCT(BlueprintType)
-struct FRPathNode
+USTRUCT()
+struct FRNodeComparator
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(Transient)
-	TArray<double> Cost;
-};
-
-struct FNodeComparator
-{
-	bool operator()(const TPair<int32, double>& A, const TPair<int32, double>& B) const
+	bool operator()(const FRPathEdge& A, const FRPathEdge& B) const
 	{
-		return A.Value < B.Value;
+		return A.Cost < B.Cost;
 	}
 };
 
@@ -38,22 +33,27 @@ class RESONANCE_API URPathFinder : public UObject
 	GENERATED_BODY()
 
 public:
+	URPathFinder();
 	static URPathFinder* Get(const UObject* WorldContextObject);
-	// ARPatrolActor을 모두 가져오고 캐싱한다.
-	void Init();	
+	void Initialize();
+public:
+	int32 GetNearestNodeIndex(const FVector& TargetLocation);
+	int32 PickDestination();
 	
-	// 현재 캐릭터의 위치 -> 목적지 까지의 위치를 담은 벡터 전달
 	TArray<FVector> FindPath(const FVector& StartLocation, const FVector& Destination);
+	TArray<FVector> FindPath(const int32& StartIndex, const int32& DestinationIndex);
+	
 protected:
-	TArray<double> Dijkstra(int32 StartIndex);
-	void MakeGraph();
+	bool Dijkstra(int32 StartIndex, int32 EndIndex, TArray<int32>& RoutePathIndex);
+	TArray<FVector> FindPath_Internal(const int32& StartIndex, const int32& EndIndex);
+
 protected:
-	// Spawn에 사용되는 ActorPoint는 이중 관리 필요
-	UPROPERTY(Transient)
-	TMap<ERPatrolPointType, FRRoutePointContainer> PatrolPoints;
 	
 	UPROPERTY(Transient)
-	TArray<FRPathNode> GraphNode;
+	TMap<ERPathPointType, FRRoutePointContainer> TypedPatrolPoints;
+	
+	UPROPERTY(Transient)
+	FRGraph GraphNode;
 	
 	UPROPERTY(Transient)
 	TArray<FVector> Locations;

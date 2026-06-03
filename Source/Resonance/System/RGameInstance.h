@@ -6,7 +6,7 @@
 
 class URDataManager;
 class URUIManagerBase;
-class URWayPointManager;
+class URBakeDataManager;
 class UREventManager;
 class URPathFinder;
 
@@ -20,7 +20,9 @@ public:
 
 	URDataManager* GetDataManager() { return DataManager; }
 	UREventManager* GetEventManager() { return EventManager; }
-	URWayPointManager* GetWayPointManager() { return WayPointManager; }
+	
+	// 정적으로 구워진 데이터
+	URBakeDataManager* GetBakeDataManager() { return BakeDataManager; }
 	URPathFinder* GetPathFinder() { return PathFinder; }	
 protected:
 
@@ -39,7 +41,7 @@ protected:
 	TObjectPtr<UREventManager> EventManager;
 
 	UPROPERTY(Transient)
-	TObjectPtr<URWayPointManager> WayPointManager;
+	TObjectPtr<URBakeDataManager> BakeDataManager;
 	
 	UPROPERTY(Transient)
 	TObjectPtr<URUIManagerBase> UIManager;

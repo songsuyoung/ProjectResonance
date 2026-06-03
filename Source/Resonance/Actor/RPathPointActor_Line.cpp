@@ -1,9 +1,9 @@
-#include "Actor/RPatrolActor_Line.h"
+#include "Actor/RPathPointActor_Line.h"
 
 // UE 5.
 #include "Components/SplineComponent.h"
 
-ARPatrolActor_Line::ARPatrolActor_Line()
+ARPathPointActor_Line::ARPathPointActor_Line()
 {
 	SplineComponent = CreateDefaultSubobject<USplineComponent>("SplineComponent");
 	

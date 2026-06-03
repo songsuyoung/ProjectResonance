@@ -3,12 +3,15 @@
 #include "ResonanceStructs.generated.h"
 
 USTRUCT()
-struct FRPatrolRoutePayload
+struct FRPathRoutePayload
 {
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(Transient)
+	int32 NearestPointIndex;
 	
 	UPROPERTY(Transient)
-	FVector Destination;
+	int32 DestinationPointIndex;
+	
 };

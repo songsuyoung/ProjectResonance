@@ -4,7 +4,7 @@
 #include "Modules/ModuleManager.h"
 
 
-class RESONANCEEDITOR_API FRWayPointEditorExtension : public IModuleInterface
+class RESONANCEEDITOR_API FRBakeEditorExtension : public IModuleInterface
 {
 public:
 	

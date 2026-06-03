@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Game/Interface/RWayPointSerializable.h"
+#include "Game/Interface/RBakeable.h"
 #include "GameFramework/Actor.h"
 #include "Interface/RInteractable.h"
 #include "RWayPointActor.generated.h"
@@ -9,7 +9,7 @@
 class UStaticMeshComponent;
 
 UCLASS()
-class RESONANCE_API ARWayPointActor : public AActor, public IRInteractable, public IRWayPointSerializable
+class RESONANCE_API ARWayPointActor : public AActor, public IRInteractable, public IRBakeable
 {
 	GENERATED_BODY()
 	
@@ -18,7 +18,8 @@ public:
 
 	virtual void Interact(AActor* OtherActor);
 	
-	virtual FRWayPoint GetSerializedData() const;
+	virtual FRTransformData GetSerializedData() const override;
+	virtual ERBakeType GetBakeType() const override;
 	
 protected:
 	virtual void BeginPlay() override;

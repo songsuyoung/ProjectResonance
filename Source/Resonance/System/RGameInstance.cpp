@@ -2,7 +2,7 @@
 
 // Newly Created File Names ..
 #include "System/RPathFinder.h"
-#include "RWayPointManager.h"
+#include "RBakeDataManager.h"
 #include "System/RDataManager.h"
 #include "System/REventManager.h"
 
@@ -21,16 +21,16 @@ void URGameInstance::Init()
 	}
 
 	EventManager = NewObject<UREventManager>(this, UREventManager::StaticClass());
-	WayPointManager = NewObject<URWayPointManager>(this, URWayPointManager::StaticClass());
+	BakeDataManager = NewObject<URBakeDataManager>(this, URBakeDataManager::StaticClass());
 	PathFinder = NewObject<URPathFinder>(this, URPathFinder::StaticClass());
 	
-	if (IsValid(WayPointManager))
+	if (IsValid(BakeDataManager))
 	{
-		WayPointManager->Initialize();
+		BakeDataManager->Initialize();
 	}
 	
 	if (IsValid(PathFinder))
 	{
-		PathFinder->Init();
+		PathFinder->Initialize();
 	}
 }

@@ -1,1 +1,0 @@
-﻿#include "RWayPointSerializable.h"

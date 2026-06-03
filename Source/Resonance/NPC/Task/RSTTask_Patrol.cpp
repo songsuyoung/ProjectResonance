@@ -45,21 +45,12 @@ EStateTreeRunStatus URSTTask_Patrol::EnterState(FStateTreeExecutionContext& Cont
 	SplinePoints.Empty();
 	CurrentSplineIndex = 0;
 
-	const FRPatrolRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPatrolRoutePayload>();
+	const FRPathRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPathRoutePayload>();
 
-	/*UNavigationSystemV1* NavigationSystemV1 = UNavigationSystemV1::GetNavigationSystem(this);
-	
-	check(NavigationSystemV1);
-	
-	UNavigationPath* Path = NavigationSystemV1->FindPathToLocationSynchronously(
-		this, 
-		OwnerCharacter->GetActorLocation(),
-		Payload.Destination
-		);*/
 	URPathFinder* PathFinder = URPathFinder::Get(this);
 	check(PathFinder);
 	
-	const TArray<FVector>& Locations = PathFinder->FindPath(OwnerCharacter->GetActorLocation(), Payload.Destination);
+	const TArray<FVector>& Locations = PathFinder->FindPath(Payload.NearestPointIndex, Payload.DestinationPointIndex);
 	
 	SplineComponent->SetSplinePoints(Locations, ESplineCoordinateSpace::World);
 	
