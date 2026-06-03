@@ -2,18 +2,21 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "RSTTask_FindDestination.generated.h"
+#include "RSTTask_FindCircuitPath.generated.h"
+
+class ARBaseCharacter;
 class AAIController;
-class APawn;
 
 UCLASS()
-class RESONANCE_API URSTTask_FindDestination : public UStateTreeTaskBlueprintBase
+class RESONANCE_API URSTTask_FindCircuitPath : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
-	
+
 public:
-	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
+	URSTTask_FindCircuitPath(const FObjectInitializer& ObjectInitializer);
 	
+	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition);
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
@@ -21,5 +24,4 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<APawn> OwnerCharacter;
-	
 };

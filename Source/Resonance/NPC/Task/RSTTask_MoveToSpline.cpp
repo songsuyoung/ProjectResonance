@@ -1,28 +1,25 @@
-#include "NPC/Task/RSTTask_Patrol.h"
+#include "RSTTask_MoveToSpline.h"
 
 // UE 5.
-#include "AIController.h"
-#include "NavigationSystem.h"
-#include "StateTreeExecutionContext.h"
 #include "Components/SplineComponent.h"
-#include "NavigationPath.h"
+#include "StateTreeExecutionContext.h"
 
 //
-#include "Character/RBaseCharacter.h"
+#include "Character/RNPCCharacter.h"
 #include "Data/ResonanceStructs.h"
-#include "System/RPathFinder.h"
 
-
-URSTTask_Patrol::URSTTask_Patrol(const FObjectInitializer& ObjectInitializer)
+URSTTask_MoveToSpline::URSTTask_MoveToSpline(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	, AcceptableRadius(100.f)
-	, SlowDownRadius(300.f)
 {
-	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
 }
 
-EStateTreeRunStatus URSTTask_Patrol::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
+EStateTreeRunStatus URSTTask_MoveToSpline::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
 {
+	// 전달받은 데이터를 읽는다.
+	// 전달된 데이터는 TArray<FVector> 값을 전달한다.
+	// FindLinePath는 목적지에 맞는 직선을 결정
+	// FindCircuitPath는 원형으로 전달된 경로를 전달
+	
 	const FStateTreeEventQueue& EventQueue = Context.GetEventQueue();
 	
 	const FStateTreeEvent* StateTreeEvent = nullptr;
@@ -44,15 +41,16 @@ EStateTreeRunStatus URSTTask_Patrol::EnterState(FStateTreeExecutionContext& Cont
 	// 초기화
 	SplinePoints.Empty();
 	CurrentSplineIndex = 0;
+	SplineComponent = OwnerCharacter->GetSplineComponent();
 
+	if (false == SplineComponent.IsValid())
+	{
+		return EStateTreeRunStatus::Failed;
+	}
+	
 	const FRPathRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPathRoutePayload>();
-
-	URPathFinder* PathFinder = URPathFinder::Get(this);
-	check(PathFinder);
 	
-	const TArray<FVector>& Locations = PathFinder->FindPath(Payload.NearestPointIndex, Payload.DestinationPointIndex);
-	
-	SplineComponent->SetSplinePoints(Locations, ESplineCoordinateSpace::World);
+	SplineComponent->SetSplinePoints(Payload.PathLocation, ESplineCoordinateSpace::World);
 	
 	// SplineComponent로부터 가져온다.
 	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); Index++)
@@ -82,15 +80,9 @@ EStateTreeRunStatus URSTTask_Patrol::EnterState(FStateTreeExecutionContext& Cont
 	return EStateTreeRunStatus::Running;
 }
 
-EStateTreeRunStatus URSTTask_Patrol::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
+EStateTreeRunStatus URSTTask_MoveToSpline::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
-	// SplinePoints의 인덱스가 작다면 이동할 위치가 존재함.
-	
-	// 현재 위치에서 SplinePoint위치까지 Interp 시키면서 이동 
-	// Z값은 변하지 않고 X/Y값만 변경
-	// Position 값 뿐만 아니라 Rotation값 변경 
-	
-	// 일정 거리에 도달하면 Index를 올려줌
+	// 데이터에 따라 진행한다.
 	if (CurrentSplineIndex >= SplinePoints.Num())
 	{
 		return EStateTreeRunStatus::Succeeded;
@@ -98,7 +90,7 @@ EStateTreeRunStatus URSTTask_Patrol::Tick(FStateTreeExecutionContext& Context, c
 
 	FVector CurrentLocation = OwnerCharacter->GetActorLocation();
 	FVector TargetLocation  = SplinePoints[CurrentSplineIndex].Position;
-	TargetLocation.Z        = CurrentLocation.Z; // Z 고정
+	TargetLocation.Z = CurrentLocation.Z; // Z 고정
 
 	// 방향 계산
 	FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
@@ -110,9 +102,14 @@ EStateTreeRunStatus URSTTask_Patrol::Tick(FStateTreeExecutionContext& Context, c
 	);
 	
 	float RemainingDistance = FVector::Dist2D(CurrentLocation, TargetLocation);
-		
 	// 거리를 SlowDownRadius씩 나눈다.
-	float ScaleValue = FMath::Clamp(RemainingDistance/SlowDownRadius, 0.f,1.0f);
+	float ScaleValue = 1.0f;
+	
+	// 거의 끝에 도달하면 속도를 줄여야한다.
+	if (CurrentSplineIndex >= SplinePoints.Num() - 1)
+	{
+		ScaleValue = FMath::Clamp(RemainingDistance/SlowDownRadius, 0.f,1.0f);
+	}
 	
 	OwnerCharacter->AddMovementInput(Direction, ScaleValue);
 
