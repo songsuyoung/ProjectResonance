@@ -39,6 +39,7 @@ public:
 public:
 	int32 GetNearestNodeIndex(const FVector& TargetLocation);
 	int32 PickDestination();
+	const TArray<FVector>& GetPathPoints() { return Locations; }
 	
 	// 선형적으로 목표에 도달하고 싶을 때 사용하는 함수
 	TArray<FVector> FindPath(const FVector& StartLocation, const FVector& Destination);
