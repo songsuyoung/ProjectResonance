@@ -13,6 +13,7 @@
 
 URPathFinder::URPathFinder()
 	: Super()
+	, RandomWeight(0.6f)
 {
 }
 
@@ -46,8 +47,8 @@ void URPathFinder::Initialize()
 	
 	for (int32 Index = 0; Index < PathDataArray.TransformData.Num(); Index++)
 	{
-		Locations.Add(PathDataArray.TransformData[Index].Tansform.GetLocation());
-		FRRoutePointContainer& RoutePointContainer = TypedPatrolPoints.FindOrAdd(PathDataArray.TransformData[Index].PathPointType);
+		Locations.Add(PathDataArray.TransformData[Index]);
+		FRRoutePointContainer& RoutePointContainer = TypedPoints.FindOrAdd(PathDataArray.TransformData[Index].PathPointType);
 		
 		RoutePointContainer.PointIndex.Add(Index);
 	}
@@ -60,68 +61,83 @@ void URPathFinder::Initialize()
 
 int32 URPathFinder::GetNearestNodeIndex(const FVector& TargetLocation)
 {
-	double Min = DBL_MAX;
-	int32 NearestNodeIndex = -1;
-
+	// 우측 Bias값을 사용해서, 일부 랜덤으로 우측을 기준으로 좌측을 기준으로를 정하자.
+	TArray<int32> NearestNodes;
 	for (int32 Index = 0; Index < Locations.Num(); Index++)
 	{
 		// 현재 위치와 가장 가까운 위치를 찾는다.
-		float Dist = FVector::Dist(Locations[Index], TargetLocation);
+		float Dist = FVector::Dist(Locations[Index].Tansform.GetLocation(), TargetLocation);
 		
-		if (Dist < Min)
+		// 임시값 사용
+		if (Dist < 500.f)
 		{
-			Min = Dist;
-			NearestNodeIndex = Index;
+			NearestNodes.Add(Index);
 		}
 	}
-
-	return NearestNodeIndex;
+	
+	int32 RandIndex = FMath::RandRange(0, NearestNodes.Num() - 1);
+	
+	return NearestNodes[RandIndex];
 }
 
 bool URPathFinder::Dijkstra(int32 StartIndex, int32 EndIndex, TArray<int32>& RoutePathIndex)
 {
+	// 0~1 사이의 값 추출 *0.3하면 0~0.3 값을 가질 수 있음.
+	float RightWeight = FMath::FRand() < RandomWeight ? 0.7f : -0.7f;
+
 	RoutePathIndex.Empty();
 	RoutePathIndex.Init(-1, Locations.Num());
-		
+
 	//Dijksta Algorithm
 	TArray<double> Distance;
 	TArray<FRPathEdge> OpenList;
-	
+
 	Distance.Init(DBL_MAX, Locations.Num());
-	
-	OpenList.HeapPush({StartIndex, 0.f},FRNodeComparator());
+
+	OpenList.HeapPush({StartIndex, 0.f, FVector::ForwardVector}, FRNodeComparator());
 	Distance[StartIndex] = 0.f;
-	
+
 	while (false == OpenList.IsEmpty())
 	{
 		FRPathEdge CurrentNode;
-		OpenList.HeapPop(CurrentNode,FRNodeComparator());
-		
+		OpenList.HeapPop(CurrentNode, FRNodeComparator());
+
 		// 이전에 저장된 값보다 현재 따로 저장한 값이 크면, 아래를 진행할 필요가 없음
 		if (Distance[CurrentNode.Index] < CurrentNode.Cost)
 		{
 			continue;
 		}
-		
+
 		if (CurrentNode.Index == EndIndex)
 		{
 			break;
 		}
-		
+
 		for (int32 Index = 0; Index < GraphNode.AdjacencyList[CurrentNode.Index].Edges.Num(); Index++)
 		{
 			const FRPathEdge& NextEdge = GraphNode.AdjacencyList[CurrentNode.Index].Edges[Index]; // 실제 이웃 노드
-			float NewCost = CurrentNode.Cost + NextEdge.Cost;
-			
+
+			FVector NextDir = (Locations[NextEdge.Index].Tansform.GetLocation() - Locations[CurrentNode.Index].Tansform.
+				GetLocation()).GetSafeNormal();
+
+			FVector Cross = FVector::CrossProduct(CurrentNode.CurrentForward, NextDir);
+			// 왼손 좌표계로, 음수일때 오른쪽을 의미함.
+			// 좌측일 수록 양수
+			// Z축이 클수록 90도에 가까움. 
+			float RightBias = FMath::Clamp(-Cross.Z, -1.f, 1.0f);
+
+			// 비율을 가중치로 두면, 거리 상관 없이 30프로 비용 차감
+			float NewCost = (CurrentNode.Cost + NextEdge.Cost) - (RightBias * NextEdge.Cost * RightWeight);
+
 			if (Distance[NextEdge.Index] > NewCost)
 			{
 				RoutePathIndex[NextEdge.Index] = CurrentNode.Index;
 				Distance[NextEdge.Index] = NewCost;
-				OpenList.HeapPush({NextEdge.Index, NewCost}, FRNodeComparator());
+				OpenList.HeapPush({NextEdge.Index, NewCost, NextDir}, FRNodeComparator());
 			}
 		}
 	}
-	
+
 	// 포함되어있지 않으면, 실패한 경우
 	if (RoutePathIndex[EndIndex] == -1 && EndIndex != StartIndex)
 	{
@@ -132,19 +148,9 @@ bool URPathFinder::Dijkstra(int32 StartIndex, int32 EndIndex, TArray<int32>& Rou
 	return true;
 }
 
-TArray<FVector> URPathFinder::FindPath(const FVector& StartLocation, const FVector& Destination)
-{
-	// 위치를 전달하기 때문에 가장 가까운 노드를 찾아야 다익스트라 알고리즘이 작동 가능하다.
-	// 아래 코드는 현재 노드 중에 가장 가까운 노드를 찾는 알고리즘이다.
-	int32 StartIndex = GetNearestNodeIndex(StartLocation);
-	int32 EndIndex = GetNearestNodeIndex(Destination);
-
-	return FindPath(StartIndex, EndIndex);
-}
-
 TArray<FVector> URPathFinder::FindPath(const int32& StartIndex, const int32& DestinationIndex)
 {
-	const FRRoutePointContainer* RoutePointContainer = TypedPatrolPoints.Find(ERPathPointType::Destination);
+	const FRRoutePointContainer* RoutePointContainer = TypedPoints.Find(ERPathPointType::Destination);
 
 	if (nullptr == RoutePointContainer)
 	{
@@ -157,16 +163,17 @@ TArray<FVector> URPathFinder::FindPath(const int32& StartIndex, const int32& Des
 	}
 	
 	int EndIndex = RoutePointContainer->PointIndex[DestinationIndex];
-	
 	return FindPath_Internal(StartIndex, EndIndex);
 }
 
 TArray<FVector> URPathFinder::FindPath_Internal(const int32& StartIndex, const int32& EndIndex)
 {
 	TArray<int32> RoutePathIndex;
-	bool bResult = Dijkstra(StartIndex, EndIndex, RoutePathIndex);
-
-	if (false == bResult)
+	
+	// Dijkstra 알고리즘을 진행한다.
+	bool PathResult = Dijkstra(StartIndex, EndIndex, RoutePathIndex);
+	
+	if (false == PathResult)
 	{
 		return TArray<FVector>();
 	}
@@ -184,8 +191,8 @@ TArray<FVector> URPathFinder::FindPath_Internal(const int32& StartIndex, const i
 		
 		UNavigationPath* NavPath = NavigationSystem->FindPathToLocationSynchronously(
 			this,
-			Locations[Index],
-			Locations[PrevIndex]
+			Locations[Index].Tansform.GetLocation(),
+			Locations[PrevIndex].Tansform.GetLocation()
 		);
 		
 		if (IsValid(NavPath))
@@ -196,7 +203,7 @@ TArray<FVector> URPathFinder::FindPath_Internal(const int32& StartIndex, const i
 		Index = PrevIndex;	
 	}
 	
-	RoutePoints.Add(Locations[Index]);
+	RoutePoints.Add(Locations[Index].Tansform.GetLocation());
 	
 	Algo::Reverse(RoutePoints);
 	
@@ -218,7 +225,7 @@ TArray<FVector> URPathFinder::FindPath_Circuit(const FVector& StartLocation)
 	
 	int32 PrevIndex = StartIndex;
 	// Direction과 가장 일치하는 방향으로 이동한다.
-	FVector NextLocation = Locations[RealDirIndex];
+	FVector NextLocation = Locations[RealDirIndex].Tansform.GetLocation();
 	FVector Direction = (NextLocation- StartLocation).GetSafeNormal();
 	
 	Path.Add(NextLocation);
@@ -241,7 +248,7 @@ TArray<FVector> URPathFinder::FindPath_Circuit(const FVector& StartLocation)
 				continue;
 			}
 			
-			FVector CandidateLocation  = Locations[CandidateIndex];
+			FVector CandidateLocation  = Locations[CandidateIndex].Tansform.GetLocation();
 			FVector NextDir = (CandidateLocation - Path.Last()).GetSafeNormal();
 			// Direction과 가장 일치하는 방향으로 이동한다.
 			float Result = FVector::DotProduct(Direction, NextDir);
@@ -268,9 +275,10 @@ TArray<FVector> URPathFinder::FindPath_Circuit(const FVector& StartLocation)
 	return Path;
 }
 
+
 int32 URPathFinder::PickDestination()
 {
-	FRRoutePointContainer* RoutePointContainer = TypedPatrolPoints.Find(ERPathPointType::Destination);
+	FRRoutePointContainer* RoutePointContainer = TypedPoints.Find(ERPathPointType::Destination);
 
 	if (nullptr == RoutePointContainer)
 	{

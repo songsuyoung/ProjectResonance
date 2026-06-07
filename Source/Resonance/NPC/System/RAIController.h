@@ -15,6 +15,9 @@ public:
 	
 protected:
 	
+	virtual void OnPossess(APawn* InPawn) override;
+protected:
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStateTreeAIComponent> StateTreeComponent;
 };

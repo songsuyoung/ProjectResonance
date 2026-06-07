@@ -18,7 +18,7 @@ public:
 
 	virtual void Interact(AActor* OtherActor);
 	
-	virtual FRTransformData GetSerializedData() const override;
+	virtual FRPointData GetSerializedData() const override;
 	virtual ERBakeType GetBakeType() const override;
 	
 protected:

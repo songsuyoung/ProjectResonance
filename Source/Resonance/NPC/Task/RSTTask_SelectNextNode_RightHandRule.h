@@ -15,9 +15,10 @@ public:
 	
 	bool operator()(const TPair<int32, double> RouteA, const TPair<int32, double> RouteB) const
 	{
-		return RouteA < RouteB;
+		return RouteA.Value < RouteB.Value;
 	}
 };
+
 UCLASS()
 class RESONANCE_API URSTTask_SelectNextNode_RightHandRule : public UStateTreeTaskBlueprintBase
 {

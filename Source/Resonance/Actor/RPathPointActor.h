@@ -14,7 +14,7 @@ class RESONANCE_API ARPathPointActor : public AActor, public IRBakeable
 public:	
 	ARPathPointActor();
 
-	virtual FRTransformData GetSerializedData() const override;
+	virtual FRPointData GetSerializedData() const override;
 	virtual ERBakeType GetBakeType() const;
 protected:
 	

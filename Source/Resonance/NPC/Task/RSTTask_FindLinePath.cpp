@@ -20,6 +20,7 @@ EStateTreeRunStatus URSTTask_FindLinePath::EnterState(FStateTreeExecutionContext
 	
 	// 시작점과 끝점을 랜덤으로 정한다.
 	int32 NearestPointIndex = PathFinder->GetNearestNodeIndex(OwnerCharacter->GetActorLocation());
+	
 	int32 DestinationPointIndex = PathFinder->PickDestination();
 	
 	TArray<FVector> Locations = PathFinder->FindPath(NearestPointIndex, DestinationPointIndex);

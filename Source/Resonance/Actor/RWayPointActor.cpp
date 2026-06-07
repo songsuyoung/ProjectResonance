@@ -22,7 +22,7 @@ void ARWayPointActor::Interact(AActor* OtherActor)
 	
 	ensure(WayPointManager);
 	
-	FRTransformData WayPoint;
+	FRPointData WayPoint;
 	bool bResult = WayPointManager->GetRandomTransformData(ERBakeType::WarpPoint, WayPoint);
 	
 	if (false == bResult)
@@ -34,9 +34,9 @@ void ARWayPointActor::Interact(AActor* OtherActor)
 	OtherActor->TeleportTo(WayPoint.Tansform.GetLocation(), WayPoint.Tansform.GetRotation().Rotator());
 }
 
-FRTransformData ARWayPointActor::GetSerializedData() const
+FRPointData ARWayPointActor::GetSerializedData() const
 {
-	return FRTransformData(ERPathPointType::Waypoint, GetActorTransform());
+	return FRPointData(ERPathPointType::Waypoint, GetActorTransform());
 }
 
 ERBakeType ARWayPointActor::GetBakeType() const

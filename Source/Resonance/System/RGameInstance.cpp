@@ -3,6 +3,7 @@
 // Newly Created File Names ..
 #include "System/RPathFinder.h"
 #include "RBakeDataManager.h"
+#include "RNPCSpawnManager.h"
 #include "System/RDataManager.h"
 #include "System/REventManager.h"
 
@@ -32,5 +33,12 @@ void URGameInstance::Init()
 	if (IsValid(PathFinder))
 	{
 		PathFinder->Initialize();
+	}
+	
+	NPCSpawnManager = NewObject<URNPCSpawnManager>(this, NPCSpawnManagerClass);
+	
+	if (IsValid(NPCSpawnManager))
+	{
+		NPCSpawnManager->Initialize();
 	}
 }

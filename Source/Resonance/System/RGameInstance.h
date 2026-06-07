@@ -6,6 +6,7 @@
 
 class URDataManager;
 class URUIManagerBase;
+class URNPCSpawnManager;
 class URBakeDataManager;
 class UREventManager;
 class URPathFinder;
@@ -24,10 +25,18 @@ public:
 	// 정적으로 구워진 데이터
 	URBakeDataManager* GetBakeDataManager() { return BakeDataManager; }
 	URPathFinder* GetPathFinder() { return PathFinder; }	
+	
+	URNPCSpawnManager* GetNPCSpawnManager() { return NPCSpawnManager; }
+	
+protected:
+	
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "AssetClass")
 	TSubclassOf<URDataManager> DataManagerClass;
+
+	UPROPERTY(EditAnywhere, Category = "AssetClass")
+	TSubclassOf<URNPCSpawnManager> NPCSpawnManagerClass;
 
 protected:
 
@@ -39,6 +48,9 @@ protected:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UREventManager> EventManager;
+	
+	UPROPERTY(Transient)
+	TObjectPtr<URNPCSpawnManager> NPCSpawnManager;
 
 	UPROPERTY(Transient)
 	TObjectPtr<URBakeDataManager> BakeDataManager;

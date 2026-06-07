@@ -6,7 +6,7 @@ enum class ERBakeType : uint8;
 enum class ERPathPointType : uint8;
 
 USTRUCT()
-struct RESONANCECORE_API FRTransformData
+struct RESONANCECORE_API FRPointData
 {
 	GENERATED_BODY()
 public:
@@ -25,7 +25,7 @@ struct RESONANCECORE_API FRTransformDataArray
 public:
 	
 	UPROPERTY()
-	TArray<FRTransformData> TransformData;
+	TArray<FRPointData> TransformData;
 };
 
 USTRUCT()
@@ -48,6 +48,9 @@ public:
 
 	UPROPERTY()
 	double Cost = 0.0;
+	
+	UPROPERTY()
+	FVector CurrentForward = FVector::ForwardVector;
 };
 
 USTRUCT()

@@ -18,7 +18,7 @@ URBakeDataManager* URBakeDataManager::Get(UObject* Object)
     return GameInstance->GetBakeDataManager();
 }
 
-bool URBakeDataManager::GetRandomTransformData(ERBakeType BakeType, FRTransformData& OutData) const
+bool URBakeDataManager::GetRandomTransformData(ERBakeType BakeType, FRPointData& OutData) const
 {
     if (false == BakeDataGroup.BakeDataMap.Contains(BakeType))
     {
@@ -32,7 +32,7 @@ bool URBakeDataManager::GetRandomTransformData(ERBakeType BakeType, FRTransformD
     return true;
 }
 
-bool URBakeDataManager::GetTransformData(ERBakeType BakeType, TArray<FRTransformData>& OutData) const
+bool URBakeDataManager::GetTransformData(ERBakeType BakeType, TArray<FRPointData>& OutData) const
 {
     if (false == BakeDataGroup.BakeDataMap.Contains(BakeType))
     {
@@ -46,7 +46,7 @@ bool URBakeDataManager::GetTransformData(ERBakeType BakeType, TArray<FRTransform
 
 bool URBakeDataManager::GetLocationData(ERBakeType BakeType, TArray<FVector>& OutData) const
 {
-    TArray<FRTransformData> TempTransformData;
+    TArray<FRPointData> TempTransformData;
     if (false == GetTransformData(BakeType, TempTransformData))
     {
         return false;

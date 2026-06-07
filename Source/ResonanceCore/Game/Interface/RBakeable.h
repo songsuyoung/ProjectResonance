@@ -6,7 +6,7 @@
 #include "RBakeable.generated.h"
 
 enum class ERBakeType : uint8;
-struct FRTransformData;
+struct FRPointData;
 
 UINTERFACE()
 class RESONANCECORE_API URBakeable : public UInterface
@@ -20,6 +20,6 @@ class RESONANCECORE_API IRBakeable
 
 public:
 	
-	virtual FRTransformData GetSerializedData() const = 0;
+	virtual FRPointData GetSerializedData() const = 0;
 	virtual ERBakeType GetBakeType() const = 0;
 };

@@ -84,7 +84,7 @@ EStateTreeRunStatus URSTTask_MoveToSpline::Tick(FStateTreeExecutionContext& Cont
 {
 	// 데이터에 따라 진행한다.
 	if (CurrentSplineIndex >= SplinePoints.Num())
-	{
+	{	
 		return EStateTreeRunStatus::Succeeded;
 	}
 

@@ -14,19 +14,20 @@ URSTTask_SelectNextNode_RightHandRule::URSTTask_SelectNextNode_RightHandRule(con
 
 EStateTreeRunStatus URSTTask_SelectNextNode_RightHandRule::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
 {
+	/*
 	URPathFinder* PathFinder = URPathFinder::Get(this);
 
 	check(PathFinder);
 	
 	// 현재 액터 위치를 가져온다.
-	const TArray<FVector>& Locations = PathFinder->GetPathPoints();
+	const TArray<FRPointData>& Locations = PathFinder->GetPathPoints();
 
 	TArray<TPair<int32, FVector>> NearestLocations;
 	// 현재 액터에게 가까운 노드들을 가져온다.
 	for (int32 Index = 0; Index < Locations.Num(); Index++)
 	{
 		//가장 가까운 노드들 평가
-		float Distance = FVector::Dist(Locations[Index], OwnerCharacter->GetActorLocation());
+		float Distance = FVector::Dist(Locations[Index].Tansform, OwnerCharacter->GetActorLocation());
 
 		if (Distance < NearbyRadius)
 		{
@@ -72,6 +73,7 @@ EStateTreeRunStatus URSTTask_SelectNextNode_RightHandRule::EnterState(FStateTree
 		SelectedIndex = MaxCostNode.Key;
 	}
 	DrawDebugSphere(GetWorld(), Locations[SelectedIndex], 20.f, 8, FColor::Cyan, false, 2.f);
+	*/
 	
 	return Super::EnterState(Context, Transition);
 }

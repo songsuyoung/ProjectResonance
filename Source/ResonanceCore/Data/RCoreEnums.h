@@ -17,4 +17,6 @@ enum class ERPathPointType : uint8
 	Waypoint,    // 경유지
 	Walk,        // 걷는 구간
 	Run,         // 뛰는 구간
+	RightPathOn, // 우측 경로 시작
+	RightPathOff, // 우측 경로 끝 -> 원래 길찾기 복귀
 };

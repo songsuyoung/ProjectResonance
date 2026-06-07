@@ -4,7 +4,7 @@
 #include "Data/RCoreStructs.h"
 #include "RBakeDataManager.generated.h"
 
-struct FRTransformData;
+struct FRPointData;
 enum class ERBakeType : uint8;
 
 UCLASS()
@@ -15,8 +15,8 @@ class RESONANCE_API URBakeDataManager : public UObject
 public:
 	static URBakeDataManager* Get(UObject* Context);
 	const FRBakeDataGroup& GetBakeDataGroup() { return BakeDataGroup; }
-	bool GetRandomTransformData(ERBakeType BakeType, FRTransformData& OutData) const;
-	bool GetTransformData(ERBakeType BakeType, TArray<FRTransformData>& OutData) const;
+	bool GetRandomTransformData(ERBakeType BakeType, FRPointData& OutData) const;
+	bool GetTransformData(ERBakeType BakeType, TArray<FRPointData>& OutData) const;
 	bool GetLocationData(ERBakeType BakeType, TArray<FVector>& OutData) const;
 	
 	void Initialize();
