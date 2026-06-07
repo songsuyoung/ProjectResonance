@@ -74,9 +74,12 @@ int32 URPathFinder::GetNearestNodeIndex(const FVector& TargetLocation)
 			NearestNodes.Add(Index);
 		}
 	}
-	
+	if (true == NearestNodes.IsEmpty())
+	{
+		return INDEX_NONE;
+	}
+
 	int32 RandIndex = FMath::RandRange(0, NearestNodes.Num() - 1);
-	
 	return NearestNodes[RandIndex];
 }
 
@@ -215,7 +218,12 @@ TArray<FVector> URPathFinder::FindPath_Circuit(const FVector& StartLocation)
 	TArray<FVector> Path;
 	// 가장 가까운 노드 인덱스를 가져온다.
 	int32 StartIndex = GetNearestNodeIndex(StartLocation);
-
+	
+	if (StartIndex ==  INDEX_NONE)
+	{
+		return TArray<FVector>();
+	}	
+	
 	int32 NextIndex = FMath::RandRange(0, GraphNode.AdjacencyList[StartIndex].Edges.Num() - 1);
 	int32 RealDirIndex = GraphNode.AdjacencyList[StartIndex].Edges[NextIndex].Index; //실제 인덱스가 저장되어있음
 	if (false == Locations.IsValidIndex(RealDirIndex))
@@ -285,6 +293,11 @@ int32 URPathFinder::PickDestination()
 		return -1;	
 	}
 
+	if (RoutePointContainer->PointIndex.IsEmpty())
+	{
+		return INDEX_NONE;
+	}
+	
 	int LastIndex = RoutePointContainer->PointIndex.Num();
 
 	return FMath::RandRange(0, LastIndex - 1);

@@ -328,6 +328,56 @@
 							"z": 1
 						}
 					}
+				},
+				{
+					"pathPointType": "Spawn",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 600,
+							"y": 1990,
+							"z": 0.062600000000000003
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Destination",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 2510,
+							"y": 320,
+							"z": 10
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
 				}
 			]
 		}

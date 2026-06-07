@@ -22,6 +22,10 @@ EStateTreeRunStatus URSTTask_FindLinePath::EnterState(FStateTreeExecutionContext
 	int32 NearestPointIndex = PathFinder->GetNearestNodeIndex(OwnerCharacter->GetActorLocation());
 	
 	int32 DestinationPointIndex = PathFinder->PickDestination();
+	if (NearestPointIndex ==  INDEX_NONE || DestinationPointIndex ==  INDEX_NONE)
+	{
+		return EStateTreeRunStatus::Failed;
+	}	
 	
 	TArray<FVector> Locations = PathFinder->FindPath(NearestPointIndex, DestinationPointIndex);
 	// 데이터 전달용으로 시작점과 끝점의 위치를 담는다.
