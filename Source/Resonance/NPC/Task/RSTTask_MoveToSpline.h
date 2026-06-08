@@ -40,11 +40,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
 	float SlowDownRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
+	float LookAhead;
 	
-protected:
-	UPROPERTY(Transient)
-	TArray<FSplinePoint> SplinePoints;
-	
-	UPROPERTY(Transient)
-	int32 CurrentSplineIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
+	uint8 bDebugDraw : 1;
 };

@@ -39,8 +39,6 @@ EStateTreeRunStatus URSTTask_MoveToSpline::EnterState(FStateTreeExecutionContext
 	}
 	
 	// 초기화
-	SplinePoints.Empty();
-	CurrentSplineIndex = 0;
 	SplineComponent = OwnerCharacter->GetSplineComponent();
 
 	if (false == SplineComponent.IsValid())
@@ -48,33 +46,36 @@ EStateTreeRunStatus URSTTask_MoveToSpline::EnterState(FStateTreeExecutionContext
 		return EStateTreeRunStatus::Failed;
 	}
 	
+	SplineComponent->ClearSplinePoints();
+	
 	const FRPathRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPathRoutePayload>();
-	
 	SplineComponent->SetSplinePoints(Payload.PathLocation, ESplineCoordinateSpace::World);
-	
-	// SplineComponent로부터 가져온다.
-	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); Index++)
+	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); ++Index)
 	{
-		SplinePoints.Add(SplineComponent->GetSplinePointAt(Index, ESplineCoordinateSpace::World));
+		SplineComponent->SetSplinePointType(Index, ESplinePointType::Curve, false);
 	}
+	SplineComponent->UpdateSpline();
 	
-	const int32 SampleCount = 100; // 촘촘할수록 곡선처럼 보임
-	const float TotalLength = SplineComponent->GetSplineLength();
-	const float Step = TotalLength / SampleCount;
-
-	for (int32 Index = 0; Index < SampleCount; Index++)
+	if (bDebugDraw)
 	{
-		FVector Start = SplineComponent->GetLocationAtDistanceAlongSpline(Step * Index, ESplineCoordinateSpace::World);
-		FVector End = SplineComponent->GetLocationAtDistanceAlongSpline(Step * (Index + 1), ESplineCoordinateSpace::World);
+		const int32 SampleCount = 100; // 촘촘할수록 곡선처럼 보임
+		const float TotalLength = SplineComponent->GetSplineLength();
+		const float Step = TotalLength / SampleCount;
 
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 10.f, 0, 2.f);
-	}
+		for (int32 Index = 0; Index < SampleCount; Index++)
+		{
+			FVector Start = SplineComponent->GetLocationAtDistanceAlongSpline(Step * Index, ESplineCoordinateSpace::World);
+			FVector End = SplineComponent->GetLocationAtDistanceAlongSpline(Step * (Index + 1), ESplineCoordinateSpace::World);
 
-	// 포인트 위치도 같이 표시
-	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); Index++)
-	{
-		FVector PointLocation = SplineComponent->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
-		DrawDebugSphere(GetWorld(), PointLocation, 20.f, 8, FColor::Green, false, 10.f);
+			DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 10.f, 0, 2.f);
+		}
+
+		// 포인트 위치도 같이 표시
+		for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); Index++)
+		{
+			FVector PointLocation = SplineComponent->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+			DrawDebugSphere(GetWorld(), PointLocation, 20.f, 8, FColor::Green, false, 10.f);
+		}	
 	}
 	
 	return EStateTreeRunStatus::Running;
@@ -82,41 +83,42 @@ EStateTreeRunStatus URSTTask_MoveToSpline::EnterState(FStateTreeExecutionContext
 
 EStateTreeRunStatus URSTTask_MoveToSpline::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
-	// 데이터에 따라 진행한다.
-	if (CurrentSplineIndex >= SplinePoints.Num())
-	{	
-		return EStateTreeRunStatus::Succeeded;
+	if (false == SplineComponent.IsValid())
+	{
+		return EStateTreeRunStatus::Failed;
 	}
 
 	FVector CurrentLocation = OwnerCharacter->GetActorLocation();
-	FVector TargetLocation  = SplinePoints[CurrentSplineIndex].Position;
-	TargetLocation.Z = CurrentLocation.Z; // Z 고정
+	const float SplineLength = SplineComponent->GetSplineLength();
+
+	// 현재 위치를 스플라인 위의 거리로 투영
+	float CurrentDistance = SplineComponent->GetDistanceAlongSplineAtLocation(CurrentLocation, ESplineCoordinateSpace::World);
+
+	// 종료 판정: 스플라인 끝 도달
+	float RemainingDistance = SplineLength - CurrentDistance;
+	if (RemainingDistance < AcceptableRadius)
+	{
+		return EStateTreeRunStatus::Succeeded;
+	}
+
+	// 현재 위치에서 Nm 앞에 있는 지점 까지 간다.
+	// Min인 이유는 SplineLength의 길이를 넘으면 안되기 때문임.
+	// 꼭지점이 아니라, 미래에 거리를 기반으로 곡선을 부드럽게 추정
+	float TargetDistance = FMath::Min(CurrentDistance + LookAhead, SplineLength);
+	FVector TargetLocation = SplineComponent->GetLocationAtDistanceAlongSpline(TargetDistance, ESplineCoordinateSpace::World);
+	TargetLocation.Z = CurrentLocation.Z;
 
 	// 방향 계산
 	FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
 
-	// Rotation 변경
+	// 회전
 	FRotator TargetRotation = Direction.Rotation();
-	OwnerCharacter->SetActorRotation(
-		FMath::RInterpTo(OwnerCharacter->GetActorRotation(), TargetRotation, DeltaTime, 10.f)
-	);
+	OwnerCharacter->SetActorRotation(FMath::RInterpTo(OwnerCharacter->GetActorRotation(), TargetRotation, DeltaTime, 10.f));
 	
-	float RemainingDistance = FVector::Dist2D(CurrentLocation, TargetLocation);
-	// 거리를 SlowDownRadius씩 나눈다.
-	float ScaleValue = 1.0f;
-	
-	// 거의 끝에 도달하면 속도를 줄여야한다.
-	if (CurrentSplineIndex >= SplinePoints.Num() - 1)
-	{
-		ScaleValue = FMath::Clamp(RemainingDistance/SlowDownRadius, 0.f,1.0f);
-	}
-	
+	// 감속 코드
+	float ScaleValue = FMath::Clamp(RemainingDistance / SlowDownRadius, 0.f, 1.0f);
+
 	OwnerCharacter->AddMovementInput(Direction, ScaleValue);
 
-	if (RemainingDistance < AcceptableRadius)
-	{
-		++CurrentSplineIndex;
-	}
-	
 	return EStateTreeRunStatus::Running;
 }

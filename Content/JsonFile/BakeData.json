@@ -5,7 +5,7 @@
 		{
 			"transformData": [
 				{
-					"pathPointType": "Waypoint",
+					"pathPointType": "Spawn",
 					"tansform":
 					{
 						"rotation":
@@ -17,9 +17,9 @@
 						},
 						"translation":
 						{
-							"x": 780,
-							"y": 1300,
-							"z": 0
+							"x": -3190,
+							"y": -400,
+							"z": 40.000130517575599
 						},
 						"scale3D":
 						{
@@ -42,9 +42,9 @@
 						},
 						"translation":
 						{
-							"x": 2610,
-							"y": 1090,
-							"z": 0
+							"x": -3030,
+							"y": -110,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -67,9 +67,9 @@
 						},
 						"translation":
 						{
-							"x": 1250,
-							"y": 1010,
-							"z": 0
+							"x": -3030,
+							"y": 200,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -92,9 +92,9 @@
 						},
 						"translation":
 						{
-							"x": 1720,
-							"y": 1300,
-							"z": 0
+							"x": -2840,
+							"y": 600,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -117,9 +117,9 @@
 						},
 						"translation":
 						{
-							"x": 1250,
-							"y": 1300,
-							"z": 0
+							"x": -2620,
+							"y": 850,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -142,9 +142,9 @@
 						},
 						"translation":
 						{
-							"x": 1990,
-							"y": 1150,
-							"z": 0
+							"x": -2620,
+							"y": 1160,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -167,9 +167,9 @@
 						},
 						"translation":
 						{
-							"x": 780,
-							"y": 1010,
-							"z": 0
+							"x": -2620,
+							"y": 1500,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -192,9 +192,434 @@
 						},
 						"translation":
 						{
-							"x": 1720,
-							"y": 1000,
-							"z": 0
+							"x": -2670,
+							"y": 1860,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -2320,
+							"y": 2130,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -2030,
+							"y": 2130,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -1650,
+							"y": 2130,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -1270,
+							"y": 2130,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -880,
+							"y": 2130,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -520,
+							"y": 2130,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -260,
+							"y": 2030,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -320,
+							"y": 1630,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -360,
+							"y": 1220,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -360,
+							"y": 820,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -30,
+							"y": 650,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -30,
+							"y": 950,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 360,
+							"y": 950,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 720,
+							"y": 950,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 360,
+							"y": 660,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 730,
+							"y": 650,
+							"z": 40
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Waypoint",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": 1040,
+							"y": 790,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -217,9 +642,9 @@
 						},
 						"translation":
 						{
-							"x": 440,
-							"y": 2010,
-							"z": 10
+							"x": 1380,
+							"y": 380,
+							"z": 40
 						},
 						"scale3D":
 						{
@@ -242,9 +667,9 @@
 						},
 						"translation":
 						{
-							"x": 2610,
-							"y": 750,
-							"z": 0
+							"x": 1300,
+							"y": 710,
+							"z": 40.000161035153724
 						},
 						"scale3D":
 						{
@@ -267,59 +692,9 @@
 						},
 						"translation":
 						{
-							"x": 2700,
-							"y": 350,
-							"z": 0.062600000000000003
-						},
-						"scale3D":
-						{
-							"x": 1,
-							"y": 1,
-							"z": 1
-						}
-					}
-				},
-				{
-					"pathPointType": "Waypoint",
-					"tansform":
-					{
-						"rotation":
-						{
-							"x": 0,
-							"y": 0,
-							"z": 0,
-							"w": 1
-						},
-						"translation":
-						{
-							"x": 2290,
-							"y": 1170,
-							"z": 0
-						},
-						"scale3D":
-						{
-							"x": 1,
-							"y": 1,
-							"z": 1
-						}
-					}
-				},
-				{
-					"pathPointType": "Waypoint",
-					"tansform":
-					{
-						"rotation":
-						{
-							"x": 0,
-							"y": 0,
-							"z": 0,
-							"w": 1
-						},
-						"translation":
-						{
-							"x": 610,
-							"y": 1670,
-							"z": 0
+							"x": -3120,
+							"y": -400,
+							"z": 40.000131000000003
 						},
 						"scale3D":
 						{
@@ -342,9 +717,9 @@
 						},
 						"translation":
 						{
-							"x": 600,
-							"y": 1990,
-							"z": 0.062600000000000003
+							"x": -3040,
+							"y": -400,
+							"z": 40.000131000000003
 						},
 						"scale3D":
 						{
@@ -355,7 +730,7 @@
 					}
 				},
 				{
-					"pathPointType": "Destination",
+					"pathPointType": "Spawn",
 					"tansform":
 					{
 						"rotation":
@@ -367,9 +742,34 @@
 						},
 						"translation":
 						{
-							"x": 2510,
-							"y": 320,
-							"z": 10
+							"x": -3270,
+							"y": -400,
+							"z": 40.000131000000003
+						},
+						"scale3D":
+						{
+							"x": 1,
+							"y": 1,
+							"z": 1
+						}
+					}
+				},
+				{
+					"pathPointType": "Spawn",
+					"tansform":
+					{
+						"rotation":
+						{
+							"x": 0,
+							"y": 0,
+							"z": 0,
+							"w": 1
+						},
+						"translation":
+						{
+							"x": -3340,
+							"y": -400,
+							"z": 40.000131000000003
 						},
 						"scale3D":
 						{
