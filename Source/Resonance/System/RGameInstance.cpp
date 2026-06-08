@@ -36,9 +36,4 @@ void URGameInstance::Init()
 	}
 	
 	NPCSpawnManager = NewObject<URNPCSpawnManager>(this, NPCSpawnManagerClass);
-	
-	if (IsValid(NPCSpawnManager))
-	{
-		NPCSpawnManager->Initialize();
-	}
 }

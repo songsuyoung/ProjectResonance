@@ -7,6 +7,7 @@ enum class ERDataTableType : uint8
 	None,
 	SkillData,
 	CharacterData,
+	RegionData,
 	Max,
 };
 

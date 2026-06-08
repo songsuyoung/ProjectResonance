@@ -18,14 +18,14 @@ public:
 
 	void Initialize();
 public:
-	// °Ë»ö ¿ëµµ
+	// ï¿½Ë»ï¿½ ï¿½ëµµ
 	TArray<UDataTable*> GetAllDataTable();
 
 	UDataTable* GetDataTable(const ERDataTableType& DataType);
 	UDataTable* GetDataTable(const FName& DataType);
 
 
-	// FTableRowBase¸¦ castÇÏÁö ¾Êµµ·Ï, ÅÛÇÃ¸´ ÇÔ¼ö Á¤ÀÇ ¿¹Á¤
+	// FTableRowBaseï¿½ï¿½ castï¿½ï¿½ï¿½ï¿½ ï¿½Êµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ã¸ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	template<typename T>
 	T* GetDataTableRow(const ERDataTableType& DataType, const FName& ID);
 
@@ -38,7 +38,7 @@ protected:
 
 protected:
 
-	// µ¿ÀûÀ¸·Î »ý¼º-> ºñµ¿±â·Î È£ÃâÇÏ¸é, GC¿¡ ÀÇÇØ È¸»çµÉ ¼ö ÀÖ´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½-> ï¿½ñµ¿±ï¿½ï¿½ È£ï¿½ï¿½ï¿½Ï¸ï¿½, GCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½.
 	UPROPERTY(EditAnywhere, Category = "DataTables")
 	TSoftObjectPtr<URDataAsset> DataAssetClass;
 
