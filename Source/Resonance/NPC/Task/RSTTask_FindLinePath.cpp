@@ -26,7 +26,7 @@ EStateTreeRunStatus URSTTask_FindLinePath::EnterState(FStateTreeExecutionContext
 	// 이 RegionID는 다음 목표지점으로 정하면 안된다!!!!!
 	FName RegionID = OwnerCharacter->ConsumeNextRegion();
 	
-	URRegionManager* RegionManager = URRegionManager::Get(this);
+ 	URRegionManager* RegionManager = URRegionManager::Get(this);
 	
 	check(RegionManager);
 	

@@ -99,7 +99,6 @@ EStateTreeRunStatus URSTTask_MoveToSpline::Tick(FStateTreeExecutionContext& Cont
 	float RemainingDistance = SplineLength - CurrentDistance;
 	if (RemainingDistance < AcceptableRadius)
 	{
-		OwnerCharacter->VisitRegion(NextRegionID);
 		return EStateTreeRunStatus::Succeeded;
 	}
 

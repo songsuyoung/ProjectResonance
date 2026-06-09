@@ -61,26 +61,23 @@ void URPathFinder::Initialize()
 
 int32 URPathFinder::GetNearestNodeIndex(const FVector& TargetLocation)
 {
-	// 우측 Bias값을 사용해서, 일부 랜덤으로 우측을 기준으로 좌측을 기준으로를 정하자.
-	TArray<int32> NearestNodes;
+	// 가장 가까운 노드를 선점한다.
+	float MaxDistance = MAX_FLT;
+	int32 TargetIndex = -1;
 	for (int32 Index = 0; Index < Locations.Num(); Index++)
 	{
 		// 현재 위치와 가장 가까운 위치를 찾는다.
 		float Dist = FVector::Dist(Locations[Index].Tansform.GetLocation(), TargetLocation);
 		
 		// 임시값 사용
-		if (Dist < 500.f)
+		if (Dist < MaxDistance)
 		{
-			NearestNodes.Add(Index);
+			MaxDistance = Dist;
+			TargetIndex = Index;
 		}
 	}
-	if (true == NearestNodes.IsEmpty())
-	{
-		return INDEX_NONE;
-	}
-
-	int32 RandIndex = FMath::RandRange(0, NearestNodes.Num() - 1);
-	return NearestNodes[RandIndex];
+	
+	return TargetIndex;
 }
 
 bool URPathFinder::Dijkstra(int32 StartIndex, int32 EndIndex, TArray<int32>& RoutePathIndex)

@@ -23,7 +23,7 @@ void ARRegionVolume::BeginPlay()
 
 void ARRegionVolume::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-	ARNPCCharacter* NPCCharacter = Cast<ARNPCCharacter>(OverlappedActor);
+	ARNPCCharacter* NPCCharacter = Cast<ARNPCCharacter>(OtherActor);
 	
 	if (IsValid(NPCCharacter))
 	{
