@@ -22,9 +22,6 @@ public:
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 
 protected:
-	
-	void Move(float DeltaTime);
-protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<AAIController> AIController;
@@ -46,4 +43,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
 	uint8 bDebugDraw : 1;
+	
+protected:
+	
+	UPROPERTY(Transient)
+	FName NextRegionID;
 };

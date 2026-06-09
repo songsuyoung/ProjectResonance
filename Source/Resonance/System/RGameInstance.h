@@ -7,6 +7,7 @@
 class URDataManager;
 class URUIManagerBase;
 class URNPCSpawnManager;
+class URRegionManager;
 class URBakeDataManager;
 class UREventManager;
 class URPathFinder;
@@ -26,8 +27,9 @@ public:
 	URBakeDataManager* GetBakeDataManager() { return BakeDataManager; }
 	URPathFinder* GetPathFinder() { return PathFinder; }	
 	
+	UFUNCTION(BlueprintCallable)
 	URNPCSpawnManager* GetNPCSpawnManager() { return NPCSpawnManager; }
-	
+	URRegionManager* GetRegionManager() { return RegionManager;}
 protected:
 	
 protected:
@@ -57,5 +59,7 @@ protected:
 	
 	UPROPERTY(Transient)
 	TObjectPtr<URUIManagerBase> UIManager;
-
+	
+	UPROPERTY(Transient)
+	TObjectPtr<URRegionManager> RegionManager;
 };

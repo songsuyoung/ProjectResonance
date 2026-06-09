@@ -4,40 +4,6 @@
 			"edges": [
 				{
 					"index": 1,
-					"cost": 331.20989990234375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 51,
-					"cost": 332.4154052734375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 0,
-					"cost": 331.20989990234375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 2,
 					"cost": 310,
 					"currentForward":
 					{
@@ -47,7 +13,7 @@
 					}
 				},
 				{
-					"index": 45,
+					"index": 44,
 					"cost": 423.79238891601562,
 					"currentForward":
 					{
@@ -57,7 +23,7 @@
 					}
 				},
 				{
-					"index": 51,
+					"index": 50,
 					"cost": 226.71568298339844,
 					"currentForward":
 					{
@@ -71,7 +37,7 @@
 		{
 			"edges": [
 				{
-					"index": 1,
+					"index": 0,
 					"cost": 310,
 					"currentForward":
 					{
@@ -81,7 +47,7 @@
 					}
 				},
 				{
-					"index": 3,
+					"index": 2,
 					"cost": 442.831787109375,
 					"currentForward":
 					{
@@ -91,7 +57,7 @@
 					}
 				},
 				{
-					"index": 45,
+					"index": 44,
 					"cost": 434.62628173828125,
 					"currentForward":
 					{
@@ -105,7 +71,7 @@
 		{
 			"edges": [
 				{
-					"index": 2,
+					"index": 1,
 					"cost": 442.831787109375,
 					"currentForward":
 					{
@@ -115,8 +81,32 @@
 					}
 				},
 				{
-					"index": 4,
+					"index": 3,
 					"cost": 333.01651000976562,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 2,
+					"cost": 333.01651000976562,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 4,
+					"cost": 310,
 					"currentForward":
 					{
 						"x": 1,
@@ -130,7 +120,7 @@
 			"edges": [
 				{
 					"index": 3,
-					"cost": 333.01651000976562,
+					"cost": 310,
 					"currentForward":
 					{
 						"x": 1,
@@ -140,7 +130,7 @@
 				},
 				{
 					"index": 5,
-					"cost": 310,
+					"cost": 340,
 					"currentForward":
 					{
 						"x": 1,
@@ -154,7 +144,7 @@
 			"edges": [
 				{
 					"index": 4,
-					"cost": 310,
+					"cost": 340,
 					"currentForward":
 					{
 						"x": 1,
@@ -164,7 +154,7 @@
 				},
 				{
 					"index": 6,
-					"cost": 340,
+					"cost": 363.45562744140625,
 					"currentForward":
 					{
 						"x": 1,
@@ -178,7 +168,7 @@
 			"edges": [
 				{
 					"index": 5,
-					"cost": 340,
+					"cost": 363.45562744140625,
 					"currentForward":
 					{
 						"x": 1,
@@ -188,30 +178,6 @@
 				},
 				{
 					"index": 7,
-					"cost": 363.45562744140625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 6,
-					"cost": 363.45562744140625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 8,
 					"cost": 442.04071044921875,
 					"currentForward":
 					{
@@ -221,7 +187,7 @@
 					}
 				},
 				{
-					"index": 58,
+					"index": 57,
 					"cost": 433.8201904296875,
 					"currentForward":
 					{
@@ -231,7 +197,7 @@
 					}
 				},
 				{
-					"index": 60,
+					"index": 59,
 					"cost": 350,
 					"currentForward":
 					{
@@ -245,7 +211,7 @@
 		{
 			"edges": [
 				{
-					"index": 7,
+					"index": 6,
 					"cost": 442.04071044921875,
 					"currentForward":
 					{
@@ -255,7 +221,7 @@
 					}
 				},
 				{
-					"index": 9,
+					"index": 8,
 					"cost": 290,
 					"currentForward":
 					{
@@ -265,7 +231,7 @@
 					}
 				},
 				{
-					"index": 60,
+					"index": 59,
 					"cost": 359.02645874023438,
 					"currentForward":
 					{
@@ -279,8 +245,32 @@
 		{
 			"edges": [
 				{
-					"index": 8,
+					"index": 7,
 					"cost": 290,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 9,
+					"cost": 380,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 8,
+					"cost": 380,
 					"currentForward":
 					{
 						"x": 1,
@@ -314,7 +304,7 @@
 				},
 				{
 					"index": 11,
-					"cost": 380,
+					"cost": 390,
 					"currentForward":
 					{
 						"x": 1,
@@ -328,7 +318,7 @@
 			"edges": [
 				{
 					"index": 10,
-					"cost": 380,
+					"cost": 390,
 					"currentForward":
 					{
 						"x": 1,
@@ -338,7 +328,7 @@
 				},
 				{
 					"index": 12,
-					"cost": 390,
+					"cost": 360,
 					"currentForward":
 					{
 						"x": 1,
@@ -352,7 +342,7 @@
 			"edges": [
 				{
 					"index": 11,
-					"cost": 390,
+					"cost": 360,
 					"currentForward":
 					{
 						"x": 1,
@@ -362,7 +352,7 @@
 				},
 				{
 					"index": 13,
-					"cost": 360,
+					"cost": 278.56777954101562,
 					"currentForward":
 					{
 						"x": 1,
@@ -376,7 +366,7 @@
 			"edges": [
 				{
 					"index": 12,
-					"cost": 360,
+					"cost": 278.56777954101562,
 					"currentForward":
 					{
 						"x": 1,
@@ -386,7 +376,7 @@
 				},
 				{
 					"index": 14,
-					"cost": 278.56777954101562,
+					"cost": 404.4749755859375,
 					"currentForward":
 					{
 						"x": 1,
@@ -400,7 +390,7 @@
 			"edges": [
 				{
 					"index": 13,
-					"cost": 278.56777954101562,
+					"cost": 404.4749755859375,
 					"currentForward":
 					{
 						"x": 1,
@@ -410,7 +400,7 @@
 				},
 				{
 					"index": 15,
-					"cost": 404.4749755859375,
+					"cost": 411.94659423828125,
 					"currentForward":
 					{
 						"x": 1,
@@ -424,7 +414,7 @@
 			"edges": [
 				{
 					"index": 14,
-					"cost": 404.4749755859375,
+					"cost": 411.94659423828125,
 					"currentForward":
 					{
 						"x": 1,
@@ -434,7 +424,7 @@
 				},
 				{
 					"index": 16,
-					"cost": 411.94659423828125,
+					"cost": 400,
 					"currentForward":
 					{
 						"x": 1,
@@ -448,7 +438,7 @@
 			"edges": [
 				{
 					"index": 15,
-					"cost": 411.94659423828125,
+					"cost": 400,
 					"currentForward":
 					{
 						"x": 1,
@@ -458,7 +448,17 @@
 				},
 				{
 					"index": 17,
-					"cost": 400,
+					"cost": 371.2142333984375,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 18,
+					"cost": 354.68295288085938,
 					"currentForward":
 					{
 						"x": 1,
@@ -472,7 +472,7 @@
 			"edges": [
 				{
 					"index": 16,
-					"cost": 400,
+					"cost": 371.2142333984375,
 					"currentForward":
 					{
 						"x": 1,
@@ -482,40 +482,6 @@
 				},
 				{
 					"index": 18,
-					"cost": 371.2142333984375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 19,
-					"cost": 354.68295288085938,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 17,
-					"cost": 371.2142333984375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 19,
 					"cost": 300,
 					"currentForward":
 					{
@@ -525,7 +491,7 @@
 					}
 				},
 				{
-					"index": 20,
+					"index": 19,
 					"cost": 492.03659057617188,
 					"currentForward":
 					{
@@ -535,7 +501,7 @@
 					}
 				},
 				{
-					"index": 22,
+					"index": 21,
 					"cost": 390.128173828125,
 					"currentForward":
 					{
@@ -549,7 +515,7 @@
 		{
 			"edges": [
 				{
-					"index": 17,
+					"index": 16,
 					"cost": 354.68295288085938,
 					"currentForward":
 					{
@@ -559,42 +525,8 @@
 					}
 				},
 				{
-					"index": 18,
+					"index": 17,
 					"cost": 300,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 20,
-					"cost": 390,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 22,
-					"cost": 486.00411987304688,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 18,
-					"cost": 492.03659057617188,
 					"currentForward":
 					{
 						"x": 1,
@@ -614,6 +546,40 @@
 				},
 				{
 					"index": 21,
+					"cost": 486.00411987304688,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 17,
+					"cost": 492.03659057617188,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 18,
+					"cost": 390,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 20,
 					"cost": 360,
 					"currentForward":
 					{
@@ -623,7 +589,7 @@
 					}
 				},
 				{
-					"index": 22,
+					"index": 21,
 					"cost": 290,
 					"currentForward":
 					{
@@ -633,7 +599,7 @@
 					}
 				},
 				{
-					"index": 23,
+					"index": 22,
 					"cost": 476.3402099609375,
 					"currentForward":
 					{
@@ -647,7 +613,7 @@
 		{
 			"edges": [
 				{
-					"index": 20,
+					"index": 19,
 					"cost": 360,
 					"currentForward":
 					{
@@ -657,7 +623,7 @@
 					}
 				},
 				{
-					"index": 22,
+					"index": 21,
 					"cost": 462.2769775390625,
 					"currentForward":
 					{
@@ -667,7 +633,7 @@
 					}
 				},
 				{
-					"index": 23,
+					"index": 22,
 					"cost": 300.1666259765625,
 					"currentForward":
 					{
@@ -677,7 +643,7 @@
 					}
 				},
 				{
-					"index": 24,
+					"index": 23,
 					"cost": 357.7708740234375,
 					"currentForward":
 					{
@@ -691,7 +657,7 @@
 		{
 			"edges": [
 				{
-					"index": 18,
+					"index": 17,
 					"cost": 390.128173828125,
 					"currentForward":
 					{
@@ -701,7 +667,7 @@
 					}
 				},
 				{
-					"index": 19,
+					"index": 18,
 					"cost": 486.00411987304688,
 					"currentForward":
 					{
@@ -711,7 +677,7 @@
 					}
 				},
 				{
-					"index": 20,
+					"index": 19,
 					"cost": 290,
 					"currentForward":
 					{
@@ -721,42 +687,8 @@
 					}
 				},
 				{
-					"index": 21,
-					"cost": 462.2769775390625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 23,
-					"cost": 370.13510131835938,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
 					"index": 20,
-					"cost": 476.3402099609375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 21,
-					"cost": 300.1666259765625,
+					"cost": 462.2769775390625,
 					"currentForward":
 					{
 						"x": 1,
@@ -773,24 +705,34 @@
 						"y": 0,
 						"z": 0
 					}
-				},
-				{
-					"index": 24,
-					"cost": 340.14703369140625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
 				}
 			]
 		},
 		{
 			"edges": [
 				{
+					"index": 19,
+					"cost": 476.3402099609375,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 20,
+					"cost": 300.1666259765625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
 					"index": 21,
-					"cost": 357.7708740234375,
+					"cost": 370.13510131835938,
 					"currentForward":
 					{
 						"x": 1,
@@ -807,9 +749,33 @@
 						"y": 0,
 						"z": 0
 					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 20,
+					"cost": 357.7708740234375,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
 				},
 				{
-					"index": 26,
+					"index": 22,
+					"cost": 340.14703369140625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 25,
 					"cost": 272.0294189453125,
 					"currentForward":
 					{
@@ -823,8 +789,56 @@
 		{
 			"edges": [
 				{
-					"index": 26,
+					"index": 25,
 					"cost": 339.55853271484375,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 26,
+					"cost": 362.21539306640625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 23,
+					"cost": 272.0294189453125,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 24,
+					"cost": 339.55853271484375,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 24,
+					"cost": 362.21539306640625,
 					"currentForward":
 					{
 						"x": 1,
@@ -834,7 +848,7 @@
 				},
 				{
 					"index": 27,
-					"cost": 362.21539306640625,
+					"cost": 400,
 					"currentForward":
 					{
 						"x": 1,
@@ -847,32 +861,8 @@
 		{
 			"edges": [
 				{
-					"index": 24,
-					"cost": 272.0294189453125,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 25,
-					"cost": 339.55853271484375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 25,
-					"cost": 362.21539306640625,
+					"index": 26,
+					"cost": 400,
 					"currentForward":
 					{
 						"x": 1,
@@ -882,7 +872,7 @@
 				},
 				{
 					"index": 28,
-					"cost": 400,
+					"cost": 296.81643676757812,
 					"currentForward":
 					{
 						"x": 1,
@@ -896,7 +886,7 @@
 			"edges": [
 				{
 					"index": 27,
-					"cost": 400,
+					"cost": 296.81643676757812,
 					"currentForward":
 					{
 						"x": 1,
@@ -906,30 +896,6 @@
 				},
 				{
 					"index": 29,
-					"cost": 296.81643676757812,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 28,
-					"cost": 296.81643676757812,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 30,
 					"cost": 444.07205200195312,
 					"currentForward":
 					{
@@ -939,7 +905,7 @@
 					}
 				},
 				{
-					"index": 37,
+					"index": 36,
 					"cost": 480.20828247070312,
 					"currentForward":
 					{
@@ -953,7 +919,7 @@
 		{
 			"edges": [
 				{
-					"index": 29,
+					"index": 28,
 					"cost": 444.07205200195312,
 					"currentForward":
 					{
@@ -963,7 +929,7 @@
 					}
 				},
 				{
-					"index": 31,
+					"index": 30,
 					"cost": 350,
 					"currentForward":
 					{
@@ -973,7 +939,7 @@
 					}
 				},
 				{
-					"index": 36,
+					"index": 35,
 					"cost": 460.10867309570312,
 					"currentForward":
 					{
@@ -983,7 +949,7 @@
 					}
 				},
 				{
-					"index": 37,
+					"index": 36,
 					"cost": 311.4482421875,
 					"currentForward":
 					{
@@ -997,7 +963,7 @@
 		{
 			"edges": [
 				{
-					"index": 30,
+					"index": 29,
 					"cost": 350,
 					"currentForward":
 					{
@@ -1007,7 +973,7 @@
 					}
 				},
 				{
-					"index": 32,
+					"index": 31,
 					"cost": 310,
 					"currentForward":
 					{
@@ -1017,7 +983,7 @@
 					}
 				},
 				{
-					"index": 35,
+					"index": 34,
 					"cost": 438.40621948242188,
 					"currentForward":
 					{
@@ -1027,7 +993,7 @@
 					}
 				},
 				{
-					"index": 36,
+					"index": 35,
 					"cost": 310.1612548828125,
 					"currentForward":
 					{
@@ -1037,7 +1003,7 @@
 					}
 				},
 				{
-					"index": 37,
+					"index": 36,
 					"cost": 490.40798950195312,
 					"currentForward":
 					{
@@ -1051,7 +1017,7 @@
 		{
 			"edges": [
 				{
-					"index": 31,
+					"index": 30,
 					"cost": 310,
 					"currentForward":
 					{
@@ -1061,7 +1027,7 @@
 					}
 				},
 				{
-					"index": 33,
+					"index": 32,
 					"cost": 330,
 					"currentForward":
 					{
@@ -1071,7 +1037,7 @@
 					}
 				},
 				{
-					"index": 34,
+					"index": 33,
 					"cost": 452.76925659179688,
 					"currentForward":
 					{
@@ -1081,7 +1047,7 @@
 					}
 				},
 				{
-					"index": 35,
+					"index": 34,
 					"cost": 310,
 					"currentForward":
 					{
@@ -1091,7 +1057,7 @@
 					}
 				},
 				{
-					"index": 36,
+					"index": 35,
 					"cost": 445.53338623046875,
 					"currentForward":
 					{
@@ -1105,7 +1071,7 @@
 		{
 			"edges": [
 				{
-					"index": 32,
+					"index": 31,
 					"cost": 330,
 					"currentForward":
 					{
@@ -1115,7 +1081,7 @@
 					}
 				},
 				{
-					"index": 34,
+					"index": 33,
 					"cost": 310,
 					"currentForward":
 					{
@@ -1125,8 +1091,18 @@
 					}
 				},
 				{
-					"index": 35,
+					"index": 34,
 					"cost": 452.76925659179688,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 37,
+					"cost": 438.63424682617188,
 					"currentForward":
 					{
 						"x": 1,
@@ -1136,16 +1112,6 @@
 				},
 				{
 					"index": 38,
-					"cost": 438.63424682617188,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 39,
 					"cost": 497.29266357421875,
 					"currentForward":
 					{
@@ -1159,42 +1125,8 @@
 		{
 			"edges": [
 				{
-					"index": 32,
-					"cost": 452.76925659179688,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 33,
-					"cost": 310,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 35,
-					"cost": 330,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
 					"index": 31,
-					"cost": 438.40621948242188,
+					"cost": 452.76925659179688,
 					"currentForward":
 					{
 						"x": 1,
@@ -1205,16 +1137,6 @@
 				{
 					"index": 32,
 					"cost": 310,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 33,
-					"cost": 452.76925659179688,
 					"currentForward":
 					{
 						"x": 1,
@@ -1231,16 +1153,6 @@
 						"y": 0,
 						"z": 0
 					}
-				},
-				{
-					"index": 36,
-					"cost": 320,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
 				}
 			]
 		},
@@ -1248,7 +1160,7 @@
 			"edges": [
 				{
 					"index": 30,
-					"cost": 460.10867309570312,
+					"cost": 438.40621948242188,
 					"currentForward":
 					{
 						"x": 1,
@@ -1258,7 +1170,7 @@
 				},
 				{
 					"index": 31,
-					"cost": 310.1612548828125,
+					"cost": 310,
 					"currentForward":
 					{
 						"x": 1,
@@ -1268,7 +1180,17 @@
 				},
 				{
 					"index": 32,
-					"cost": 445.53338623046875,
+					"cost": 452.76925659179688,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 33,
+					"cost": 330,
 					"currentForward":
 					{
 						"x": 1,
@@ -1285,16 +1207,6 @@
 						"y": 0,
 						"z": 0
 					}
-				},
-				{
-					"index": 37,
-					"cost": 370,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
 				}
 			]
 		},
@@ -1302,7 +1214,7 @@
 			"edges": [
 				{
 					"index": 29,
-					"cost": 480.20828247070312,
+					"cost": 460.10867309570312,
 					"currentForward":
 					{
 						"x": 1,
@@ -1312,7 +1224,7 @@
 				},
 				{
 					"index": 30,
-					"cost": 311.4482421875,
+					"cost": 310.1612548828125,
 					"currentForward":
 					{
 						"x": 1,
@@ -1322,7 +1234,17 @@
 				},
 				{
 					"index": 31,
-					"cost": 490.40798950195312,
+					"cost": 445.53338623046875,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 34,
+					"cost": 320,
 					"currentForward":
 					{
 						"x": 1,
@@ -1345,192 +1267,52 @@
 		{
 			"edges": [
 				{
-					"index": 33,
+					"index": 28,
+					"cost": 480.20828247070312,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 29,
+					"cost": 311.4482421875,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 30,
+					"cost": 490.40798950195312,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 35,
+					"cost": 370,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 32,
 					"cost": 438.63424682617188,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 46,
-					"cost": 380,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 33,
-					"cost": 497.29266357421875,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 40,
-					"cost": 233.23808288574219,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 39,
-					"cost": 233.23808288574219,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 41,
-					"cost": 410,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 40,
-					"cost": 410,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 42,
-					"cost": 410,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 47,
-					"cost": 322.49029541015625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 52,
-					"cost": 496.4876708984375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 41,
-					"cost": 410,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 43,
-					"cost": 350,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 47,
-					"cost": 206.15528869628906,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 52,
-					"cost": 430.11627197265625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 42,
-					"cost": 350,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 44,
-					"cost": 500,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 43,
-					"cost": 500,
 					"currentForward":
 					{
 						"x": 1,
@@ -1553,8 +1335,8 @@
 		{
 			"edges": [
 				{
-					"index": 1,
-					"cost": 423.79238891601562,
+					"index": 32,
+					"cost": 497.29266357421875,
 					"currentForward":
 					{
 						"x": 1,
@@ -1563,8 +1345,158 @@
 					}
 				},
 				{
-					"index": 2,
-					"cost": 434.62628173828125,
+					"index": 39,
+					"cost": 233.23808288574219,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 38,
+					"cost": 233.23808288574219,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 40,
+					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 39,
+					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 41,
+					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 46,
+					"cost": 322.49029541015625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 51,
+					"cost": 496.4876708984375,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 40,
+					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 42,
+					"cost": 350,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 46,
+					"cost": 206.15528869628906,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 51,
+					"cost": 430.11627197265625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 41,
+					"cost": 350,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 43,
+					"cost": 500,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 42,
+					"cost": 500,
 					"currentForward":
 					{
 						"x": 1,
@@ -1581,9 +1513,43 @@
 						"y": 0,
 						"z": 0
 					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 0,
+					"cost": 423.79238891601562,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
 				},
 				{
-					"index": 51,
+					"index": 1,
+					"cost": 434.62628173828125,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 43,
+					"cost": 380,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 50,
 					"cost": 398.24615478515625,
 					"currentForward":
 					{
@@ -1597,52 +1563,8 @@
 		{
 			"edges": [
 				{
-					"index": 38,
+					"index": 37,
 					"cost": 380,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 47,
-					"cost": 353.83612060546875,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 52,
-					"cost": 240.20823669433594,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 41,
-					"cost": 322.49029541015625,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 42,
-					"cost": 206.15528869628906,
 					"currentForward":
 					{
 						"x": 1,
@@ -1661,7 +1583,51 @@
 					}
 				},
 				{
-					"index": 48,
+					"index": 51,
+					"cost": 240.20823669433594,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 40,
+					"cost": 322.49029541015625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 41,
+					"cost": 206.15528869628906,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 45,
+					"cost": 353.83612060546875,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 47,
 					"cost": 381.83767700195312,
 					"currentForward":
 					{
@@ -1671,7 +1637,7 @@
 					}
 				},
 				{
-					"index": 52,
+					"index": 51,
 					"cost": 250,
 					"currentForward":
 					{
@@ -1685,7 +1651,7 @@
 		{
 			"edges": [
 				{
-					"index": 47,
+					"index": 46,
 					"cost": 381.83767700195312,
 					"currentForward":
 					{
@@ -1695,7 +1661,7 @@
 					}
 				},
 				{
-					"index": 49,
+					"index": 48,
 					"cost": 500,
 					"currentForward":
 					{
@@ -1705,7 +1671,7 @@
 					}
 				},
 				{
-					"index": 52,
+					"index": 51,
 					"cost": 270.73971557617188,
 					"currentForward":
 					{
@@ -1719,7 +1685,7 @@
 		{
 			"edges": [
 				{
-					"index": 48,
+					"index": 47,
 					"cost": 500,
 					"currentForward":
 					{
@@ -1729,7 +1695,7 @@
 					}
 				},
 				{
-					"index": 50,
+					"index": 49,
 					"cost": 470,
 					"currentForward":
 					{
@@ -1743,7 +1709,7 @@
 		{
 			"edges": [
 				{
-					"index": 49,
+					"index": 48,
 					"cost": 470,
 					"currentForward":
 					{
@@ -1753,7 +1719,7 @@
 					}
 				},
 				{
-					"index": 51,
+					"index": 50,
 					"cost": 388.97299194335938,
 					"currentForward":
 					{
@@ -1768,16 +1734,6 @@
 			"edges": [
 				{
 					"index": 0,
-					"cost": 332.4154052734375,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 1,
 					"cost": 226.71568298339844,
 					"currentForward":
 					{
@@ -1787,7 +1743,7 @@
 					}
 				},
 				{
-					"index": 45,
+					"index": 44,
 					"cost": 398.24615478515625,
 					"currentForward":
 					{
@@ -1797,7 +1753,7 @@
 					}
 				},
 				{
-					"index": 50,
+					"index": 49,
 					"cost": 388.97299194335938,
 					"currentForward":
 					{
@@ -1811,7 +1767,7 @@
 		{
 			"edges": [
 				{
-					"index": 41,
+					"index": 40,
 					"cost": 496.4876708984375,
 					"currentForward":
 					{
@@ -1821,7 +1777,7 @@
 					}
 				},
 				{
-					"index": 42,
+					"index": 41,
 					"cost": 430.11627197265625,
 					"currentForward":
 					{
@@ -1831,7 +1787,7 @@
 					}
 				},
 				{
-					"index": 46,
+					"index": 45,
 					"cost": 240.20823669433594,
 					"currentForward":
 					{
@@ -1841,7 +1797,7 @@
 					}
 				},
 				{
-					"index": 47,
+					"index": 46,
 					"cost": 250,
 					"currentForward":
 					{
@@ -1851,22 +1807,8 @@
 					}
 				},
 				{
-					"index": 48,
+					"index": 47,
 					"cost": 270.73971557617188,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 54,
-					"cost": 346.69873046875,
 					"currentForward":
 					{
 						"x": 1,
@@ -1887,10 +1829,48 @@
 						"y": 0,
 						"z": 0
 					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 52,
+					"cost": 346.69873046875,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 54,
+					"cost": 371.07949829101562,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 53,
+					"cost": 371.07949829101562,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
 				},
 				{
 					"index": 55,
-					"cost": 371.07949829101562,
+					"cost": 410,
 					"currentForward":
 					{
 						"x": 1,
@@ -1904,7 +1884,7 @@
 			"edges": [
 				{
 					"index": 54,
-					"cost": 371.07949829101562,
+					"cost": 410,
 					"currentForward":
 					{
 						"x": 1,
@@ -1914,7 +1894,7 @@
 				},
 				{
 					"index": 56,
-					"cost": 410,
+					"cost": 400,
 					"currentForward":
 					{
 						"x": 1,
@@ -1928,30 +1908,6 @@
 			"edges": [
 				{
 					"index": 55,
-					"cost": 410,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				},
-				{
-					"index": 57,
-					"cost": 400,
-					"currentForward":
-					{
-						"x": 1,
-						"y": 0,
-						"z": 0
-					}
-				}
-			]
-		},
-		{
-			"edges": [
-				{
-					"index": 56,
 					"cost": 400,
 					"currentForward":
 					{
@@ -1961,7 +1917,7 @@
 					}
 				},
 				{
-					"index": 59,
+					"index": 58,
 					"cost": 230.86793518066406,
 					"currentForward":
 					{
@@ -1975,7 +1931,7 @@
 		{
 			"edges": [
 				{
-					"index": 7,
+					"index": 6,
 					"cost": 433.8201904296875,
 					"currentForward":
 					{
@@ -1985,7 +1941,7 @@
 					}
 				},
 				{
-					"index": 59,
+					"index": 58,
 					"cost": 311.608642578125,
 					"currentForward":
 					{
@@ -1995,7 +1951,7 @@
 					}
 				},
 				{
-					"index": 60,
+					"index": 59,
 					"cost": 282.31182861328125,
 					"currentForward":
 					{
@@ -2009,7 +1965,7 @@
 		{
 			"edges": [
 				{
-					"index": 57,
+					"index": 56,
 					"cost": 230.86793518066406,
 					"currentForward":
 					{
@@ -2019,7 +1975,7 @@
 					}
 				},
 				{
-					"index": 58,
+					"index": 57,
 					"cost": 311.608642578125,
 					"currentForward":
 					{
@@ -2033,7 +1989,7 @@
 		{
 			"edges": [
 				{
-					"index": 7,
+					"index": 6,
 					"cost": 350,
 					"currentForward":
 					{
@@ -2043,7 +1999,7 @@
 					}
 				},
 				{
-					"index": 8,
+					"index": 7,
 					"cost": 359.02645874023438,
 					"currentForward":
 					{
@@ -2053,7 +2009,7 @@
 					}
 				},
 				{
-					"index": 58,
+					"index": 57,
 					"cost": 282.31182861328125,
 					"currentForward":
 					{

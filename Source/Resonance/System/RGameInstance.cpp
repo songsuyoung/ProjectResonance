@@ -4,6 +4,7 @@
 #include "System/RPathFinder.h"
 #include "RBakeDataManager.h"
 #include "RNPCSpawnManager.h"
+#include "RRegionManager.h"
 #include "System/RDataManager.h"
 #include "System/REventManager.h"
 
@@ -36,4 +37,5 @@ void URGameInstance::Init()
 	}
 	
 	NPCSpawnManager = NewObject<URNPCSpawnManager>(this, NPCSpawnManagerClass);
+	RegionManager = NewObject<URRegionManager>(this, URRegionManager::StaticClass());
 }

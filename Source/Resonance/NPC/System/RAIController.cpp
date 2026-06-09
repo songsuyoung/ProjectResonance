@@ -16,4 +16,18 @@ void ARAIController::OnPossess(APawn* InPawn)
 	{
 		StateTreeComponent->StartLogic();
 	}
+	
+	OnRegionVisited.AddUObject(this, &ThisClass::VisitRegion);
+}
+
+void ARAIController::OnUnPossess()
+{
+	Super::OnUnPossess();
+	
+	OnRegionVisited.RemoveAll(this);
+}
+
+void ARAIController::VisitRegion(FName RegionID)
+{
+	BP_OnRegionVisited(RegionID);
 }

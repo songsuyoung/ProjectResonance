@@ -4,7 +4,7 @@
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
 #include "RSTTask_FindLinePath.generated.h"
 
-class ARBaseCharacter;
+class ARNPCCharacter;
 class AAIController;
 
 UCLASS()
@@ -23,5 +23,5 @@ protected:
 	TWeakObjectPtr<AAIController> AIController;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
-	TWeakObjectPtr<APawn> OwnerCharacter;
+	TWeakObjectPtr<ARNPCCharacter> OwnerCharacter;
 };

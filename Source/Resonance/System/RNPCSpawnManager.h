@@ -32,7 +32,8 @@ class RESONANCE_API URNPCSpawnManager : public UObject
 public:
 	static URNPCSpawnManager* Get(UObject* Context);
 	
-	void SpawnNPC(const FName& RegionID, const FTransform& SpawnTransform);
+	UFUNCTION(BlueprintCallable)
+	void SpawnNPC(const FName& RegionID);
 	
 protected:
 	

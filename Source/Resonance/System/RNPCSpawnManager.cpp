@@ -1,12 +1,9 @@
 #include "System/RNPCSpawnManager.h"
 
-#include "RDataManager.h"
+// 
 #include "RGameInstance.h"
-#include "RPathFinder.h"
+#include "RRegionManager.h"
 #include "Character/RNPCCharacter.h"
-#include "Data/RCoreEnums.h"
-#include "Data/RRegionDataTable.h"
-
 
 URNPCSpawnManager* URNPCSpawnManager::Get(UObject* Context)
 {
@@ -21,21 +18,19 @@ URNPCSpawnManager* URNPCSpawnManager::Get(UObject* Context)
 	return GameInstance->GetNPCSpawnManager();
 }
 
-void URNPCSpawnManager::SpawnNPC(const FName& RegionID, const FTransform& SpawnTransform)
+void URNPCSpawnManager::SpawnNPC(const FName& RegionID)
 {
-	URDataManager* DataManager = URDataManager::Get(this);
+	URRegionManager* RegionManager = URRegionManager::Get(this);
+	check(RegionManager);
 	
-	check(DataManager);
+	//RegionDataTable 에 NPC ID들이 저장, NPC를 스폰하는데 사용하도록 함.
+	FVector Location;
+	bool bFind = RegionManager->FindRegionLocation(RegionID, Location);
 	
-	FRRegionDataTable* RegionDataTable = DataManager->GetDataTableRow<FRRegionDataTable>(ERDataTableType::RegionData, RegionID);
-
-	if (nullptr == RegionDataTable)
+	if (false == bFind)
 	{
 		return;
 	}
-	
-	//RegionDataTable 에 NPC ID들이 저장, NPC를 스폰하는데 사용하도록 함.
-	const FVector& Location = SpawnTransform.GetLocation();
 	
 	UWorld* World = GetWorld();
 	check(World);

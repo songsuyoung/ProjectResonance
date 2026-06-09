@@ -49,6 +49,7 @@ EStateTreeRunStatus URSTTask_MoveToSpline::EnterState(FStateTreeExecutionContext
 	SplineComponent->ClearSplinePoints();
 	
 	const FRPathRoutePayload& Payload = StateTreeEvent->Payload.Get<FRPathRoutePayload>();
+	NextRegionID = Payload.NextRegionID;
 	SplineComponent->SetSplinePoints(Payload.PathLocation, ESplineCoordinateSpace::World);
 	for (int32 Index = 0; Index < SplineComponent->GetNumberOfSplinePoints(); ++Index)
 	{
@@ -98,6 +99,7 @@ EStateTreeRunStatus URSTTask_MoveToSpline::Tick(FStateTreeExecutionContext& Cont
 	float RemainingDistance = SplineLength - CurrentDistance;
 	if (RemainingDistance < AcceptableRadius)
 	{
+		OwnerCharacter->VisitRegion(NextRegionID);
 		return EStateTreeRunStatus::Succeeded;
 	}
 

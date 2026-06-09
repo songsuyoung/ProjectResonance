@@ -8,9 +8,10 @@ struct FRPathRoutePayload
 	GENERATED_BODY()
 	
 public:
-	FRPathRoutePayload() { }
-	FRPathRoutePayload(const TArray<FVector>& Locations) : PathLocation(Locations) {}
-
+	
+	UPROPERTY(Transient)
+	FName NextRegionID;
+	
 	UPROPERTY(Transient)
 	TArray<FVector> PathLocation;
 };

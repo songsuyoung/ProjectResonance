@@ -15,6 +15,7 @@ URSTTask_FindCircuitPath::URSTTask_FindCircuitPath(const FObjectInitializer& Obj
 
 EStateTreeRunStatus URSTTask_FindCircuitPath::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
 {
+	/*
 	URPathFinder* PathFinder = URPathFinder::Get(this);
 	check(PathFinder);
 	
@@ -25,6 +26,7 @@ EStateTreeRunStatus URSTTask_FindCircuitPath::EnterState(FStateTreeExecutionCont
 	
 	// SendEvent로 어떤 위치가 결정됐는지 전달한다.
 	Context.SendEvent(FGameplayTag::RequestGameplayTag(TEXT("StateTree.Task.Event.DestinationDecided")), FConstStructView::Make(Payload));
+	*/
 	
 	return Super::EnterState(Context, Transition);
 }

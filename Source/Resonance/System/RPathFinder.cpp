@@ -153,20 +153,7 @@ bool URPathFinder::Dijkstra(int32 StartIndex, int32 EndIndex, TArray<int32>& Rou
 
 TArray<FVector> URPathFinder::FindPath(const int32& StartIndex, const int32& DestinationIndex)
 {
-	const FRRoutePointContainer* RoutePointContainer = TypedPoints.Find(ERPathPointType::Destination);
-
-	if (nullptr == RoutePointContainer)
-	{
-		return TArray<FVector>();
-	}
-
-	if (false == RoutePointContainer->PointIndex.IsValidIndex(DestinationIndex))
-	{
-		return TArray<FVector>();
-	}
-	
-	int EndIndex = RoutePointContainer->PointIndex[DestinationIndex];
-	return FindPath_Internal(StartIndex, EndIndex);
+	return FindPath_Internal(StartIndex, DestinationIndex);
 }
 
 TArray<FVector> URPathFinder::FindPath_Internal(const int32& StartIndex, const int32& EndIndex)
