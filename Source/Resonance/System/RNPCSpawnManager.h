@@ -6,21 +6,19 @@
 #include "RNPCSpawnManager.generated.h"
 
 USTRUCT(BlueprintType)
-struct FRPooling
+struct FRNPCPooling
 {
 	GENERATED_BODY()
 public:
 	
-};
-
-USTRUCT(BlueprintType)
-struct FRZoneSpawnedNPCs
-{
-	GENERATED_BODY()
-
-public:
 	UPROPERTY(Transient)
-	TSet<int32> SpawnedNPCIds;
+	TObjectPtr<ARNPCCharacter> NPC;
+	
+	UPROPERTY(Transient)
+	float PooledTime;		// 풀링에 들어온 시간 (타임스탬프)
+	
+	UPROPERTY(Transient)
+	FTimerHandle SpawnTimerHandle;
 };
 
 class URPathFinder;
@@ -40,6 +38,13 @@ protected:
 	
 	void InitSpawnNPC();
 	void SpawnNPC(const FName& RegionID);
+	
+protected:
+	
+	// 풀링과 관련된 함수
+	void AcquireNPC(FName NPCID);
+	void ReleaseNPC(const FRMessage* Msg);
+	
 protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Settings")
@@ -48,19 +53,11 @@ protected:
 protected:
 	
 	UPROPERTY(Transient)
-	TArray<int32> SpawnPointIndex;
-	
-	UPROPERTY(Transient)
 	TWeakObjectPtr<URPathFinder> PathFinder;
 	
 	UPROPERTY(Transient)
-	TArray<FRPooling> NPCPooling;
+	TMap<FName, FRNPCPooling> NPCPooling;
 	
 	UPROPERTY(Transient)
-	TArray<TObjectPtr<ARNPCCharacter>> ActiveNPC;
-	
-	// 존에 따라서 스폰된 NPC 관리 => 중복 스폰을 막기 위해서
-	// NPC마다 ID을 부착해서, 중복으로 태어났는지 아닌지를 확인해야한다.
-	UPROPERTY(Transient)
-	TMap<int32, FRZoneSpawnedNPCs> NPCIDs; 
+	TMap<FName, TObjectPtr<ARNPCCharacter>> ActiveNPC;
 };

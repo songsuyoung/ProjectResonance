@@ -4,6 +4,7 @@
 #include "RDataManager.h"
 #include "REventManager.h"
 #include "RGameInstance.h"
+#include "RMessage.h"
 #include "RRegionManager.h"
 #include "Character/RNPCCharacter.h"
 #include "Data/ResonanceEnums.h"
@@ -50,18 +51,102 @@ void URNPCSpawnManager::SpawnNPC(const FName& RegionID)
 	UWorld* World = GetWorld();
 	check(World);
 	
-	FActorSpawnParameters SpawnParams;
-	ActiveNPC.Add(World->SpawnActor<ARNPCCharacter>(NPCCharacterClass, Location, FRotator::ZeroRotator, SpawnParams));
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(Location);
+	SpawnTransform.SetRotation(FRotator::ZeroRotator.Quaternion());
+	
+	// TODO: NPCID를 지정해야함. 현재 RegionID를 사용하고 있음.
+	// 아직 NPCID가 없어서 임의의 랜덤 값 지정.
+	ARNPCCharacter* SpawnedNPC = World->SpawnActorDeferred<ARNPCCharacter>(NPCCharacterClass, SpawnTransform);
+	SpawnedNPC->SetID(RegionID); //일단 지역 ID로 저장
+	SpawnedNPC->FinishSpawning(SpawnTransform);
+	
+	ActiveNPC.Add({RegionID, SpawnedNPC});
+}
+
+void URNPCSpawnManager::AcquireNPC(FName NPCID)
+{
+	// NPC를 찾는다.
+	FRNPCPooling* Slot = NPCPooling.Find(NPCID);
+	
+	if (nullptr == Slot)
+	{
+		return;
+	}
+	NPCPooling.Remove(NPCID);
+	ARNPCCharacter* NPCCharacter = Slot->NPC;
+	ActiveNPC.Add({NPCID, NPCCharacter});
+	
+	Slot->SpawnTimerHandle.Invalidate(); //무효화
+	
+	if (false == IsValid(NPCCharacter))
+	{
+		return;	
+	}
+	
+	// NPC->Stat 정리
+	
+	// NPC 활성화
+	NPCCharacter->SetActorHiddenInGame(false);
+}
+
+void URNPCSpawnManager::ReleaseNPC(const FRMessage* Msg)
+{
+	const FRNPCReleaseMessage* ReleaseMessage = static_cast<const FRNPCReleaseMessage*>(Msg);
+	
+	if (nullptr == ReleaseMessage)
+	{
+		return;
+	}
+	TObjectPtr<ARNPCCharacter>* NPC = ActiveNPC.Find(ReleaseMessage->NPCID);
+	
+	if (nullptr == NPC || false == IsValid(*NPC))
+	{
+		return;
+	}
+	
+	(*NPC)->SetActorHiddenInGame(true);
+	
+	FName NPCID = ReleaseMessage->NPCID;
+	
+	FRNPCPooling PoolingSlot;
+	PoolingSlot.NPC = *NPC; 
+	
+	UWorld* World = GetWorld();
+	check(World);
+	PoolingSlot.PooledTime = World->GetTimeSeconds();
+	
+	NPCPooling.Add({NPCID, PoolingSlot});
+	ActiveNPC.Remove(NPCID);
+	
+	TWeakObjectPtr<URNPCSpawnManager> ThisWeakPtr = this;
+	
+	World->GetTimerManager().SetTimer(
+		PoolingSlot.SpawnTimerHandle,
+		FTimerDelegate::CreateLambda([ThisWeakPtr, NPCID]()
+		{
+			if (false == ThisWeakPtr.IsValid())
+			{
+				return;
+			}
+			ThisWeakPtr->AcquireNPC(NPCID);
+		}),
+		5.f,
+		false
+	);
 }
 
 void URNPCSpawnManager::OnMessage(ERMessageType Type, FRMessage* Message)
 {
-	if (Type != ERMessageType::StartGame)
+	switch (Type)
 	{
-		return;
+		case ERMessageType::StartGame:
+			InitSpawnNPC();
+		break;
+		case ERMessageType::EnterRegion:
+			ReleaseNPC(Message);
+		break;
 	}
-
-	InitSpawnNPC();
 }
 
 void URNPCSpawnManager::InitSpawnNPC()
@@ -84,6 +169,8 @@ void URNPCSpawnManager::InitSpawnNPC()
 		
 		for (const FRNPCDataTable* NPCData : NPCDataTable)
 		{
+			// TODO: C++ ID 로딩할 수 있도록 수정.
+			// const FName NPCID = NPCData->GetID();
 			const FName RegionID = NPCData->RegionID;
 			const float SpawnTime = NPCData->SpawnTime;
 			FTimerHandle TimerHandle;

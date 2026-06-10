@@ -17,6 +17,8 @@ public:
 	
 	virtual void BeginPlay() override;
 	
+	void SetID(FName NPCID) { ID = NPCID; }
+	FName GetID() { return ID; }
 public:
 	USplineComponent* GetSplineComponent() const { return SplineComponent; }
 	void VisitRegion(const FName& RegionID);
@@ -40,4 +42,7 @@ protected:
 	// 다시 들리는 경우는 어느정도 나왔다가 다시 돌아가는 경우가 있지만. 선택할 때 반복하지않도록한다.(기획)
 	UPROPERTY(Transient)
 	FName CurrentVisitedRegion;
+	
+	UPROPERTY(Transient)
+	FName ID;
 };

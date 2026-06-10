@@ -4,8 +4,8 @@
 #define REVENT_MESSAGE_NOTIFY(Context, Type) \
 	UREventManager::Get(Context)->Notify(Type, nullptr); \
 
-#define REVENT_MESSAGE_NOTIFY_MSG(Context, Type, ...) \
-	UREventManager::Get(Context)->Notify(Type, &_Msg); \
+#define REVENT_MESSAGE_NOTIFY_MSG(Context, Type, Msg) \
+	UREventManager::Get(Context)->Notify(Type, &Msg);
 
 #define REVENT_MESSAGE_ADD(Context, Receiver)	\
 	UREventManager::Get(Context)->AddReceiver(Receiver) \

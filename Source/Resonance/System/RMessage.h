@@ -15,7 +15,7 @@ public:
 	ERMessageType MessageType;
 };
 
-// юс╫ц ©К╣╣
+// О©╫с╫О©╫ О©╫К╣╣
 USTRUCT()
 struct FRShowUIMessage : public FRMessage
 {
@@ -33,4 +33,26 @@ public:
 
 	UPROPERTY(Transient)
 	FString TextValue;
+};
+
+USTRUCT()
+struct FRNPCReleaseMessage : public FRMessage
+{
+	GENERATED_BODY()
+public:
+	FRNPCReleaseMessage()
+		: FRMessage(ERMessageType::EnterRegion)
+	{}
+
+	FRNPCReleaseMessage(FName NPCID, FName RegionID)
+		: FRMessage(ERMessageType::EnterRegion)
+		, NPCID(NPCID)
+		, RegionID(RegionID)
+	{ }
+
+	UPROPERTY(Transient)
+	FName NPCID;
+	
+	UPROPERTY(Transient)
+	FName RegionID;
 };

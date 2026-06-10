@@ -4,7 +4,11 @@
 #include "Components/SplineComponent.h"
 
 // 
+#include "Data/ResonanceEnums.h"
+#include "Data/ResonanceMacro.h"
 #include "NPC/System/RAIController.h"
+#include "System/REventManager.h"
+#include "System/RMessage.h"
 
 ARNPCCharacter::ARNPCCharacter()
 	: Super()
@@ -33,8 +37,10 @@ void ARNPCCharacter::VisitRegion(const FName& RegionID)
 	if (IsValid(AIController))
 	{
 		AIController->OnRegionVisited.Broadcast(RegionID);
+		
+		FRNPCReleaseMessage Msg(ID, RegionID);
+		REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::EnterRegion, Msg);
 	}
-	
 }
 
 FName ARNPCCharacter::ConsumeNextRegion()

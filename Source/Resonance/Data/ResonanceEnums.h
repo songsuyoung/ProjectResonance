@@ -43,6 +43,7 @@ enum class ERMessageType
 {
 	StartGame,
 	ShowUI,
+	EnterRegion,
 };
 
 UENUM()
