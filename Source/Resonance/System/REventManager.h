@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "Interface/RMessageReceiver.h"
 #include "Containers/List.h"
 #include "REventManager.generated.h"

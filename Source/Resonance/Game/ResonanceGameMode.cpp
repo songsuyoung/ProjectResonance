@@ -1,5 +1,7 @@
 #include "ResonanceGameMode.h"
-#include "Character/ResonanceCharacter.h"
+#include "Data/ResonanceEnums.h"
+#include "Data/ResonanceMacro.h"
+#include "System/REventManager.h"
 #include "UObject/ConstructorHelpers.h"
 
 AResonanceGameMode::AResonanceGameMode()
@@ -9,4 +11,12 @@ AResonanceGameMode::AResonanceGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+}
+
+void AResonanceGameMode::StartPlay()
+{
+	Super::StartPlay();
+	
+	// 모든 액터들이 놓여졌을 때 알림
+	REVENT_MESSAGE_NOTIFY(this, ERMessageType::StartGame);
 }

@@ -19,7 +19,8 @@ class RESONANCE_API URGameInstance : public UGameInstance
 
 public:
 	virtual void Init() override;
-
+	virtual void BeginDestroy() override;
+	
 	URDataManager* GetDataManager() { return DataManager; }
 	UREventManager* GetEventManager() { return EventManager; }
 	

@@ -1,6 +1,7 @@
 #include "System/RRegionManager.h"
 
 #include "RGameInstance.h"
+#include "RNPCSpawnManager.h"
 #include "Actor/RRegionVolume.h"
 
 
@@ -20,8 +21,6 @@ URRegionManager* URRegionManager::Get(UObject* Context)
 void URRegionManager::RegisterRegion(FName ID, ARRegionVolume* RegionVolume)
 {
 	Regions.Add(ID, RegionVolume);
-	
-	// 등록시 정보를 전달할 수도 있음.
 }
 
 bool URRegionManager::FindRegionLocation(FName ID, FVector& OutLocation)

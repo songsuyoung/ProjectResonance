@@ -7,7 +7,7 @@ enum class ERDataTableType : uint8
 	None,
 	SkillData,
 	CharacterData,
-	RegionData,
+	NPCDataTable,
 	Max,
 };
 
@@ -41,6 +41,7 @@ enum class ERElementType : uint8
 UENUM()
 enum class ERMessageType
 {
+	StartGame,
 	ShowUI,
 };
 

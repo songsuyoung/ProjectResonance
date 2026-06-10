@@ -11,6 +11,8 @@ class AResonanceGameMode : public AGameMode
 
 public:
 	AResonanceGameMode();
+	
+	virtual void StartPlay() override;
 };
 
 

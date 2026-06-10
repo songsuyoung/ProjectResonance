@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interface/RMessageReceiver.h"
 #include "UObject/NoExportTypes.h"
 #include "RNPCSpawnManager.generated.h"
 
@@ -25,16 +26,20 @@ public:
 class URPathFinder;
 class ARNPCCharacter;
 UCLASS(Blueprintable)
-class RESONANCE_API URNPCSpawnManager : public UObject
+class RESONANCE_API URNPCSpawnManager : public UObject, public IRMessageReceiver
 {
 	GENERATED_BODY()
 	
 public:
 	static URNPCSpawnManager* Get(UObject* Context);
+	void Initialize();
+	void DeInitialize();
 	
-	UFUNCTION(BlueprintCallable)
+protected:
+	virtual void OnMessage(ERMessageType Type, FRMessage* Message);
+	
+	void InitSpawnNPC();
 	void SpawnNPC(const FName& RegionID);
-	
 protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Settings")

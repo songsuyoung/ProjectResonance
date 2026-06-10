@@ -13,9 +13,11 @@ class RESONANCE_API URRegionManager : public UObject
 	
 public:
 	static URRegionManager* Get(UObject* Context);
-
+	
 	void RegisterRegion(FName ID, ARRegionVolume* RegionVolume);
 	bool FindRegionLocation(FName ID, FVector& OutLocation);
+	
+
 protected:
 	
 	UPROPERTY(Transient)

@@ -37,5 +37,19 @@ void URGameInstance::Init()
 	}
 	
 	NPCSpawnManager = NewObject<URNPCSpawnManager>(this, NPCSpawnManagerClass);
+	if (IsValid(NPCSpawnManager))
+	{
+		NPCSpawnManager->Initialize();
+	}
 	RegionManager = NewObject<URRegionManager>(this, URRegionManager::StaticClass());
+}
+
+void URGameInstance::BeginDestroy()
+{
+	Super::BeginDestroy();
+	
+	if (IsValid(NPCSpawnManager))
+	{
+		NPCSpawnManager->DeInitialize();
+	}
 }
