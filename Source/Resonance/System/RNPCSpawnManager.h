@@ -5,6 +5,9 @@
 #include "UObject/NoExportTypes.h"
 #include "RNPCSpawnManager.generated.h"
 
+class URPathFinder;
+class ARNPCCharacter;
+
 USTRUCT(BlueprintType)
 struct FRNPCPooling
 {
@@ -21,8 +24,6 @@ public:
 	FTimerHandle SpawnTimerHandle;
 };
 
-class URPathFinder;
-class ARNPCCharacter;
 UCLASS(Blueprintable)
 class RESONANCE_API URNPCSpawnManager : public UObject, public IRMessageReceiver
 {

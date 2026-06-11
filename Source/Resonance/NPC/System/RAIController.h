@@ -24,11 +24,6 @@ protected:
 	void VisitRegion(FName RegionID);
 	
 protected:
-	//BP 전용 테스트
-	UFUNCTION(BlueprintImplementableEvent)
-	void BP_OnRegionVisited(FName RegionID);
-	
-protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStateTreeAIComponent> StateTreeComponent;
