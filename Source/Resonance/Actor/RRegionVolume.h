@@ -23,4 +23,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Region|Settings")
 	FName RegionID;
 	
+protected:
+	
+	UPROPERTY(Transient)
+	TSet<TWeakObjectPtr<ACharacter>> OverlappedCharacters;
+	
 };

@@ -28,5 +28,6 @@ void ARRegionVolume::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherA
 	if (IsValid(NPCCharacter))
 	{
 		NPCCharacter->VisitRegion(RegionID);
+		OverlappedCharacters.Add(NPCCharacter);
 	}
 }

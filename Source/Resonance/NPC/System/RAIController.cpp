@@ -1,6 +1,7 @@
 #include "RAIController.h"
 
 // UE 5.
+#include "Character/RNPCCharacter.h"
 #include "Components/StateTreeAIComponent.h"
 
 ARAIController::ARAIController()
@@ -17,17 +18,44 @@ void ARAIController::OnPossess(APawn* InPawn)
 		StateTreeComponent->StartLogic();
 	}
 	
-	OnRegionVisited.AddUObject(this, &ThisClass::VisitRegion);
+	ARNPCCharacter* NPCCharacter = Cast<ARNPCCharacter>(InPawn);
+	
+	if (IsValid(NPCCharacter))
+	{
+		NPCCharacter->OnRegionExited.AddUObject(this, &ThisClass::HandleRegionExited);
+	}
 }
 
 void ARAIController::OnUnPossess()
 {
+	ARNPCCharacter* NPCCharacter = Cast<ARNPCCharacter>(GetOwner());
+	
+	if (IsValid(NPCCharacter))
+	{
+		NPCCharacter->OnRegionExited.RemoveAll(this);
+	}
+	
 	Super::OnUnPossess();
 	
-	OnRegionVisited.RemoveAll(this);
+	if (IsValid(StateTreeComponent))
+	{
+		StateTreeComponent->StopLogic(TEXT("UnPossess"));
+	}
+
 }
 
-void ARAIController::VisitRegion(FName RegionID)
+void ARAIController::HandleRegionExited()
 {
-	BP_OnRegionVisited(RegionID);
+	if (IsValid(StateTreeComponent))
+	{
+		StateTreeComponent->StartLogic();
+	}
+}
+
+void ARAIController::HandleRegionEntered()
+{
+	if (IsValid(StateTreeComponent))
+	{
+		StateTreeComponent->StopLogic(TEXT("VisitRegion"));
+	}
 }

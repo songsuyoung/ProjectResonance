@@ -6,6 +6,10 @@
 class URActionData;
 class UStateTreeAIComponent;
 class USplineComponent;
+class UREmotionComponent;
+
+DECLARE_MULTICAST_DELEGATE(FOnRegionEntered);
+DECLARE_MULTICAST_DELEGATE(FOnRegionExited);
 
 UCLASS()
 class RESONANCE_API ARNPCCharacter : public ARBaseCharacter
@@ -16,15 +20,23 @@ public:
 	ARNPCCharacter();
 	
 	virtual void BeginPlay() override;
-	
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	void SetID(FName NPCID) { ID = NPCID; }
 	FName GetID() { return ID; }
+
+	FOnRegionEntered OnRegionEntered;
+	FOnRegionExited OnRegionExited;
 public:
 	USplineComponent* GetSplineComponent() const { return SplineComponent; }
-	void VisitRegion(const FName& RegionID);
 	FName GetCurrentVisitedRegion() const { return CurrentVisitedRegion; }
-	FName ConsumeNextRegion();
 	
+public:
+	void HandleRegionEntered();
+	void HandleRegionExited();
+	
+	void VisitRegion(const FName& RegionID);
+	FName ConsumeNextRegion();
+
 protected:
 	
 	// TODO: 변경해야함. 임시로 경로를 지정해준다
@@ -37,6 +49,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings|Path")
 	TObjectPtr<USplineComponent> SplineComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings|Path")
+	TObjectPtr<UREmotionComponent> EmotionComponent;
 	
 	// 현재 방문했던 곳은 다시 들리지 않는다. 
 	// 다시 들리는 경우는 어느정도 나왔다가 다시 돌아가는 경우가 있지만. 선택할 때 반복하지않도록한다.(기획)

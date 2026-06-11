@@ -38,7 +38,7 @@ protected:
 	virtual void OnMessage(ERMessageType Type, FRMessage* Message);
 	
 	void InitSpawnNPC();
-	void SpawnNPC(const FName& RegionID);
+	void SpawnNPC(const FName& NPCID, const FName& RegionID);
 	
 protected:
 	

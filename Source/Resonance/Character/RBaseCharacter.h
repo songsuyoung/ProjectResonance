@@ -6,6 +6,7 @@
 #include "RBaseCharacter.generated.h"
 
 class URActionStateComponent;
+class URBaseStatComponent;
 UCLASS()
 class RESONANCE_API ARBaseCharacter : public ACharacter
 {
@@ -13,12 +14,10 @@ class RESONANCE_API ARBaseCharacter : public ACharacter
 
 public:
 	ARBaseCharacter();
-
 	
+	URBaseStatComponent* GetBaseStatComponent() const { return BaseStatComponent; }
 protected:
-
-	// 캐릭터의 전체 상태를 관리할 예정
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	TObjectPtr<URActionStateComponent> ActionStateComponent;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
+	TObjectPtr<URBaseStatComponent> BaseStatComponent;
 };

@@ -1,5 +1,11 @@
 #include "Components/REmotionComponent.h"
 
+//
+
+// 
+#include "Character/RBaseCharacter.h"
+#include "Components/Stat/RBaseStatComponent.h"
+
 UREmotionComponent::UREmotionComponent()
 {
 
@@ -9,6 +15,12 @@ void UREmotionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(GetOwner());
+	
+	if (IsValid(BaseCharacter))
+	{
+		StatComponent = BaseCharacter->GetBaseStatComponent();
+	}
 }
 
 float UREmotionComponent::GetStayDuration()

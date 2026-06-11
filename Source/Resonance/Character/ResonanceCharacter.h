@@ -42,6 +42,10 @@ protected:
 	void OnInputReceived(ERActionContext ActionContext);
 	
 protected:
+	
+	// 캐릭터의 전체 상태를 관리할 예정
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<URActionStateComponent> ActionStateComponent;
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

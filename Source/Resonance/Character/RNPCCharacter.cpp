@@ -4,6 +4,8 @@
 #include "Components/SplineComponent.h"
 
 // 
+#include "Components/REmotionComponent.h"
+#include "Components/StateTreeAIComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "Data/ResonanceMacro.h"
 #include "NPC/System/RAIController.h"
@@ -15,6 +17,8 @@ ARNPCCharacter::ARNPCCharacter()
 	, CurrentVisitedRegion()
 {
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
+	EmotionComponent = CreateDefaultSubobject<UREmotionComponent>(TEXT("EmotionComponent"));
+	
 	AIControllerClass = ARAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -23,24 +27,64 @@ void ARNPCCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	OnRegionEntered.AddUObject(this, &ThisClass::HandleRegionEntered);
+	OnRegionExited.AddUObject(this, &ThisClass::HandleRegionExited);
+}
+
+void ARNPCCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	OnRegionEntered.RemoveAll(this);
+	OnRegionExited.RemoveAll(this);
+}
+
+void ARNPCCharacter::HandleRegionEntered()
+{
+	// 밑에 히든하기 전에 액션일 취할 필요가 있을 때 여기서 해주는게 맞다.
+	// 왜냐하면 캐릭터 자체의 움직임이기 때문임.
+	SetActorHiddenInGame(true);
+	SetActorEnableCollision(false);
+}
+
+void ARNPCCharacter::HandleRegionExited()
+{
+	SetActorHiddenInGame(false);
+	SetActorEnableCollision(true);
 }
 
 void ARNPCCharacter::VisitRegion(const FName& RegionID)
 {
-	CurrentVisitedRegion = RegionID;
-	
-	// AIController에게도 전달해야한다.
-	// 의존성을 줄이는 방법은 델리게이트로 둘다 연결하고 호출하게 하는 방법이 가장 좋아보인다.
-	// EventManager를 관리하는 것도 고려해본다.
-	ARAIController* AIController = GetController<ARAIController>();
-	
-	if (IsValid(AIController))
+	if (false == IsValid(EmotionComponent))
 	{
-		AIController->OnRegionVisited.Broadcast(RegionID);
-		
-		FRNPCReleaseMessage Msg(ID, RegionID);
-		REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::EnterRegion, Msg);
+		return;
 	}
+	
+	// 이미 방문한 경우에는 변경하지 않는다.
+	if (CurrentVisitedRegion == RegionID)
+	{
+		return;
+	}
+	
+	if (PendingRegions.IsEmpty())
+	{
+		// 전부 다 소진함.
+		return;
+	}
+	
+	FName NextRegion = PendingRegions[0];
+	
+	if (RegionID != NextRegion)
+	{
+		return;
+	}
+	
+	CurrentVisitedRegion = RegionID;
+	PendingRegions.RemoveAt(0);
+	float DurationTime = EmotionComponent->GetStayDuration();
+
+	FRNPCEnterRegion Msg(ID, RegionID, DurationTime);
+	REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::EnterRegion, Msg);
 }
 
 FName ARNPCCharacter::ConsumeNextRegion()
@@ -50,11 +94,7 @@ FName ARNPCCharacter::ConsumeNextRegion()
 		// 전부 다 소진함.
 		return FName();
 	}
-	FName NextRegion = PendingRegions[0];
 	
-	// 0번째 인덱스 삭제 
-	PendingRegions.RemoveAt(0);
-	
-	return NextRegion;
+	return PendingRegions[0];
 }
 

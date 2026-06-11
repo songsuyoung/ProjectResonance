@@ -35,6 +35,7 @@ AResonanceCharacter::AResonanceCharacter()
 	CombatComponent = CreateDefaultSubobject<URCombatComponent>(TEXT("CombatComponent"));
 	HitCheckComponent = CreateDefaultSubobject<URHitCheckComponent>(TEXT("HitCheckComponent"));
 	ClimbComponent = CreateDefaultSubobject<URClimbComponent>(TEXT("ClimbComponent"));
+	ActionStateComponent = CreateDefaultSubobject<URActionStateComponent>(TEXT("ActionStateComponent"));
 }
 
 bool AResonanceCharacter::RequestClimb()

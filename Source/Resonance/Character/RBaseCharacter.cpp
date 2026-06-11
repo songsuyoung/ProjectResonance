@@ -1,6 +1,6 @@
 #include "Character/RBaseCharacter.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/RActionStateComponent.h"
+#include "Components/Stat/RBaseStatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 ARBaseCharacter::ARBaseCharacter()
@@ -23,5 +23,5 @@ ARBaseCharacter::ARBaseCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
-	ActionStateComponent = CreateDefaultSubobject<URActionStateComponent>(TEXT("ActionStateComponent"));
+	BaseStatComponent = CreateDefaultSubobject<URBaseStatComponent>(TEXT("BaseStatComponent"));
 }

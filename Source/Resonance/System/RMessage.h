@@ -36,23 +36,30 @@ public:
 };
 
 USTRUCT()
-struct FRNPCReleaseMessage : public FRMessage
+struct FRNPCEnterRegion : public FRMessage
 {
 	GENERATED_BODY()
 public:
-	FRNPCReleaseMessage()
+	FRNPCEnterRegion()
 		: FRMessage(ERMessageType::EnterRegion)
 	{}
 
-	FRNPCReleaseMessage(FName NPCID, FName RegionID)
+	FRNPCEnterRegion(FName NPCID, FName RegionID, float DurationTime)
 		: FRMessage(ERMessageType::EnterRegion)
 		, NPCID(NPCID)
 		, RegionID(RegionID)
+		, HangAroundTime(DurationTime)
 	{ }
 
+	// NPC ID
 	UPROPERTY(Transient)
 	FName NPCID;
 	
+	// 지역 ID
 	UPROPERTY(Transient)
 	FName RegionID;
+	
+	// 머무는 시간 
+	UPROPERTY(Transient)
+	float HangAroundTime;
 };

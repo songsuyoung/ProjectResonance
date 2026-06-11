@@ -14,15 +14,16 @@ class RESONANCE_API ARAIController : public AAIController
 public:
 	ARAIController();
 	
-	FOnRegionVisited OnRegionVisited;
+	UStateTreeAIComponent* GetStateTreeAIComponent() { return StateTreeComponent; }
 	
 protected:
 	
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
 	
-	void VisitRegion(FName RegionID);
-	
+	void HandleRegionExited();
+	void HandleRegionEntered();
+
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
