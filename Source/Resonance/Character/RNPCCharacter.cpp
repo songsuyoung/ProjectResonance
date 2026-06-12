@@ -5,7 +5,6 @@
 
 // 
 #include "Components/REmotionComponent.h"
-#include "Components/StateTreeAIComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "Data/ResonanceMacro.h"
 #include "NPC/System/RAIController.h"
@@ -41,16 +40,16 @@ void ARNPCCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ARNPCCharacter::HandleRegionEntered()
 {
-	// 밑에 히든하기 전에 액션일 취할 필요가 있을 때 여기서 해주는게 맞다.
-	// 왜냐하면 캐릭터 자체의 움직임이기 때문임.
 	SetActorHiddenInGame(true);
 	SetActorEnableCollision(false);
 }
 
 void ARNPCCharacter::HandleRegionExited()
 {
+	
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
+	
 }
 
 void ARNPCCharacter::VisitRegion(const FName& RegionID)
@@ -87,7 +86,7 @@ void ARNPCCharacter::VisitRegion(const FName& RegionID)
 	REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::EnterRegion, Msg);
 }
 
-FName ARNPCCharacter::ConsumeNextRegion()
+FName ARNPCCharacter::PeekNextRegion()
 {
 	if (PendingRegions.IsEmpty())
 	{

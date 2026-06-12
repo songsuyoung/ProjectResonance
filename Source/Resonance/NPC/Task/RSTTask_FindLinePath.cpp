@@ -24,7 +24,7 @@ EStateTreeRunStatus URSTTask_FindLinePath::EnterState(FStateTreeExecutionContext
 	int32 NearestPointIndex = PathFinder->GetNearestNodeIndex(OwnerCharacter->GetActorLocation());
 	
 	// 이 RegionID는 다음 목표지점으로 정하면 안된다!!!!!
-	FName RegionID = OwnerCharacter->ConsumeNextRegion();
+	FName RegionID = OwnerCharacter->PeekNextRegion();
 	
  	URRegionManager* RegionManager = URRegionManager::Get(this);
 	

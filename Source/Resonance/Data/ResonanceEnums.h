@@ -73,3 +73,9 @@ enum class ERActionContext : uint8
 	Action_Default_2,
 	Action_Default_3,
 };
+
+UENUM()
+enum class EREmotionState : uint8
+{
+	Calm,
+};

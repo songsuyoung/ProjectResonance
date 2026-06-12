@@ -19,28 +19,30 @@ class RESONANCE_API ARNPCCharacter : public ARBaseCharacter
 public:
 	ARNPCCharacter();
 	
+	USplineComponent* GetSplineComponent() const { return SplineComponent; }
+	FName GetCurrentVisitedRegion() const { return CurrentVisitedRegion; }
+	void SetID(FName NPCID, FName HomeGroundID) { ID = NPCID; CurrentVisitedRegion = HomeGroundID; }
+	FName GetID() { return ID; }
+	bool HasNextRegion() { return false == PendingRegions.IsEmpty(); }
+	void SetNextRegions(const TArray<FName>& NewNextRegions) { PendingRegions = NewNextRegions; }
+public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	void SetID(FName NPCID) { ID = NPCID; }
-	FName GetID() { return ID; }
+	void VisitRegion(const FName& RegionID);
+	FName PeekNextRegion();
+	
+public:
 
 	FOnRegionEntered OnRegionEntered;
 	FOnRegionExited OnRegionExited;
-public:
-	USplineComponent* GetSplineComponent() const { return SplineComponent; }
-	FName GetCurrentVisitedRegion() const { return CurrentVisitedRegion; }
 	
-public:
+protected:
 	void HandleRegionEntered();
 	void HandleRegionExited();
-	
-	void VisitRegion(const FName& RegionID);
-	FName ConsumeNextRegion();
 
 protected:
 	
-	// TODO: 변경해야함. 임시로 경로를 지정해준다
-	// 이 부분은 추후에 개발될 예정
+	// TODO: 감정으로 다음 지역결정
 	// 현재는 자기 스스로 정의하지 못하지만. 나중에, 스탯 붙고나서 자율 적으로 고민할 수 있도록 코딩할 예정.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings|Path")
 	TArray<FName> PendingRegions;

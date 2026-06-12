@@ -5,6 +5,7 @@
 #include "RRegionManager.generated.h"
 
 class ARRegionVolume;
+enum class EREmotionState : uint8;
 
 UCLASS(Blueprintable)
 class RESONANCE_API URRegionManager : public UObject
@@ -16,7 +17,8 @@ public:
 	
 	void RegisterRegion(FName ID, ARRegionVolume* RegionVolume);
 	bool FindRegionLocation(FName ID, FVector& OutLocation);
-	
+	TArray<FName> GetNextRegions(FName RegionID, EREmotionState NPCEmotionState);
+	TWeakObjectPtr<ARRegionVolume> GetRegionVolume(FName RegionID);
 
 protected:
 	

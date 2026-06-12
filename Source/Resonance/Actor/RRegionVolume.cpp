@@ -1,13 +1,14 @@
 #include "Actor/RRegionVolume.h"
 
-#include "Character/RNPCCharacter.h"
-#include "System/RNPCSpawnManager.h"
+#include "Components/SplineComponent.h"
 #include "System/RRegionManager.h"
 
 ARRegionVolume::ARRegionVolume()
 	: Super()
 {
-	OnActorBeginOverlap.AddDynamic(this, &ThisClass::OnActorOverlapBegin);
+	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("DirectionSplineComponent"));
+	
+	SplineComponent->SetupAttachment(RootComponent);
 }
 
 void ARRegionVolume::BeginPlay()
@@ -21,13 +22,3 @@ void ARRegionVolume::BeginPlay()
 	RegionManager->RegisterRegion(RegionID, this);
 }
 
-void ARRegionVolume::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
-{
-	ARNPCCharacter* NPCCharacter = Cast<ARNPCCharacter>(OtherActor);
-	
-	if (IsValid(NPCCharacter))
-	{
-		NPCCharacter->VisitRegion(RegionID);
-		OverlappedCharacters.Add(NPCCharacter);
-	}
-}
