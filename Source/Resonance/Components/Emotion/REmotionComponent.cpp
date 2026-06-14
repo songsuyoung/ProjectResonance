@@ -6,10 +6,13 @@
 #include "REmotionStateBase.h"
 #include "Character/RBaseCharacter.h"
 #include "Components/Stat/RBaseStatComponent.h"
+#include "System/ResonanceMacro.h"
+#include "System/REventManager.h"
+#include "System/RMessage.h"
 
 UREmotionComponent::UREmotionComponent()
 {
-
+	
 }
 
 void UREmotionComponent::BeginPlay()
@@ -27,6 +30,22 @@ void UREmotionComponent::BeginPlay()
 			StatComponent->OnStatChanged.AddUObject(this, &ThisClass::HandleStatChanged);
 		}
 	}
+	
+	for (const auto& Class : StateClass)
+	{
+		UREmotionStateBase* EmotionState = NewObject<UREmotionStateBase>(this, Class);
+		
+		if (IsValid(EmotionState))
+		{
+			EmotionState->Init();
+			uint8 Priority = EmotionState->GetPriority();
+			Emotions.Add({Priority, EmotionState});
+			SortedEmotionKeys.Add(Priority);
+		}
+	}
+	
+	SortedEmotionKeys.Sort();
+	CurrentEmotionKey = static_cast<uint8>(EREmotionState::Max); //가장 마지막값으로, 아무것도 없음을 표현
 }
 
 /*
@@ -72,6 +91,12 @@ void UREmotionComponent::HandleStatChanged(ERStatType StatType, float MaxValue, 
 		}
 	}
 	
+	if (ActiveEmotionIndexes.IsEmpty())
+	{
+		// 활성화된 Emotion이 없음을 의미함.
+		return;
+	}
+	
 	// 새로 Top이 생긴것.
 	if (CurrentEmotionKey != ActiveEmotionIndexes.HeapTop())
 	{
@@ -89,6 +114,9 @@ void UREmotionComponent::HandleStatChanged(ERStatType StatType, float MaxValue, 
 		if (nullptr != CurrentEmotion)
 		{
 			(*CurrentEmotion)->Enter();
+			
+			FRUpdateEmotion UpdateEmotion((*CurrentEmotion)->GetEmotionType());
+			REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::UpdateEmotion, UpdateEmotion);
 		}
 	}
 }

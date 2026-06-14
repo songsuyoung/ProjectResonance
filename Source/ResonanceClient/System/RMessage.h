@@ -12,6 +12,7 @@ enum class ERMessageType
 	EnterRegion,
 	InitStat,
 	UpdateStat,
+	UpdateEmotion,
 };
 
 USTRUCT()
@@ -82,13 +83,16 @@ public:
 	FRInitStat()
 		: FRMessage(ERMessageType::InitStat)
 	{}
-	
-	FRInitStat(const TArray<FRUIStatInfo>& StatInfos) : StatInfos(StatInfos) { }
+
+	FRInitStat(const TArray<FRUIStatInfo>& StatInfos) :
+		FRMessage(ERMessageType::InitStat),
+		StatInfos(StatInfos)
+	{
+	}
 	
 	UPROPERTY(Transient)
 	TArray<FRUIStatInfo> StatInfos;
 };
-enum class ERStatType : uint8;
 
 USTRUCT()
 struct FRUpdateStat : public FRMessage
@@ -98,12 +102,36 @@ public:
 	FRUpdateStat()
 		: FRMessage(ERMessageType::UpdateStat)
 	{}
-	
-	FRUpdateStat(ERStatType StatType, float NewValue) : StatType(StatType), NewValue(NewValue) { }
+
+	FRUpdateStat(ERStatType StatType, float NewValue) :
+		FRMessage(ERMessageType::UpdateStat),
+		StatType(StatType),
+		NewValue(NewValue)
+	{
+	}
 	
 	UPROPERTY(Transient)
 	ERStatType StatType;
 	
 	UPROPERTY(Transient)
 	float NewValue;
+};
+
+USTRUCT()
+struct FRUpdateEmotion : public FRMessage
+{
+	GENERATED_BODY()
+public:
+	FRUpdateEmotion()
+		: FRMessage(ERMessageType::UpdateEmotion)
+	{}
+
+	FRUpdateEmotion(EREmotionState EmotionType) :
+		FRMessage(ERMessageType::UpdateEmotion),
+		EmotionState(EmotionType)
+	{
+	}
+	
+	UPROPERTY(Transient)
+	EREmotionState EmotionState;
 };

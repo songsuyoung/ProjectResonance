@@ -16,10 +16,15 @@ class RESONANCE_API URBaseStatComponent : public UActorComponent
 
 public:	
 	URBaseStatComponent();
-
-
+	
 	FOnStatChanged OnStatChanged;
+	
+	UFUNCTION(BlueprintCallable)
+	float GetStatValue(ERStatType StatType);
+	
+	UFUNCTION(BlueprintCallable)
 	void UpdateStat(ERStatType StatType, float NewStatValue);
+	
 protected:
 	void SetupStat(const TArray<FRStatInfo>& InStatInfos);
 	virtual void BeginPlay() override;

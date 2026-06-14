@@ -26,9 +26,9 @@ public:
 public:
 	
 	// Stat으로 부터 값이 들어 와야 함.
-	bool CanExecute(ERStatType StatType, float MaxValue, float Value);
-	int32 GetPriority() { return static_cast<int32>(EmotionState); }
-	
+	virtual bool CanExecute(ERStatType StatType, float MaxValue, float Value);
+	virtual uint8 GetPriority() { return static_cast<uint8>(EmotionState); }
+	EREmotionState GetEmotionType() { return EmotionState; }
 public:
 	virtual void Enter() { }
 	virtual void Tick() { }
@@ -39,17 +39,17 @@ protected:
 	bool CheckCondition(ERArithmeticOperation OPType, float ConditionValue, float CurrentValue);
 protected:
 	
+	// 우선 순위를 담당
 	UPROPERTY(EditAnywhere, Category = "Emotion|Settings")
-	FREmotionInfo EmotionConditionInfo;
+	EREmotionState EmotionState;
 	
-protected:
-	
-	UPROPERTY(Transient)
+	UPROPERTY(EditAnywhere, Category = "Emotion|Settings")
 	uint8 bCanTick : 1;
 	
-	// 우선 순위를 담당
-	UPROPERTY(Transient)
-	EREmotionState EmotionState;
+	UPROPERTY(EditAnywhere, Category = "Emotion|Settings")
+	FREmotionInfo EmotionConditionInfo;
+
+protected:
 	
 	UPROPERTY(Transient)
 	TMap<ERStatType, bool> ConditionResults;

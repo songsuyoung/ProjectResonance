@@ -8,7 +8,7 @@
 class UTextBlock;
 struct FRUIStatInfo;
 enum class ERStatType : uint8;
-
+enum class EREmotionState : uint8;
 UCLASS()
 class RESONANCECLIENT_API URNPCStatusDisplay : public UUserWidget, public IRMessageReceiver
 {
@@ -24,6 +24,7 @@ protected:
 	virtual void NativeDestruct() override;
 	void InitStat(const TArray<FRUIStatInfo>& StatInfos);	
 	void UpdateStat(ERStatType StatType, int32 NewValue);
+	void UpdateEmotion(EREmotionState EmotionState);
 protected:
 	
 	UPROPERTY(Transient, meta = (BindWidgetOptional))

@@ -35,6 +35,15 @@ void URNPCStatusDisplay::OnMessage(ERMessageType Type, FRMessage* Message)
 			}
 			break;	
 		}
+	case ERMessageType::UpdateEmotion:
+		{
+			FRUpdateEmotion* UpdateEmotionValue = static_cast<FRUpdateEmotion*>(Message);
+			if (nullptr != UpdateEmotionValue)
+			{
+				UpdateEmotion(UpdateEmotionValue->EmotionState);
+			}
+		}
+		break;
 	}
 }
 
@@ -54,8 +63,6 @@ void URNPCStatusDisplay::NativeDestruct()
 
 void URNPCStatusDisplay::InitStat(const TArray<FRUIStatInfo>& StatInfos)
 {
-	Args.Empty();
-	
 	for (const FRUIStatInfo& StatInfo : StatInfos)
 	{
 		UpdateStat(StatInfo.StatType, StatInfo.Value);
@@ -67,6 +74,17 @@ void URNPCStatusDisplay::UpdateStat(ERStatType StatType, int32 NewValue)
 	FString Key = FString::FromInt(static_cast<uint8>(StatType));
 	
 	Args.Add(Key, FStringFormatArg(NewValue));
+	
+	if (IsValid(TextBlock_Stat))
+	{
+		FString Result = FString::Format(*StatText, Args);
+		TextBlock_Stat->SetText(FText::FromString(Result));
+	}
+}
+
+void URNPCStatusDisplay::UpdateEmotion(EREmotionState EmotionState)
+{
+	Args.Add(TEXT("3"), UEnum::GetValueAsString(EmotionState));
 	
 	if (IsValid(TextBlock_Stat))
 	{

@@ -26,6 +26,12 @@ protected:
 
 	virtual void BeginPlay() override;
 	void HandleStatChanged(ERStatType StatType, float MaxValue, float CurrentValue);
+	
+protected:
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Emotion|Settings")
+	TArray<TSubclassOf<UREmotionStateBase>> StateClass;
+	
 protected:
 	
 	UPROPERTY(Transient)

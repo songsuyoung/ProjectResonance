@@ -13,6 +13,19 @@ URBaseStatComponent::URBaseStatComponent()
 {
 }
 
+float URBaseStatComponent::GetStatValue(ERStatType StatType)
+{
+	for (FRStatInfo& StatInfo : StatInfos)
+	{
+		if (StatInfo.StatType == StatType)
+		{
+			return StatInfo.Value;
+		}
+	}
+	
+	return 0.f;
+}
+
 void URBaseStatComponent::UpdateStat(ERStatType StatType, float NewStatValue)
 {
 	for (FRStatInfo& StatInfo : StatInfos)
@@ -27,7 +40,8 @@ void URBaseStatComponent::UpdateStat(ERStatType StatType, float NewStatValue)
 				FRUpdateStat UpdateStat;
 				UpdateStat.StatType = StatType;
 				UpdateStat.NewValue = NewValue;
-				
+	
+				OnStatChanged.Broadcast(StatInfo.StatType, StatInfo.MaxValue, StatInfo.Value);			
 				REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::UpdateStat, UpdateStat);
 			}
 			break;
@@ -44,6 +58,7 @@ void URBaseStatComponent::SetupStat(const TArray<FRStatInfo>& InStatInfos)
 	for (const FRStatInfo& StatInfo : StatInfos)
 	{
 		InitStat.StatInfos.Add(FRUIStatInfo(StatInfo.StatType, StatInfo.Value));
+		OnStatChanged.Broadcast(StatInfo.StatType, StatInfo.MaxValue, StatInfo.Value);
 	}
 	
 	REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::InitStat, InitStat);
