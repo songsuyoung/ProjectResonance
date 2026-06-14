@@ -46,10 +46,8 @@ void ARNPCCharacter::HandleRegionEntered()
 
 void ARNPCCharacter::HandleRegionExited()
 {
-	
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
-	
 }
 
 void ARNPCCharacter::VisitRegion(const FName& RegionID)

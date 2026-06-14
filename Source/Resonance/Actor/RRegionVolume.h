@@ -4,9 +4,9 @@
 #include "GameFramework/Volume.h"
 #include "RRegionVolume.generated.h"
 
-class USplineComponent;
+class UArrowComponent;
 
-UCLASS()
+UCLASS(Blueprintable)
 class RESONANCE_API ARRegionVolume : public AVolume
 {
 	GENERATED_BODY()
@@ -14,17 +14,15 @@ class RESONANCE_API ARRegionVolume : public AVolume
 public:
 	ARRegionVolume();
 	
-	USplineComponent* GetSplineComponent() { return SplineComponent; }
+	UArrowComponent* GetLookAtArrowComponent() { return LookAtArrowComponent; }
+	
 	// BeginPlay 함수에서는 NPC를 스폰한다.
 	virtual void BeginPlay() override;
-	
 protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Region|Settings")
 	FName RegionID;
 	
-	// 앞으로 가야하는 방향
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Region|Settings")
-	TObjectPtr<USplineComponent> SplineComponent;
-	
+	UPROPERTY(EditInstanceOnly, Category = "Region|Settings")
+	TObjectPtr<UArrowComponent> LookAtArrowComponent;
 };

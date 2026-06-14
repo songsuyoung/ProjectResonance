@@ -56,7 +56,7 @@ void URNPCSpawnManager::SpawnNPC(const FName& NPCID, const FName& RegionID)
 	SpawnTransform.SetRotation(FRotator::ZeroRotator.Quaternion());
 	
 	ARNPCCharacter* SpawnedNPC = World->SpawnActorDeferred<ARNPCCharacter>(NPCCharacterClass, SpawnTransform);
-	SpawnedNPC->SetID(NPCID, RegionID); //일단 지역 ID로 저장
+	SpawnedNPC->SetID(NPCID, RegionID);
 	SpawnedNPC->FinishSpawning(SpawnTransform);
 	
 	ActiveNPC.Add({NPCID, SpawnedNPC});

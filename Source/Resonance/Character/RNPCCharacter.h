@@ -61,5 +61,8 @@ protected:
 	FName CurrentVisitedRegion;
 	
 	UPROPERTY(Transient)
+	FName HomeID;
+	
+	UPROPERTY(Transient)
 	FName ID;
 };

@@ -1,41 +1,57 @@
 #include "RSTTask_EnterRegion.h"
 
+// UE 5.
+#include "Components/ArrowComponent.h"
+
+//
 #include "Actor/RRegionVolume.h"
 #include "Character/RNPCCharacter.h"
-#include "Components/SplineComponent.h"
 #include "System/RRegionManager.h"
 
 URSTTask_EnterRegion::URSTTask_EnterRegion(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
     , EnterRegion(EREnterRegionStage::TurnInPlace)
+    , SlowDownRadius(200.f)
+    , LimitedDistanceScale(0.7f)
 {
 }
 
 EStateTreeRunStatus URSTTask_EnterRegion::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
 {
-    FName CurrentRegionID = OwnerCharacter->GetCurrentVisitedRegion();
+    // 현재 도달한 다음 구역을 가져온다.
+    NextRegionID = OwnerCharacter->PeekNextRegion();
+    
+    if (NextRegionID.IsNone())
+    {
+        return EStateTreeRunStatus::Failed;
+    }
     
     URRegionManager* RegionManager = URRegionManager::Get(this);
     check(RegionManager);
     
-    TWeakObjectPtr<ARRegionVolume> RegionVolume = RegionManager->GetRegionVolume(CurrentRegionID);
+    // 그 구역의 RegionVolume을 가져오고,
+    TWeakObjectPtr<ARRegionVolume> RegionVolume = RegionManager->GetRegionVolume(NextRegionID);
     
     if (false == RegionVolume.IsValid())
     {
         return EStateTreeRunStatus::Failed;
     }
-
-    USplineComponent* SplineComponent = RegionVolume->GetSplineComponent();
-
-    // Point 1 위치로 목적지 설정
-    TargetLocation = SplineComponent->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::World);
-
-    // 캐릭터 현재 위치 → Point 1 방향으로 회전 목표 설정
-    FVector Dir = (TargetLocation - OwnerCharacter->GetActorLocation());
-    Dir.Z = 0.f;
-    TargetRotation = FRotator(0.f, Dir.Rotation().Yaw, 0.f);
-
-    LimitedDistance = 50.f;
+    
+    UArrowComponent* LookAtArrowComponent = RegionVolume->GetLookAtArrowComponent();
+    
+    if (false == IsValid(LookAtArrowComponent))
+    {
+        return EStateTreeRunStatus::Failed;
+    }
+    
+    FVector ForwardVector = LookAtArrowComponent->GetForwardVector();
+    TargetRotation = ForwardVector.Rotation();
+    TargetRotation.Roll = TargetRotation.Pitch = 0.f;
+    
+    FVector Extent, Origin;
+    RegionVolume->GetActorBounds(false, Origin, Extent);
+    TargetLocation = RegionVolume->GetActorLocation() + ForwardVector * Extent.X;
+    LimitedDistance = Extent.X * LimitedDistanceScale; //70.f 길이만큼 오면 인정.
     EnterRegion = EREnterRegionStage::TurnInPlace;
     
     return EStateTreeRunStatus::Running;
@@ -49,7 +65,7 @@ EStateTreeRunStatus URSTTask_EnterRegion::Tick(FStateTreeExecutionContext& Conte
         TurnInPlace(DeltaTime);
         break;
     case EREnterRegionStage::Walk:
-        Walk(DeltaTime);
+        MoveTo(DeltaTime);
         break;
     case EREnterRegionStage::Hidden:
         Enter();
@@ -72,17 +88,20 @@ void URSTTask_EnterRegion::TurnInPlace(float DeltaTime)
         return;
     }
 
-    OwnerCharacter->SetActorRotation(
-        FMath::RInterpTo(OwnerCharacter->GetActorRotation(), TargetRotation, DeltaTime, 10.f)
-    );
+    FRotator NewRot = FMath::RInterpTo(
+         OwnerCharacter->GetActorRotation(),
+         TargetRotation,
+         DeltaTime,
+         10.f
+     );
+    
+    OwnerCharacter->SetActorRotation(NewRot);
 }
 
-void URSTTask_EnterRegion::Walk(float DeltaTime)
+void URSTTask_EnterRegion::MoveTo(float DeltaTime)
 {
     FVector CurrentLocation = OwnerCharacter->GetActorLocation();
     float Distance = FVector::Dist2D(CurrentLocation, TargetLocation);
-
-    UE_LOG(LogTemp, Warning, TEXT("Distance: %.2f / LimitedDistance: %.2f"), Distance, LimitedDistance);
 
     if (Distance <= LimitedDistance)
     {
@@ -91,12 +110,11 @@ void URSTTask_EnterRegion::Walk(float DeltaTime)
     }
 
     FVector Direction = (TargetLocation - CurrentLocation).GetSafeNormal();
-    float ScaleValue = FMath::Clamp(Distance / 200.f, 0.1f, 0.5f);
+    float ScaleValue = FMath::Clamp(Distance / SlowDownRadius, 0.1f, 0.5f);
     OwnerCharacter->AddMovementInput(Direction, ScaleValue);
 }
 
 void URSTTask_EnterRegion::Enter()
 {
-    FName NextRegionID = OwnerCharacter->PeekNextRegion();
     OwnerCharacter->VisitRegion(NextRegionID);
 }

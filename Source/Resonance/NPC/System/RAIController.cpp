@@ -23,6 +23,7 @@ void ARAIController::OnPossess(APawn* InPawn)
 	if (IsValid(NPCCharacter))
 	{
 		NPCCharacter->OnRegionExited.AddUObject(this, &ThisClass::HandleRegionExited);
+		NPCCharacter->OnRegionEntered.AddUObject(this, &ThisClass::HandleRegionEntered);
 	}
 }
 
@@ -33,6 +34,7 @@ void ARAIController::OnUnPossess()
 	if (IsValid(NPCCharacter))
 	{
 		NPCCharacter->OnRegionExited.RemoveAll(this);
+		NPCCharacter->OnRegionEntered.RemoveAll(this);
 	}
 	
 	Super::OnUnPossess();

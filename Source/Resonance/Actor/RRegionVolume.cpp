@@ -1,14 +1,15 @@
 #include "Actor/RRegionVolume.h"
 
+#include "Character/RNPCCharacter.h"
+#include "Components/ArrowComponent.h"
 #include "Components/SplineComponent.h"
 #include "System/RRegionManager.h"
 
 ARRegionVolume::ARRegionVolume()
 	: Super()
 {
-	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("DirectionSplineComponent"));
-	
-	SplineComponent->SetupAttachment(RootComponent);
+	LookAtArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("LookAtArrowComponent"));
+	LookAtArrowComponent->SetupAttachment(RootComponent);
 }
 
 void ARRegionVolume::BeginPlay()
@@ -21,4 +22,3 @@ void ARRegionVolume::BeginPlay()
 	
 	RegionManager->RegisterRegion(RegionID, this);
 }
-
