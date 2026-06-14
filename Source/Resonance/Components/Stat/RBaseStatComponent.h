@@ -2,8 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Data/ResonanceStructs.h"
 #include "RBaseStatComponent.generated.h"
 
+enum class ERStatType : uint8;
+
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnStatChanged, ERStatType, float, float);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RESONANCE_API URBaseStatComponent : public UActorComponent
@@ -14,20 +18,14 @@ public:
 	URBaseStatComponent();
 
 
+	FOnStatChanged OnStatChanged;
+	void UpdateStat(ERStatType StatType, float NewStatValue);
+protected:
+	void SetupStat(const TArray<FRStatInfo>& InStatInfos);
+	virtual void BeginPlay() override;
+
 protected:
 
-	/* HP : 일반 체력 */
-	UPROPERTY(EditInstanceOnly, Category = "Stat")
-	float MaxHP;
-
-	UPROPERTY(EditInstanceOnly, Category = "Stat")
-	float CurrentHP;
-
-	/* Stamina : 달리기, 수영, 날기 등 제한된 활성화 값 */
-	UPROPERTY(EditInstanceOnly, Category = "Stat")
-	float MaxStamina;
-
-	UPROPERTY(EditInstanceOnly, Category = "Stat")
-	float CurrentStamina;
-
+	UPROPERTY(Transient)
+	TArray<FRStatInfo> StatInfos;
 };

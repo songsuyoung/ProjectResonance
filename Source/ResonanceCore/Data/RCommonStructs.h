@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "RCoreStructs.generated.h"
+#include "RCommonStructs.generated.h"
 
 enum class ERBakeType : uint8;
 enum class ERPathPointType : uint8;

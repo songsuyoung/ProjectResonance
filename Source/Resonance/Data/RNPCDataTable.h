@@ -1,17 +1,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RBaseDataTable.h"
 #include "RNPCDataTable.generated.h"
 
 USTRUCT(BlueprintType)
-struct RESONANCE_API FRNPCDataTable : public FTableRowBase
+struct RESONANCE_API FRNPCDataTable : public FRBaseDataTable
 {
 	GENERATED_BODY()
-public:
-	virtual void OnPostDataImport(const UDataTable* InDataTable, const FName InRowName, TArray<FString>& OutCollectedImportProblems) override;
-	virtual void OnDataTableChanged(const UDataTable* InDataTable, const FName InRowName) override;
 
-	const FName GetID() const { return ID; }
 public:
 	
 	// TODO: NPC마다 이름, 외형 등도 여기에 있을 예정
@@ -21,8 +18,4 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
 	FName RegionID;
-	
-private:
-	UPROPERTY(Transient)
-	FName ID;
 };

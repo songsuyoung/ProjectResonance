@@ -5,7 +5,7 @@ public class ResonanceClient : ModuleRules
     public ResonanceClient(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-        PublicIncludePaths.AddRange(new string[] { "ResonanceClient" });
+        PublicIncludePaths.AddRange(new string[] { "ResonanceClient", "ResonanceCore" });
 
         PrivateDependencyModuleNames.AddRange(new string[] {
             "Core",
@@ -13,7 +13,8 @@ public class ResonanceClient : ModuleRules
             "Engine",
             "UMG",
             "Slate",
-            "SlateCore"
+            "SlateCore", 
+            "ResonanceCore",
         });
     }
 }

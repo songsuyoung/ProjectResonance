@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/RCoreStructs.h"
+#include "Data/RCommonStructs.h"
 #include "RBakeDataManager.generated.h"
 
 struct FRPointData;

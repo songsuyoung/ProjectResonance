@@ -2,7 +2,7 @@
 
 #include "JsonObjectConverter.h"
 #include "RGameInstance.h"
-#include "Data/RCoreStructs.h"
+#include "Data/RCommonStructs.h"
 #include "System/RFileHelper.h"
 
 URBakeDataManager* URBakeDataManager::Get(UObject* Object)

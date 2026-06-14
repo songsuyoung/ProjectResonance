@@ -1,8 +1,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/ResonanceEnums.h"
+#include "UI/System/ResonanceUIStructs.h"
 #include "RMessage.generated.h"
+
+UENUM()
+enum class ERMessageType
+{
+	StartGame,
+	ShowUI,
+	EnterRegion,
+	InitStat,
+	UpdateStat,
+};
 
 USTRUCT()
 struct FRMessage
@@ -62,4 +72,38 @@ public:
 	// 머무는 시간 
 	UPROPERTY(Transient)
 	float HangAroundTime;
+};
+
+USTRUCT()
+struct FRInitStat : public FRMessage
+{
+	GENERATED_BODY()
+public:
+	FRInitStat()
+		: FRMessage(ERMessageType::InitStat)
+	{}
+	
+	FRInitStat(const TArray<FRUIStatInfo>& StatInfos) : StatInfos(StatInfos) { }
+	
+	UPROPERTY(Transient)
+	TArray<FRUIStatInfo> StatInfos;
+};
+enum class ERStatType : uint8;
+
+USTRUCT()
+struct FRUpdateStat : public FRMessage
+{
+	GENERATED_BODY()
+public:
+	FRUpdateStat()
+		: FRMessage(ERMessageType::UpdateStat)
+	{}
+	
+	FRUpdateStat(ERStatType StatType, float NewValue) : StatType(StatType), NewValue(NewValue) { }
+	
+	UPROPERTY(Transient)
+	ERStatType StatType;
+	
+	UPROPERTY(Transient)
+	float NewValue;
 };

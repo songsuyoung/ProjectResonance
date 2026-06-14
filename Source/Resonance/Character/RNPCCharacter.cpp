@@ -2,21 +2,36 @@
 
 // UE 5.
 #include "Components/SplineComponent.h"
+#include "Components/WidgetComponent.h"
 
 // 
-#include "Components/REmotionComponent.h"
-#include "Data/ResonanceEnums.h"
-#include "Data/ResonanceMacro.h"
+#include "Components/Emotion/REmotionComponent.h"
+#include "Components/Stat/RBaseStatComponent.h"
 #include "NPC/System/RAIController.h"
+#include "System/ResonanceMacro.h"
 #include "System/REventManager.h"
 #include "System/RMessage.h"
 
 ARNPCCharacter::ARNPCCharacter()
 	: Super()
 	, CurrentVisitedRegion()
+	
 {
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
 	EmotionComponent = CreateDefaultSubobject<UREmotionComponent>(TEXT("EmotionComponent"));
+	EmotionWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(TEXT("/Game/Blueprints/UI/WidgetComponent/WBP_StatusDisplay"));
+	if (WidgetClassFinder.Succeeded())
+	{
+		EmotionWidgetComponent->SetWidgetClass(WidgetClassFinder.Class);
+	}
+	
+	EmotionWidgetComponent->SetupAttachment(GetMesh(), TEXT("head"));
+	EmotionWidgetComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	EmotionWidgetComponent->SetDrawSize(FVector2D(200.0f, 100.0f));
+	EmotionWidgetComponent->SetRelativeRotation(FRotator(0.f, 90.0f, -90.0f));
+	
+	BaseStatComponent = CreateDefaultSubobject<URBaseStatComponent>(TEXT("BaseStatComponent"));
 	
 	AIControllerClass = ARAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;

@@ -2,14 +2,14 @@
 
 // 
 #include "RDataManager.h"
-#include "REventManager.h"
+#include "System/REventManager.h"
 #include "RGameInstance.h"
-#include "RMessage.h"
+#include "System/RMessage.h"
 #include "RRegionManager.h"
 #include "Character/RNPCCharacter.h"
 #include "Data/ResonanceEnums.h"
-#include "Data/ResonanceMacro.h"
 #include "Data/RNPCDataTable.h"
+#include "System/ResonanceMacro.h"
 
 URNPCSpawnManager* URNPCSpawnManager::Get(UObject* Context)
 {
@@ -31,7 +31,7 @@ void URNPCSpawnManager::Initialize()
 
 void URNPCSpawnManager::DeInitialize()
 {
-	REVENT_MESSAGE_Remove(this, this);
+	REVENT_MESSAGE_REMOVE(this, this);
 }
 
 void URNPCSpawnManager::SpawnNPC(const FName& NPCID, const FName& RegionID)
@@ -174,10 +174,10 @@ void URNPCSpawnManager::InitSpawnNPC()
 		
 		for (const FRNPCDataTable* NPCData : NPCDataTable)
 		{
-			// TODO: C++ ID 로딩할 수 있도록 수정.
 			const FName NPCID = NPCData->GetID();
 			const FName RegionID = NPCData->RegionID;
 			const float SpawnTime = NPCData->SpawnTime;
+			
 			FTimerHandle TimerHandle;
 			World->GetTimerManager().SetTimer(TimerHandle, [ThisWeakPtr, NPCID, RegionID]()
 			{

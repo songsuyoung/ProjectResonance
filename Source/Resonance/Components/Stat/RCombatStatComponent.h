@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Stat/RBaseStatComponent.h"
+#include "RBaseStatComponent.h"
 #include "RCombatStatComponent.generated.h"
 
 
@@ -20,25 +20,25 @@ protected:
 
 protected:
 	
-	/* BaseAttackPower : ±âº» °ø°Ý·Â */
+	/* BaseAttackPower : ï¿½âº» ï¿½ï¿½ï¿½Ý·ï¿½ */
 	UPROPERTY(EditInstanceOnly, Category = "Stat")
 	float MaxBaseAttackPower;
 
 	UPROPERTY(EditInstanceOnly, Category = "Stat")
 	float CurrentBaseAttackPower;
 
-	/* ¿ø¼Ò ¸¶½ºÅÍ¸® : ¿ø¼Ò ¸¶½ºÅÍ¸®°¡ ³ôÀ» ¼ö·Ï »ç¿ëÇÒ ¼ö ÀÖ´Â ¿ø¼Ò ÈûÀÌ °­·Â*/
+	/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditInstanceOnly, Category = "Stat")
 	float BaseElementalMastery;
 
 	/* 
-	* Ä¡¸íÅ¸ È®·ü : Ä¡¸íÅ¸ È®·üÀ» ³ôÀÌ´Â ¹æ¹ý ÇØ´ç ÆÛ¼¾Å×ÀÌÁö¿¡ µû¶ó Ä¡¸íÅ¸°¡ ´Þ¶óÁü 
-	* È®·ü => ÆÛ¼¾Å×ÀÌÁö¿¡ ±â¹Ý
+	* Ä¡ï¿½ï¿½Å¸ È®ï¿½ï¿½ : Ä¡ï¿½ï¿½Å¸ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Û¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä¡ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Þ¶ï¿½ï¿½ï¿½ 
+	* È®ï¿½ï¿½ => ï¿½Û¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	*/
 	UPROPERTY(EditInstanceOnly, Category = "Stat")
 	float BaseHitChance;
 
-	/* ¿ø¼Ò ÃæÀü È¿À² : ½ºÅ³ ÃæÀü È¿À² (ÆÛ¼¾Å×ÀÌÁö ±â¹Ý) */
+	/* ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ : ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ (ï¿½Û¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½) */
 	UPROPERTY(EditInstanceOnly, Category = "Stat")
 	float EnerageRechargeRate;
 

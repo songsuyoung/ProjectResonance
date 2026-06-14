@@ -8,7 +8,7 @@
 // 
 #include "RBakeDataManager.h"
 #include "RGameInstance.h"
-#include "Data/RCoreEnums.h"
+#include "Data/RCommonEnums.h"
 #include "System/RFileHelper.h"
 
 URPathFinder::URPathFinder()

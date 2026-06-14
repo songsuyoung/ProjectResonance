@@ -1,17 +1,17 @@
 #include "System/REventManager.h"
 
 // Newly Created Files...
-#include "System/RGameInstance.h"
+#include "System/RBaseGameInstance.h"
 
 UREventManager* UREventManager::Get(UObject* Object)
 {
-    // UObject´Â World ¸¦ °¡Áö°í ÀÖÁö ¾Ê´Ù.
-    // ±×·¸±â¶§¹®¿¡ ¿ÜºÎ ¾×ÅÍ·ÎºÎÅÍ World¸¦ °¡Á®¿Í¾ßÇÑ´Ù.
+    // UObjectï¿½ï¿½ World ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´ï¿½.
+    // ï¿½×·ï¿½ï¿½â¶§ï¿½ï¿½ï¿½ï¿½ ï¿½Üºï¿½ ï¿½ï¿½ï¿½Í·Îºï¿½ï¿½ï¿½ Worldï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ï¿½Ñ´ï¿½.
     UWorld* World = Object->GetWorld();
 
     check(World);
 
-    URGameInstance* GameInstance = Cast<URGameInstance>(World->GetGameInstance());
+    URBaseGameInstance* GameInstance = Cast<URBaseGameInstance>(World->GetGameInstance());
 
     check(GameInstance);
 
@@ -34,7 +34,7 @@ void UREventManager::Notify(ERMessageType Type, FRMessage* Message)
 
     while (nullptr != NextReceiver)
     {
-        // GetValue -> UObject¸¦ ´øÁü.
+        // GetValue -> UObjectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
         IRMessageReceiver* Receiver = Cast<IRMessageReceiver>(NextReceiver->GetValue().Get());
 
         if (nullptr == Receiver)
@@ -44,7 +44,7 @@ void UREventManager::Notify(ERMessageType Type, FRMessage* Message)
             continue;
         }
 
-        // ¸Þ½ÃÁö È£Ãâ
+        // ï¿½Þ½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
         Receiver->OnMessage(Type, Message);
         NextReceiver = NextReceiver->GetNextNode();
     }

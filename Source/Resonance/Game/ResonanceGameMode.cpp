@@ -1,7 +1,7 @@
 #include "ResonanceGameMode.h"
-#include "Data/ResonanceEnums.h"
-#include "Data/ResonanceMacro.h"
+#include "System/ResonanceMacro.h"
 #include "System/REventManager.h"
+#include "System/RMessage.h"
 #include "UObject/ConstructorHelpers.h"
 
 AResonanceGameMode::AResonanceGameMode()

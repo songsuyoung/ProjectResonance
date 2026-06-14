@@ -10,5 +10,5 @@
 #define REVENT_MESSAGE_ADD(Context, Receiver)	\
 	UREventManager::Get(Context)->AddReceiver(Receiver) \
 
-#define REVENT_MESSAGE_Remove(Context, Receiver)	\
+#define REVENT_MESSAGE_REMOVE(Context, Receiver)	\
 	UREventManager::Get(Context)->RemoveReceiver(Receiver) \

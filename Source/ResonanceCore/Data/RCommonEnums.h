@@ -15,3 +15,11 @@ enum class ERPathPointType : uint8
 	Spawn,
 	Waypoint,
 };
+
+UENUM()
+enum class ERStatType : uint8
+{
+	HP,
+	Stamina,
+	Mood,
+};

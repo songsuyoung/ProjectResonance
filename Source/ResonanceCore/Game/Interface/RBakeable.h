@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Data/RCoreEnums.h"
+#include "Data/RCommonEnums.h"
 #include "UObject/Interface.h"
 #include "RBakeable.generated.h"
 

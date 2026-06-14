@@ -2,8 +2,8 @@
 
 // 
 #include "REditorUtils.h"
-#include "Data/RCoreEnums.h"
-#include "Data/RCoreStructs.h"
+#include "Data/RCommonEnums.h"
+#include "Data/RCommonStructs.h"
 
 void FRTransformBaker::Bake(UWorld* World)
 {

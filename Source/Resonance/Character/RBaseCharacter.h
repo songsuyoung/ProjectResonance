@@ -14,10 +14,14 @@ class RESONANCE_API ARBaseCharacter : public ACharacter
 
 public:
 	ARBaseCharacter();
-	
+	FName GetID() { return ID; }
+	void SetID(FName InID) { ID = InID; }
 	URBaseStatComponent* GetBaseStatComponent() const { return BaseStatComponent; }
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 	TObjectPtr<URBaseStatComponent> BaseStatComponent;
+	
+	UPROPERTY(Transient)
+	FName ID;
 };

@@ -14,6 +14,7 @@
 #include "Components/RCombatComponent.h"
 #include "Components/RHeroComponent.h"
 #include "Components/RHitCheckComponent.h"
+#include "Components/Stat/RBaseStatComponent.h"
 #include "Game/RPlayerController.h"
 #include "Data/RCharacterDataTable.h"
 

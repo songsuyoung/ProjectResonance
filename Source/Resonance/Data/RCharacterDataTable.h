@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RBaseDataTable.h"
 #include "Data/ResonanceEnums.h"
 #include "RCharacterDataTable.generated.h"
 
@@ -30,7 +31,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct RESONANCE_API FRCharacterDataTable : public FTableRowBase
+struct RESONANCE_API FRCharacterDataTable : public FRBaseDataTable
 {
 	GENERATED_BODY()
 public:

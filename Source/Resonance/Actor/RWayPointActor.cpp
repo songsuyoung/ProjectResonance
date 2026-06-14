@@ -1,6 +1,6 @@
 #include "Actor/RWayPointActor.h"
 
-#include "Data/RCoreEnums.h"
+#include "Data/RCommonEnums.h"
 #include "System/RBakeDataManager.h"
 
 ARWayPointActor::ARWayPointActor()

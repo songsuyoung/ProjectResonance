@@ -1,7 +1,7 @@
 #include "Actor/RPathPointActor.h"
 
-#include "Data/RCoreEnums.h"
-#include "Data/RCoreStructs.h"
+#include "Data/RCommonEnums.h"
+#include "Data/RCommonStructs.h"
 
 ARPathPointActor::ARPathPointActor()
 	: Super()
