@@ -5,7 +5,10 @@
 // 
 #include "REmotionStateBase.h"
 #include "Character/RBaseCharacter.h"
+#include "Character/RNPCCharacter.h"
 #include "Components/Stat/RBaseStatComponent.h"
+#include "Data/RLocationPreferenceTable.h"
+#include "System/RDataManager.h"
 #include "System/ResonanceMacro.h"
 #include "System/REventManager.h"
 #include "System/RMessage.h"
@@ -37,7 +40,7 @@ void UREmotionComponent::BeginPlay()
 		
 		if (IsValid(EmotionState))
 		{
-			EmotionState->Init();
+			EmotionState->Init(BaseCharacter);
 			uint8 Priority = EmotionState->GetPriority();
 			Emotions.Add({Priority, EmotionState});
 			SortedEmotionKeys.Add(Priority);
@@ -71,23 +74,19 @@ void UREmotionComponent::BeginPlay()
 // StatChanged -> 각 Emotion의 조건 체크 -> 활성 가능한 것들 중 Priority 최고값 -> Enter/Exit
 void UREmotionComponent::HandleStatChanged(ERStatType StatType, float MaxValue, float CurrentValue)
 {
-	// 항상 제거 아래에서 추가하기 때문임. bCanExecute가 true일 때, 
 	ActiveEmotionIndexes.Empty();
 	// 처음 초반에는 CurrentEmotionKey가 없을 수 있음.
 	// 순서대로 반복문 돌기 위해서는, TMap이 아닌, ProrityKey순으로 돌려주어야함.
 	for (int32 Index = 0; Index < SortedEmotionKeys.Num(); Index++)
 	{
-		if (SortedEmotionKeys[Index] >= CurrentEmotionKey)
-		{
-			//이미 들어가있는 경우임.
-			break;
-		}
-		
 		TObjectPtr<UREmotionStateBase>* Emotion = Emotions.Find(SortedEmotionKeys[Index]);
 		
-		if (nullptr != Emotion && true == (*Emotion)->CanExecute(StatType, MaxValue, CurrentValue))
+		if (nullptr != Emotion)
 		{
-			ActiveEmotionIndexes.Add(SortedEmotionKeys[Index]);
+			if (true == (*Emotion)->CanExecute(StatType, MaxValue, CurrentValue))
+			{
+				ActiveEmotionIndexes.Add(SortedEmotionKeys[Index]);
+			}
 		}
 	}
 	
@@ -121,12 +120,42 @@ void UREmotionComponent::HandleStatChanged(ERStatType StatType, float MaxValue, 
 	}
 }
 
-float UREmotionComponent::GetStayDuration()
+float UREmotionComponent::GetStayDuration(FName LocationID)
 {
-	// 추후에 현재 Emotion이 무엇인가에 따라서 머무는 시간이 달라짐.	
+	ARNPCCharacter* NPCCharacter = Cast<ARNPCCharacter>(GetOwner());
 	
+	if (false == IsValid(NPCCharacter))
+	{
+		return 0.0f;
+	}
+	
+	URDataManager* DataManager = URDataManager::Get(this);
+	check(DataManager);
+	
+	FRLocationPreferenceTable* PreferenceTable = DataManager->GetDataTableRow<FRLocationPreferenceTable>(ERDataTableType::LocationPreferenceDataTable, NPCCharacter->GetPreferenceLocationID());
+	
+	if (nullptr == PreferenceTable)
+	{
+		return 0.0f;
+	}
+	
+	float Stamina = StatComponent->GetCurrentStatValue(ERStatType::Stamina) / FMath::Max(StatComponent->GetMaxStatValue(ERStatType::Stamina), 1.0f);
+	float StaminaMult = 1.0 + (1.0f - Stamina); //역비례해서 스테미나가 적을 수록 더 오래 머물도록 함.
+	
+	EREmotionState EmotionState = Emotions[CurrentEmotionKey]->GetEmotionType();
+	float EmotionMult = Emotions[CurrentEmotionKey]->GetHangAroundMultiplier();
+	
+	float* Found = PreferenceTable->Preferences[EmotionState].Preferences.Find(LocationID);
+	float LocationPref = 1.0f;
+	if (Found != nullptr)
+	{
+		LocationPref = *Found;
+	}
+	
+	// 추후에 현재 Emotion이 무엇인가에 따라서 머무는 시간이 달라짐.	
+	float TotalDuration = NPCCharacter->GetBaseDuration() * EmotionMult * LocationPref * StaminaMult;
 	//0~1 사이의 값을 가짐 
-	float DurationTime = FMath::FRand() * FMath::RandRange(10.f, 50.f);
+	float DurationTime = FMath::Clamp(TotalDuration, 5.0f, 20.f);
 	
 	return DurationTime;
 }

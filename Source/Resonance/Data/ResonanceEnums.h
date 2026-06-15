@@ -8,6 +8,7 @@ enum class ERDataTableType : uint8
 	SkillData,
 	CharacterData,
 	NPCDataTable,
+	LocationPreferenceDataTable,
 	Max,
 };
 
@@ -82,4 +83,12 @@ enum class ERArithmeticOperation : uint8
 	LessOrEqual,
 	Equal,
 	NotEqual,
+};
+
+UENUM()
+enum class ERLocationType : uint8
+{
+	Home,
+	Park,
+	Store, //Store 선택시 Volume -> Store 중 선택하도록함. (거리기반으로)
 };

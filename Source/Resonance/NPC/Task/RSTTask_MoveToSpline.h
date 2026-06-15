@@ -7,6 +7,7 @@
 class ARNPCCharacter;
 class AAIController;
 class USplineComponent;
+class URBaseStatComponent;
 
 struct FSplinePoint;
 UCLASS()
@@ -48,4 +49,7 @@ protected:
 	
 	UPROPERTY(Transient)
 	FName NextRegionID;
+	
+	UPROPERTY(Transient)
+	TWeakObjectPtr<URBaseStatComponent> StatComponent;
 };

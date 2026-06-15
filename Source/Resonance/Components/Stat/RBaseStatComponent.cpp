@@ -13,13 +13,26 @@ URBaseStatComponent::URBaseStatComponent()
 {
 }
 
-float URBaseStatComponent::GetStatValue(ERStatType StatType)
+float URBaseStatComponent::GetCurrentStatValue(ERStatType StatType)
 {
 	for (FRStatInfo& StatInfo : StatInfos)
 	{
 		if (StatInfo.StatType == StatType)
 		{
 			return StatInfo.Value;
+		}
+	}
+	
+	return 0.f;
+}
+
+float URBaseStatComponent::GetMaxStatValue(ERStatType StatType)
+{
+	for (FRStatInfo& StatInfo : StatInfos)
+	{
+		if (StatInfo.StatType == StatType)
+		{
+			return StatInfo.MaxValue;
 		}
 	}
 	
@@ -37,7 +50,9 @@ void URBaseStatComponent::UpdateStat(ERStatType StatType, float NewStatValue)
 			if (StatInfo.Value != NewValue)
 			{
 				StatInfo.Value = NewValue;
+				
 				FRUpdateStat UpdateStat;
+				UpdateStat.NPCID = OwnerID;
 				UpdateStat.StatType = StatType;
 				UpdateStat.NewValue = NewValue;
 	
@@ -54,7 +69,7 @@ void URBaseStatComponent::SetupStat(const TArray<FRStatInfo>& InStatInfos)
 	StatInfos = InStatInfos;
 
 	FRInitStat InitStat;
-	
+	InitStat.NPCID = OwnerID;
 	for (const FRStatInfo& StatInfo : StatInfos)
 	{
 		InitStat.StatInfos.Add(FRUIStatInfo(StatInfo.StatType, StatInfo.Value));
@@ -79,16 +94,18 @@ void URBaseStatComponent::BeginPlay()
 
 	check(DataManager);
 
-	FRBaseDataTable* BaseDataTable = DataManager->GetDataTableRow<FRBaseDataTable>(
-		ERDataTableType::CharacterData, BaseCharacter->GetID());
+	OwnerID = BaseCharacter->GetID();
+	
+	/*FRBaseDataTable* BaseDataTable = DataManager->GetDataTableRow<FRBaseDataTable>(
+		ERDataTableType::CharacterData, OwnerID);
 
 	if (nullptr != BaseDataTable)
 	{
 		SetupStat(BaseDataTable->StatInfos);
-	}
+	}*/
 
-	BaseDataTable = DataManager->GetDataTableRow<FRBaseDataTable>(ERDataTableType::NPCDataTable,
-	                                                              BaseCharacter->GetID());
+	FRBaseDataTable* BaseDataTable = DataManager->GetDataTableRow<FRBaseDataTable>(ERDataTableType::NPCDataTable,
+	                                                              OwnerID);
 
 	if (nullptr != BaseDataTable)
 	{

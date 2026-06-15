@@ -1,5 +1,7 @@
 #include "REmotionTired.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 UREmotionTired::UREmotionTired(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -10,7 +12,12 @@ void UREmotionTired::Enter()
 {
 	Super::Enter();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Tired is Enter"));
+	if (false == CharacterMovementComponent.IsValid())
+	{
+		return;
+	}
+	
+	CharacterMovementComponent->MaxWalkSpeed =  BaseWalkSpeed * 0.6f;
 }
 
 void UREmotionTired::Tick()
@@ -22,5 +29,10 @@ void UREmotionTired::Exit()
 {
 	Super::Exit();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Tired is Exit"));
+	if (false == CharacterMovementComponent.IsValid())
+	{
+		return;
+	}
+	
+	CharacterMovementComponent->MaxWalkSpeed =  BaseWalkSpeed;
 }

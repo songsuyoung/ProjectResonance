@@ -1,5 +1,7 @@
 #include "REmotionAnnoyed.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 UREmotionAnnoyed::UREmotionAnnoyed(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -10,7 +12,12 @@ void UREmotionAnnoyed::Enter()
 {
 	Super::Enter();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Annoyed is Enter"));
+	if (false == CharacterMovementComponent.IsValid())
+	{
+		return;
+	}
+	
+	CharacterMovementComponent->MaxWalkSpeed =  BaseWalkSpeed * 1.1f;
 }
 
 void UREmotionAnnoyed::Tick()
@@ -22,5 +29,11 @@ void UREmotionAnnoyed::Exit()
 {
 	Super::Exit();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Annoyed is Exit"));
+		
+	if (false == CharacterMovementComponent.IsValid())
+	{
+		return;
+	}
+	
+	CharacterMovementComponent->MaxWalkSpeed =  BaseWalkSpeed;
 }

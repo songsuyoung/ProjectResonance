@@ -20,7 +20,10 @@ public:
 	FOnStatChanged OnStatChanged;
 	
 	UFUNCTION(BlueprintCallable)
-	float GetStatValue(ERStatType StatType);
+	float GetCurrentStatValue(ERStatType StatType);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetMaxStatValue(ERStatType StatType);
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateStat(ERStatType StatType, float NewStatValue);
@@ -33,4 +36,7 @@ protected:
 
 	UPROPERTY(Transient)
 	TArray<FRStatInfo> StatInfos;
+	
+	UPROPERTY(Transient)
+	FName OwnerID;
 };

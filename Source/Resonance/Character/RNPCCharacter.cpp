@@ -7,6 +7,7 @@
 // 
 #include "Components/Emotion/REmotionComponent.h"
 #include "Components/Stat/RBaseStatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "NPC/System/RAIController.h"
 #include "System/ResonanceMacro.h"
 #include "System/REventManager.h"
@@ -35,6 +36,8 @@ ARNPCCharacter::ARNPCCharacter()
 	
 	AIControllerClass = ARAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	
+	GetCharacterMovement()->MaxWalkSpeed = 250.f;
 }
 
 void ARNPCCharacter::BeginPlay()
@@ -93,7 +96,7 @@ void ARNPCCharacter::VisitRegion(const FName& RegionID)
 	
 	CurrentVisitedRegion = RegionID;
 	PendingRegions.RemoveAt(0);
-	float DurationTime = EmotionComponent->GetStayDuration();
+	float DurationTime = EmotionComponent->GetStayDuration(RegionID);
 
 	FRNPCEnterRegion Msg(ID, RegionID, DurationTime);
 	REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::EnterRegion, Msg);

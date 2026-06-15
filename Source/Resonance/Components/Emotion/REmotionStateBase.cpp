@@ -1,7 +1,13 @@
 #include "Components/Emotion/REmotionStateBase.h"
 
+// UE
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 // 
+#include "Character/RBaseCharacter.h"
 #include "Data/ResonanceEnums.h"
+#include "Components/Stat/RBaseStatComponent.h"
 
 UREmotionStateBase::UREmotionStateBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -11,13 +17,23 @@ UREmotionStateBase::UREmotionStateBase(const FObjectInitializer& ObjectInitializ
 	ConditionResults.Empty();
 }
 
-void UREmotionStateBase::Init()
+void UREmotionStateBase::Init(ACharacter* InOwner)
 {
 	// 초기화를 진행.
 	for (const auto& Condition :EmotionConditionInfo.Conditions)
 	{
 		ConditionResults.Add({Condition.StatType, false});
 	}
+	ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(InOwner);
+	
+	if (IsValid(BaseCharacter))
+	{
+		CharacterMovementComponent = BaseCharacter->GetCharacterMovement();
+		BaseWalkSpeed = CharacterMovementComponent->MaxWalkSpeed;
+		
+		StatComponent = BaseCharacter->GetBaseStatComponent();
+	}
+	
 }
 
 float UREmotionStateBase::GetConditionValue(float MaxValue, const FREmotionCondition& Condition)
@@ -89,3 +105,4 @@ bool UREmotionStateBase::CanExecute(ERStatType StatType, float MaxVale, float Va
 	
 	return true;
 }
+

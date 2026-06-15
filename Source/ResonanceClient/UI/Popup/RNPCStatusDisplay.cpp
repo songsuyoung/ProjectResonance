@@ -19,10 +19,13 @@ void URNPCStatusDisplay::OnMessage(ERMessageType Type, FRMessage* Message)
 	case ERMessageType::InitStat:
 		{
 			FRInitStat* InitStatValue = static_cast<FRInitStat*>(Message);
-		
 			if (nullptr != InitStatValue)
 			{
-				InitStat(InitStatValue->StatInfos);
+				if (OwnerID.IsNone())
+				{
+					OwnerID = InitStatValue->NPCID;
+					InitStat(InitStatValue->StatInfos);
+				}
 			}
 			break;	
 		}
@@ -31,6 +34,10 @@ void URNPCStatusDisplay::OnMessage(ERMessageType Type, FRMessage* Message)
 			FRUpdateStat* UpdateStatValue = static_cast<FRUpdateStat*>(Message);
 			if (nullptr != UpdateStatValue)
 			{
+				if (OwnerID != UpdateStatValue->NPCID)
+				{
+					return;
+				}
 				UpdateStat(UpdateStatValue->StatType, UpdateStatValue->NewValue);
 			}
 			break;	

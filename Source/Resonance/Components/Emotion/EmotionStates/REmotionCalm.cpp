@@ -1,5 +1,7 @@
 #include "REmotionCalm.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 UREmotionCalm::UREmotionCalm(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -10,7 +12,12 @@ void UREmotionCalm::Enter()
 {
 	Super::Enter();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Calm is Enter"));
+	if (false == CharacterMovementComponent.IsValid())
+	{
+		return;
+	}
+	
+	CharacterMovementComponent->MaxWalkSpeed =  BaseWalkSpeed ;
 }
 
 void UREmotionCalm::Tick()

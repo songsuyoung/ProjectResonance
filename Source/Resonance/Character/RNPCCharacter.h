@@ -27,6 +27,8 @@ public:
 	void SetID(FName NPCID, FName HomeGroundID) { Super::SetID(NPCID); CurrentVisitedRegion = HomeGroundID; }
 	bool HasNextRegion() { return false == PendingRegions.IsEmpty(); }
 	void SetNextRegions(const TArray<FName>& NewNextRegions) { PendingRegions = NewNextRegions; }
+	FName GetPreferenceLocationID() { return TEXT("101"); }
+	float GetBaseDuration() { return 60.f; }
 public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

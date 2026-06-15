@@ -89,6 +89,8 @@ public:
 		StatInfos(StatInfos)
 	{
 	}
+	UPROPERTY(Transient)
+	FName NPCID;
 	
 	UPROPERTY(Transient)
 	TArray<FRUIStatInfo> StatInfos;
@@ -109,6 +111,9 @@ public:
 		NewValue(NewValue)
 	{
 	}
+	
+	UPROPERTY(Transient)
+	FName NPCID;
 	
 	UPROPERTY(Transient)
 	ERStatType StatType;

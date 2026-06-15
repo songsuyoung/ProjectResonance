@@ -6,6 +6,7 @@
 
 //
 #include "Character/RNPCCharacter.h"
+#include "Components/Stat/RBaseStatComponent.h"
 #include "Data/ResonanceStructs.h"
 
 URSTTask_MoveToSpline::URSTTask_MoveToSpline(const FObjectInitializer& ObjectInitializer)
@@ -40,8 +41,9 @@ EStateTreeRunStatus URSTTask_MoveToSpline::EnterState(FStateTreeExecutionContext
 	
 	// 초기화
 	SplineComponent = OwnerCharacter->GetSplineComponent();
-
-	if (false == SplineComponent.IsValid())
+	StatComponent = OwnerCharacter->GetBaseStatComponent();
+	
+	if (false == SplineComponent.IsValid() || false == StatComponent.IsValid())
 	{
 		return EStateTreeRunStatus::Failed;
 	}
@@ -88,7 +90,12 @@ EStateTreeRunStatus URSTTask_MoveToSpline::Tick(FStateTreeExecutionContext& Cont
 	{
 		return EStateTreeRunStatus::Failed;
 	}
-
+	
+	if (StatComponent->GetCurrentStatValue(ERStatType::Stamina) <= 0.f)
+	{
+		return EStateTreeRunStatus::Failed;
+	}
+	
 	FVector CurrentLocation = OwnerCharacter->GetActorLocation();
 	const float SplineLength = SplineComponent->GetSplineLength();
 

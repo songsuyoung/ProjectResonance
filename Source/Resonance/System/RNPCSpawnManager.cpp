@@ -175,7 +175,7 @@ void URNPCSpawnManager::InitSpawnNPC()
 		for (const FRNPCDataTable* NPCData : NPCDataTable)
 		{
 			const FName NPCID = NPCData->GetID();
-			const FName RegionID = NPCData->RegionID;
+			const FName RegionID = NPCData->HomeID;
 			const float SpawnTime = NPCData->SpawnTime;
 			
 			FTimerHandle TimerHandle;

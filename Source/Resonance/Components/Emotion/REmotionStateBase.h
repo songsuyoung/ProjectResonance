@@ -11,6 +11,8 @@
  */
 
 enum class EREmotionState : uint8;
+class UCharacterMovementComponent;
+class URBaseStatComponent;
 
 UCLASS(Abstract)
 class RESONANCE_API UREmotionStateBase : public UObject
@@ -21,7 +23,7 @@ public:
 	UREmotionStateBase(const FObjectInitializer& ObjectInitializer);
 	
 	bool CanTick() { return bCanTick; }
-	void Init();
+	void Init(ACharacter* InOwner);
 	
 public:
 	
@@ -29,6 +31,7 @@ public:
 	virtual bool CanExecute(ERStatType StatType, float MaxValue, float Value);
 	virtual uint8 GetPriority() { return static_cast<uint8>(EmotionState); }
 	EREmotionState GetEmotionType() { return EmotionState; }
+	virtual float GetHangAroundMultiplier() { return HangAroundMultiplier; }
 public:
 	virtual void Enter() { }
 	virtual void Tick() { }
@@ -47,11 +50,23 @@ protected:
 	uint8 bCanTick : 1;
 	
 	UPROPERTY(EditAnywhere, Category = "Emotion|Settings")
+	float HangAroundMultiplier;
+	
+	UPROPERTY(EditAnywhere, Category = "Emotion|Settings")
 	FREmotionInfo EmotionConditionInfo;
 
 protected:
-	
+
+	UPROPERTY(Transient)
+	float BaseWalkSpeed;
+		
 	UPROPERTY(Transient)
 	TMap<ERStatType, bool> ConditionResults;
+	
+	UPROPERTY(Transient)
+	TWeakObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
+	
+	UPROPERTY(Transient)
+	TWeakObjectPtr<URBaseStatComponent> StatComponent;
 	
 };

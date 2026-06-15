@@ -1,5 +1,8 @@
 #include "REmotionAngry.h"
 
+#include "Components/Stat/RBaseStatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 UREmotionAngry::UREmotionAngry(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -10,7 +13,12 @@ void UREmotionAngry::Enter()
 {
 	Super::Enter();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Angry is Enter"));
+	if (false == CharacterMovementComponent.IsValid())
+	{
+		return;
+	}
+	
+	CharacterMovementComponent->MaxWalkSpeed =  BaseWalkSpeed * 2.0f;
 }
 
 void UREmotionAngry::Tick()
@@ -22,5 +30,5 @@ void UREmotionAngry::Exit()
 {
 	Super::Exit();
 	
-	UE_LOG(LogTemp, Warning, TEXT("Angry is Exit"));
+	CharacterMovementComponent->MaxWalkSpeed = BaseWalkSpeed;
 }

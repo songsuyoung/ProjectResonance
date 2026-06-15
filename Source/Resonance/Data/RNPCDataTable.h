@@ -16,6 +16,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
 	float SpawnTime; // StartTime + SpawnTime 이후에 스폰될 예정
 
+	// TODO: NPCCharacter에 BaseDuration 반영예정.
 	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
-	FName RegionID;
+	float BaseDuration;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
+	FName HomeID;
+	
+	// ID, 우선순위
+	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
+	TMap<FName, int32> PreferredLocations;
 };
