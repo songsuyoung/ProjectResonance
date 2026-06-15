@@ -25,15 +25,15 @@ protected:
 protected:
 	
 	UPROPERTY(EditAnywhere, Category = "In")
-	float StaminaRecoverInterval;
+	float RecoveryRate;
+	
+	UPROPERTY(EditAnywhere, Category = "In")
+	float TargetPercentage;
 	
 protected:
 	
 	UPROPERTY(Transient)
 	TWeakObjectPtr<URBaseStatComponent> StatComponent;
-	
-	UPROPERTY(Transient)
-	float StaminaRecoverTimer;
 	
 	UPROPERTY(Transient)
 	float TargetStamaina;

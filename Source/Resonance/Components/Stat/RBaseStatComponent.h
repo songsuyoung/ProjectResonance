@@ -28,6 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateStat(ERStatType StatType, float NewStatValue);
 	
+	void RecoverStatOnSpawn(ERStatType StatType, float RecoveryRatio);
+	
 protected:
 	void SetupStat(const TArray<FRStatInfo>& InStatInfos);
 	virtual void BeginPlay() override;

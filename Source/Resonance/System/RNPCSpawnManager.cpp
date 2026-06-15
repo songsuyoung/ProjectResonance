@@ -7,6 +7,7 @@
 #include "System/RMessage.h"
 #include "RRegionManager.h"
 #include "Character/RNPCCharacter.h"
+#include "Components/Stat/RBaseStatComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "Data/RNPCDataTable.h"
 #include "System/ResonanceMacro.h"
@@ -80,9 +81,6 @@ void URNPCSpawnManager::AcquireNPC(FName NPCID)
 	Slot->SpawnTimerHandle.Invalidate(); //무효화
 	NPCPooling.Remove(NPCID);
 	ActiveNPC.Add({NPCID, NPCCharacter});
-	
-	
-	// NPC->Stat 정리
 	
 	// NPC 활성화
 	NPCCharacter->OnRegionExited.Broadcast();

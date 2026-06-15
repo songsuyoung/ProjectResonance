@@ -23,9 +23,11 @@ protected:
 
 protected:
 	// TODO: 추후에 데이터 테이블화 시킬 것.
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stamina | Settings", meta = (AllowPrivateAccess = "true"))
 	float StaminaDrainInterval;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stamina | Settings", meta = (AllowPrivateAccess = "true"))
+	float DrainRate;
 protected:
 	
 	UPROPERTY(Transient)
@@ -33,6 +35,12 @@ protected:
 	
 	UPROPERTY(Transient)
 	float CachedStamina;
+	
+	UPROPERTY(Transient)
+	float CachedMaxStamina;
+	
+	UPROPERTY(Transient)
+	float CachedDefaultMaxWalkSpeed;
 	
 	UPROPERTY(Transient)
 	float StaminaDrainTimer;

@@ -5,8 +5,8 @@
 
 URSTTask_RestToRecover::URSTTask_RestToRecover(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	, StaminaRecoverTimer(0.f)
 	, TargetStamaina(0.f)
+	, TargetPercentage(0.2f)
 {
 }
 
@@ -24,29 +24,21 @@ EStateTreeRunStatus URSTTask_RestToRecover::EnterState(FStateTreeExecutionContex
 		return EStateTreeRunStatus::Failed;
 	}
 	
-	TargetStamaina = StatComponent->GetMaxStatValue(ERStatType::Stamina) * 0.1f;
+	TargetStamaina = StatComponent->GetMaxStatValue(ERStatType::Stamina) * TargetPercentage;
 	return EStateTreeRunStatus::Running;
 }
 
 EStateTreeRunStatus URSTTask_RestToRecover::Tick(FStateTreeExecutionContext& Context, const float DeltaTime)
 {
-	if (StaminaRecoverInterval < StaminaRecoverTimer)
+	float CurrentStamina = StatComponent->GetCurrentStatValue(ERStatType::Stamina);
+	
+	if (CurrentStamina > TargetStamaina)
 	{
-		float CurrentStamina = StatComponent->GetCurrentStatValue(ERStatType::Stamina);
-		
-		if (TargetStamaina < CurrentStamina)
-		{
-			return EStateTreeRunStatus::Succeeded;
-		}
-		
-		// TODO: 공식 성립하기
-		float NewStamina = CurrentStamina + 15.f;
-		StatComponent->UpdateStat(ERStatType::Stamina, NewStamina);
-		
-		StaminaRecoverTimer = 0.f;
+		return EStateTreeRunStatus::Succeeded;
 	}
 	
-	StaminaRecoverTimer += DeltaTime;
-	
+	CurrentStamina = CurrentStamina + RecoveryRate * DeltaTime;
+	StatComponent->UpdateStat(ERStatType::Stamina, CurrentStamina);
+		
 	return EStateTreeRunStatus::Running;
 }

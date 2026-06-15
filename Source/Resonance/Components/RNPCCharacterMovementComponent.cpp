@@ -7,6 +7,7 @@
 URNPCCharacterMovementComponent::URNPCCharacterMovementComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, CachedStamina(-1.f)
+	, DrainRate(2.0f)
 {
 }
 
@@ -21,6 +22,8 @@ void URNPCCharacterMovementComponent::BeginPlay()
 		StatComponent = BaseCharacter->GetBaseStatComponent();
 		StatComponent->OnStatChanged.AddUObject(this, &ThisClass::HandleStatChanged);
 	}
+	
+	CachedDefaultMaxWalkSpeed = MaxWalkSpeed;
 }
 
 void URNPCCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, const FVector& OldLocation, const FVector& OldVelocity)
@@ -42,8 +45,9 @@ void URNPCCharacterMovementComponent::OnMovementUpdated(float DeltaSeconds, cons
 			// 캐릭터마다 MaxWalkSpeed가 다름 
 			// MaxWalkSpeed 값이 커질 수록, 감소하는 양이 많이짐 (반비례
 			// Stamina의 0.05%씩 감소하도록 함.
-			float UpdateStamina = CachedStamina - 10.f;
-			//float UpdateStamina = CachedStamina - ( CachedStamina * (1 / MaxWalkSpeed) * 0.05f );
+			float SpeedMultiplier = MaxWalkSpeed / CachedDefaultMaxWalkSpeed;
+			
+			float UpdateStamina = CachedStamina - (DrainRate * ( 1 + (1 - CachedStamina/CachedMaxStamina)) * SpeedMultiplier * DeltaSeconds);
 			StatComponent->UpdateStat(ERStatType::Stamina, UpdateStamina);
 			
 			StaminaDrainTimer = 0.f;
@@ -59,5 +63,6 @@ void URNPCCharacterMovementComponent::HandleStatChanged(ERStatType StatType, flo
 		return;
 	}
 	
+	CachedMaxStamina = MaxStat;
 	CachedStamina = Stat;
 }

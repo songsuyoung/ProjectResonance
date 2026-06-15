@@ -64,6 +64,12 @@ void ARNPCCharacter::HandleRegionEntered()
 
 void ARNPCCharacter::HandleRegionExited()
 {
+	if (IsValid(BaseStatComponent))
+	{
+		BaseStatComponent->RecoverStatOnSpawn(ERStatType::Stamina, 0.2f);
+		//Mood도 증가시킴.
+	}
+	
 	SetActorHiddenInGame(false);
 	SetActorEnableCollision(true);
 }

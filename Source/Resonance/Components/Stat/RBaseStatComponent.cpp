@@ -64,6 +64,16 @@ void URBaseStatComponent::UpdateStat(ERStatType StatType, float NewStatValue)
 	}
 }
 
+void URBaseStatComponent::RecoverStatOnSpawn(ERStatType StatType, float RecoveryRatio)
+{
+	float CurrentValue = GetCurrentStatValue(StatType);
+	// TODO: 추후 좋아하는 장소라면, +a를 더해주든가 한다.
+	float RecoveryAmount = GetMaxStatValue(StatType) * RecoveryRatio;
+
+	float NewValue = CurrentValue + RecoveryAmount; 
+	UpdateStat(StatType, NewValue);
+}
+
 void URBaseStatComponent::SetupStat(const TArray<FRStatInfo>& InStatInfos)
 {
 	StatInfos = InStatInfos;
