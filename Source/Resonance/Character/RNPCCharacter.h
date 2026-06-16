@@ -23,6 +23,7 @@ public:
 	ARNPCCharacter();
 	
 	USplineComponent* GetSplineComponent() const { return SplineComponent; }
+	UREmotionComponent* GetEmotionComponent() const { return EmotionComponent; }
 	FName GetCurrentVisitedRegion() const { return CurrentVisitedRegion; }
 	void SetID(FName NPCID, FName HomeGroundID) { Super::SetID(NPCID); CurrentVisitedRegion = HomeGroundID; }
 	bool HasNextRegion() { return false == PendingRegions.IsEmpty(); }

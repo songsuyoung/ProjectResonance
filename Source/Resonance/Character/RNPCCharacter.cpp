@@ -67,7 +67,22 @@ void ARNPCCharacter::HandleRegionExited()
 	if (IsValid(BaseStatComponent))
 	{
 		BaseStatComponent->RecoverStatOnSpawn(ERStatType::Stamina, 0.2f);
-		//Mood도 증가시킴.
+		
+		// Stat 계산을 수행해야한다. 선호하는 지역이라면, 스탯을 증가시키고,
+		// 신호하지 않는 지역이라면 스탯을 감소시킨다.
+		TMap<FName, float> PreferredRegions, DislikedRegions;
+		
+		BaseStatComponent->GetRegionPreferences(PreferredRegions, DislikedRegions);
+		
+		const auto PreferenceRegionPercentage = PreferredRegions.Find(CurrentVisitedRegion);
+		
+		if (nullptr != PreferenceRegionPercentage)
+		{
+			//Mood도 증가시킴.
+			float MaxValue = BaseStatComponent->GetMaxStatValue(ERStatType::Mood);
+			float NewValue = (MaxValue - MaxValue * (*PreferenceRegionPercentage)); // MaxValue * 0.7 => MaxValue - 70% => 더해줌.
+			BaseStatComponent->UpdateStat(ERStatType::Mood, NewValue);
+		}
 	}
 	
 	SetActorHiddenInGame(false);

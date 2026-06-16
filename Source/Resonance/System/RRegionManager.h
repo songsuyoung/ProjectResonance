@@ -17,7 +17,7 @@ public:
 	
 	void RegisterRegion(FName ID, ARRegionVolume* RegionVolume);
 	bool FindRegionLocation(FName ID, FVector& OutLocation);
-	TArray<FName> GetNextRegions(FName RegionID, EREmotionState NPCEmotionState);
+	TArray<FName> GetNextRegions(FName RegionID,const TMap<FName, float>& PreferredRegions,const TMap<FName, float>& DislikedRegions);
 	TWeakObjectPtr<ARRegionVolume> GetRegionVolume(FName RegionID);
 
 protected:

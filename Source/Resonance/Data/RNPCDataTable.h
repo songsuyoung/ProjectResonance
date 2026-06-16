@@ -23,7 +23,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
 	FName HomeID;
 	
-	// ID, 우선순위
+	// ID, 퍼센테이지
 	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
-	TMap<FName, int32> PreferredLocations;
+	TMap<FName, float> PreferredLocations;
+	
+	// ID, 퍼센테이지
+	UPROPERTY(EditDefaultsOnly, Category = "NPCBase")
+	TMap<FName, float> DislikedRegions;
 };

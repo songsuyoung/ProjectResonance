@@ -19,18 +19,17 @@ public:
 	
 	FOnStatChanged OnStatChanged;
 	
-	UFUNCTION(BlueprintCallable)
 	float GetCurrentStatValue(ERStatType StatType);
 	
-	UFUNCTION(BlueprintCallable)
 	float GetMaxStatValue(ERStatType StatType);
 	
-	UFUNCTION(BlueprintCallable)
 	void UpdateStat(ERStatType StatType, float NewStatValue);
 	
 	void RecoverStatOnSpawn(ERStatType StatType, float RecoveryRatio);
 	
+	void GetRegionPreferences(TMap<FName, float>& PreferredRegions, TMap<FName, float>& DislikedRegions);
 protected:
+	void SetRegionPreferences(const TMap<FName, float>& InPreferredRegions, const TMap<FName, float>& InDislikedRegions);
 	void SetupStat(const TArray<FRStatInfo>& InStatInfos);
 	virtual void BeginPlay() override;
 
@@ -38,6 +37,12 @@ protected:
 
 	UPROPERTY(Transient)
 	TArray<FRStatInfo> StatInfos;
+	
+	UPROPERTY(Transient)
+	TMap<FName, float> PreferredRegions;
+	
+	UPROPERTY(Transient)
+	TMap<FName, float> DislikedRegions;
 	
 	UPROPERTY(Transient)
 	FName OwnerID;

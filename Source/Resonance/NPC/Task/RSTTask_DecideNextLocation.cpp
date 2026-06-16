@@ -5,6 +5,9 @@
 
 // 
 #include "Character/RNPCCharacter.h"
+#include "Components/Emotion/REmotionComponent.h"
+#include "Components/Stat/RBaseStatComponent.h"
+#include "Data/RCommonEnums.h"
 #include "Data/ResonanceEnums.h"
 #include "System/RRegionManager.h"
 
@@ -24,15 +27,41 @@ EStateTreeRunStatus URSTTask_DecideNextLocation::EnterState(FStateTreeExecutionC
 	// NPC Character에게 현재 있는 위치가 어디있는지 가져온다.	
 	FName RegionID = OwnerCharacter->GetCurrentVisitedRegion();
 	
+	URBaseStatComponent* BaseStatComponent = OwnerCharacter->GetBaseStatComponent();
+	
+	if (nullptr == BaseStatComponent)
+	{
+		return EStateTreeRunStatus::Failed;
+	}
+	
+	TMap<FName, float> PreferredRegions, DislikedRegions;
+	BaseStatComponent->GetRegionPreferences(PreferredRegions, DislikedRegions);
+	
+	UREmotionComponent* EmotionComponent = OwnerCharacter->GetEmotionComponent();
+	
+	if (nullptr == EmotionComponent)
+	{
+		return EStateTreeRunStatus::Failed;
+	}
+	
 	// TODO: 추후 NPC 감정 상태 연동 예정
-	EREmotionState EmotionState = EREmotionState::Calm;
+	EREmotionState EmotionState = EmotionComponent->GetEmotionState();
+	// 여기서 감정에 대해 PreferredRegions, DislikedRegion 확률 계산
+	// 감정이 안좋을 수록, Alpha값이 추가되어진다.
+	// 0~3까지는 Alpha 거꾸로 Alpha +된다
+	float Alpha = (1.f - ((float)EmotionState/ (float)EREmotionState::Max)) * 0.5f;
+	
+	for (auto PreferredRegion : PreferredRegions)
+	{
+		PreferredRegion.Value += Alpha;
+	}
 	
 	// 그 위치를 제외한 다른 위치 선택해달라고 RegionManager에게 요청한다.
 	URRegionManager* RegionManager = URRegionManager::Get(this);
 	
 	check(RegionManager);
 	
-	const TArray<FName>& NextRegions = RegionManager->GetNextRegions(RegionID, EmotionState);
+	const TArray<FName>& NextRegions = RegionManager->GetNextRegions(RegionID, PreferredRegions, DislikedRegions);
 	
 	if (NextRegions.IsEmpty())
 	{

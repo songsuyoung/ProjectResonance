@@ -159,3 +159,13 @@ float UREmotionComponent::GetStayDuration(FName LocationID)
 	
 	return DurationTime;
 }
+
+EREmotionState UREmotionComponent::GetEmotionState()
+{
+	if (Emotions.Contains(CurrentEmotionKey))
+	{
+		return Emotions[CurrentEmotionKey]->GetEmotionType();
+	}
+	
+	return EREmotionState::Max;
+}

@@ -12,6 +12,7 @@
 class URBaseStatComponent;
 class UREmotionStateBase;
 
+enum class EREmotionState : uint8;
 enum class ERStatType : uint8;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class RESONANCE_API UREmotionComponent : public UActorComponent
@@ -24,6 +25,7 @@ public:
 	// 머무는 시간이 거리에 영향을 주지않도록 함.
 	// 머무는 시간에 영향 주는 것 : 장소에 대한 선호도 (LocationPref), 현재 감정 상태, 스테미나 상태
 	float GetStayDuration(FName LocationID);
+	EREmotionState GetEmotionState();
 protected:
 
 	virtual void BeginPlay() override;

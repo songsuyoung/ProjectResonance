@@ -3,6 +3,7 @@
 // 
 #include "Character/RBaseCharacter.h"
 #include "Data/RBaseDataTable.h"
+#include "Data/RNPCDataTable.h"
 #include "System/RDataManager.h"
 #include "System/ResonanceMacro.h"
 #include "System/REventManager.h"
@@ -74,6 +75,18 @@ void URBaseStatComponent::RecoverStatOnSpawn(ERStatType StatType, float Recovery
 	UpdateStat(StatType, NewValue);
 }
 
+void URBaseStatComponent::GetRegionPreferences(TMap<FName, float>& OutPreferredRegions, TMap<FName, float>& OutDislikedRegions)
+{
+	OutPreferredRegions = PreferredRegions;
+	OutDislikedRegions = DislikedRegions;
+}
+
+void URBaseStatComponent::SetRegionPreferences(const TMap<FName, float>& InPreferredRegions, const TMap<FName, float>& InDislikedRegions)
+{
+	PreferredRegions = InPreferredRegions;
+	DislikedRegions = InDislikedRegions;
+}
+
 void URBaseStatComponent::SetupStat(const TArray<FRStatInfo>& InStatInfos)
 {
 	StatInfos = InStatInfos;
@@ -114,11 +127,12 @@ void URBaseStatComponent::BeginPlay()
 		SetupStat(BaseDataTable->StatInfos);
 	}*/
 
-	FRBaseDataTable* BaseDataTable = DataManager->GetDataTableRow<FRBaseDataTable>(ERDataTableType::NPCDataTable,
+	FRNPCDataTable* NPCDataTable = DataManager->GetDataTableRow<FRNPCDataTable>(ERDataTableType::NPCDataTable,
 	                                                              OwnerID);
 
-	if (nullptr != BaseDataTable)
+	if (nullptr != NPCDataTable)
 	{
-		SetupStat(BaseDataTable->StatInfos);
+		SetupStat(NPCDataTable->StatInfos);
+		SetRegionPreferences(NPCDataTable->PreferredLocations, NPCDataTable->DislikedRegions);
 	}
 }
