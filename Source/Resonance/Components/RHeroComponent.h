@@ -89,7 +89,7 @@ protected:
 protected:
 
 	UPROPERTY(Transient)
-	TWeakObjectPtr<class ARPlayerController> PlayerController;
+	TWeakObjectPtr<class APlayerController> PlayerController;
 
 	UPROPERTY(Transient)
 	TWeakObjectPtr<class ACharacter> OwnerPawn;

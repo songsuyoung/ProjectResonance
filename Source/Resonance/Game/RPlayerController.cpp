@@ -37,6 +37,7 @@ void ARPlayerController::BeginPlay()
 
 	// 첫 시작이 101번
 	RefreshData(FName(TEXT("101")));
+	
 }
 
 void ARPlayerController::SetupInputComponent()

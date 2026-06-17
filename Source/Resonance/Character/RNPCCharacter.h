@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RCameraCharacter.h"
 #include "Character/RBaseCharacter.h"
 #include "RNPCCharacter.generated.h"
 
@@ -15,7 +16,7 @@ DECLARE_MULTICAST_DELEGATE(FOnRegionEntered);
 DECLARE_MULTICAST_DELEGATE(FOnRegionExited);
 
 UCLASS()
-class RESONANCE_API ARNPCCharacter : public ARBaseCharacter
+class RESONANCE_API ARNPCCharacter : public ARCameraCharacter
 {
 	GENERATED_BODY()
 	

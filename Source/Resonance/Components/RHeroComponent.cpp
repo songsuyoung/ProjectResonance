@@ -7,10 +7,7 @@
 
 // Newly Created File 
 #include "Character/ResonanceCharacter.h"
-#include "Components/RCombatComponent.h"
 #include "Data/ResonanceEnums.h"
-#include "Data/RCharacterDataTable.h"
-#include "Game/RPlayerController.h"
 
 URHeroComponent::URHeroComponent()
 {
@@ -23,7 +20,7 @@ URHeroComponent::URHeroComponent()
 void URHeroComponent::SetupInputComponent()
 {
 	// 없으면 캐스팅 시도를 해본다.
-	PlayerController = Cast<ARPlayerController>(GetOwner());
+	PlayerController = Cast<APlayerController>(GetOwner());
 
 	if (PlayerController.IsValid())
 	{

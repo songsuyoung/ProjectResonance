@@ -76,11 +76,21 @@ void ARNPCCharacter::HandleRegionExited()
 		
 		const auto PreferenceRegionPercentage = PreferredRegions.Find(CurrentVisitedRegion);
 		
+		float MaxValue = BaseStatComponent->GetMaxStatValue(ERStatType::Mood);
+		float CurValue = BaseStatComponent->GetCurrentStatValue(ERStatType::Mood);
 		if (nullptr != PreferenceRegionPercentage)
 		{
 			//Mood도 증가시킴.
-			float MaxValue = BaseStatComponent->GetMaxStatValue(ERStatType::Mood);
-			float NewValue = (MaxValue - MaxValue * (*PreferenceRegionPercentage)); // MaxValue * 0.7 => MaxValue - 70% => 더해줌.
+			float NewValue = CurValue + (MaxValue - MaxValue * (*PreferenceRegionPercentage)); // MaxValue * 0.7 => MaxValue - 70% => 더해줌.
+			BaseStatComponent->UpdateStat(ERStatType::Mood, NewValue);
+		}
+		
+		// 민액 싫어하는 곳을 갔다면, 선호도를 떨어트려야 한다.
+		const auto DislikedRegionPercentage = DislikedRegions.Find(CurrentVisitedRegion);
+		
+		if (nullptr != DislikedRegionPercentage)
+		{
+			float NewValue = CurValue - (MaxValue - (MaxValue * (*DislikedRegionPercentage)));
 			BaseStatComponent->UpdateStat(ERStatType::Mood, NewValue);
 		}
 	}

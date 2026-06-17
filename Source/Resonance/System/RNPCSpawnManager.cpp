@@ -7,7 +7,6 @@
 #include "System/RMessage.h"
 #include "RRegionManager.h"
 #include "Character/RNPCCharacter.h"
-#include "Components/Stat/RBaseStatComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "Data/RNPCDataTable.h"
 #include "System/ResonanceMacro.h"
@@ -33,6 +32,29 @@ void URNPCSpawnManager::Initialize()
 void URNPCSpawnManager::DeInitialize()
 {
 	REVENT_MESSAGE_REMOVE(this, this);
+}
+
+ARNPCCharacter* URNPCSpawnManager::GetObserveTarget()
+{
+	if (NPCIDs.IsEmpty())
+	{
+		return nullptr;
+	}
+	
+	for (int32 Index = 0; Index < NPCIDs.Num(); Index++)
+	{
+		int WrappedIndex = (ObserverIndex + Index) % NPCIDs.Num();
+		
+		TObjectPtr<ARNPCCharacter>* NPCCharacter = ActiveNPC.Find(NPCIDs[WrappedIndex]);
+		
+		if (nullptr != NPCCharacter)
+		{
+			ObserverIndex = WrappedIndex;
+			return *NPCCharacter;
+		}
+	}
+	
+	return nullptr;
 }
 
 void URNPCSpawnManager::SpawnNPC(const FName& NPCID, const FName& RegionID)
@@ -61,6 +83,7 @@ void URNPCSpawnManager::SpawnNPC(const FName& NPCID, const FName& RegionID)
 	SpawnedNPC->FinishSpawning(SpawnTransform);
 	
 	ActiveNPC.Add({NPCID, SpawnedNPC});
+	NPCIDs.Add(NPCID);
 }
 
 void URNPCSpawnManager::AcquireNPC(FName NPCID)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RCameraCharacter.h"
 #include "Character/RBaseCharacter.h"
 #include "ResonanceCharacter.generated.h"
 
@@ -16,7 +17,7 @@ enum class ERInputContext : uint8;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 enum class ERActionContext : uint8;
 UCLASS(config=Game)
-class AResonanceCharacter : public ARBaseCharacter
+class AResonanceCharacter : public ARCameraCharacter
 {
 	GENERATED_BODY()
 
@@ -26,11 +27,6 @@ public:
 	bool RequestClimb();
 	void RequestAttack(ERInputContext InputConext);;
 public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-
 	FORCEINLINE class URCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
 	FORCEINLINE class URHitCheckComponent* GetHitCheckComponent() const { return HitCheckComponent; }
@@ -46,14 +42,6 @@ protected:
 	// 캐릭터의 전체 상태를 관리할 예정
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<URActionStateComponent> ActionStateComponent;
-
-	/** Camera boom positioning the camera behind the character */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	USpringArmComponent* CameraBoom;
-
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
 
 protected:
 

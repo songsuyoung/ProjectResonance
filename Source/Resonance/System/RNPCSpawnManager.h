@@ -33,7 +33,7 @@ public:
 	static URNPCSpawnManager* Get(UObject* Context);
 	void Initialize();
 	void DeInitialize();
-	
+	ARNPCCharacter* GetObserveTarget();
 protected:
 	virtual void OnMessage(ERMessageType Type, FRMessage* Message);
 	
@@ -61,4 +61,10 @@ protected:
 	
 	UPROPERTY(Transient)
 	TMap<FName, TObjectPtr<ARNPCCharacter>> ActiveNPC;
+	
+	UPROPERTY(Transient)
+	TArray<FName> NPCIDs;
+	
+	UPROPERTY(Transient)
+	int32 ObserverIndex;
 };

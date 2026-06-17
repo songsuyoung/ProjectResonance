@@ -39,94 +39,73 @@ TArray<FName> URRegionManager::GetNextRegions(FName RegionID, const TMap<FName, 
     TArray<FName> CandidateRegions;
     Regions.GenerateKeyArray(CandidateRegions);
 
-    // 현재 지역 제외
-    CandidateRegions.Remove(RegionID);
-
-    // 가중치 계산
-    TArray<TPair<FName, float>> WeightedRegions;
-    float TotalWeight = 0.f;
-
-    for (const FName& Region : CandidateRegions)
-    {
-        float Weight = 0.005f; // 기본 0.5%
-
-        if (const float* PreferredWeight = PreferredRegions.Find(Region))
-        {
-            int32 Rank = 0;
-            for (const auto& Pair : PreferredRegions)
-            {
-                Rank++;
-                if (Pair.Key == Region) break;
-            }
-
-            switch (Rank)
-            {
-                case 1: Weight = 0.008f; break;
-                case 2: Weight = 0.007f; break;
-                case 3: Weight = 0.006f; break;
-                default: Weight = 0.005f; break;
-            }
-
-            Weight += *PreferredWeight;
-        }
-        else if (const float* DislikedWeight = DislikedRegions.Find(Region))
-        {
-            int32 Rank = 0;
-            for (const auto& Pair : DislikedRegions)
-            {
-                Rank++;
-                if (Pair.Key == Region) break;
-            }
-
-            switch (Rank)
-            {
-                case 1: Weight = 0.002f; break;
-                case 2: Weight = 0.003f; break;
-                case 3: Weight = 0.004f; break;
-                default: Weight = 0.005f; break;
-            }
-
-            Weight -= *DislikedWeight;
-            Weight = FMath::Max(Weight, 0.0f);
-        }
-
-        WeightedRegions.Add({ Region, Weight });
-        TotalWeight += Weight;
-    }
-
-    TArray<FName> SortedRegions;
-
-    // 전체 가중치 0 방어
-    if (TotalWeight <= 0.f)
-    {
-        return SortedRegions;
-    }
-
-    // 이미 선택된 지역 추적
-    TSet<FName> SelectedRegions;
-
-    while (SortedRegions.Num() < WeightedRegions.Num())
-    {
-        float RandomValue = FMath::FRandRange(0.f, TotalWeight);
-        float Cumulative = 0.f;
-
-        for (const auto& Pair : WeightedRegions)
-        {
-            // 이미 선택된 지역은 스킵
-            if (SelectedRegions.Contains(Pair.Key)) continue;
-
-            Cumulative += Pair.Value;
-            if (RandomValue <= Cumulative)
-            {
-                SortedRegions.Add(Pair.Key);
-                SelectedRegions.Add(Pair.Key);
-                TotalWeight -= Pair.Value; // 선택된 가중치 제거
-                break;
-            }
-        }
-    }
-
-    return SortedRegions;
+	TMap<FName, float> WeightedRegions;
+	// 선호 지역과 비선호 지역에 대해 가중치를 적용
+	for (const FName& CandidateRegion : CandidateRegions)
+	{
+		float Weight = 1.0f;
+		
+		const float* PreferredWeight = PreferredRegions.Find(CandidateRegion);
+		const float* DislikedWeight = DislikedRegions.Find(CandidateRegion);
+		
+		if (PreferredWeight != nullptr)
+		{
+			Weight *= *PreferredWeight;
+		}
+		else if (DislikedWeight != nullptr)
+		{
+			Weight *= *DislikedWeight;
+		}
+		else
+		{
+			// 나머지 일반적인 경우
+			Weight *= 0.5f;
+		}
+		
+		WeightedRegions.Add(CandidateRegion, Weight);
+	}
+	
+	
+	float* CurrentRegionWeight = WeightedRegions.Find(RegionID);
+	
+	if (nullptr == CurrentRegionWeight)
+	{
+		return TArray<FName>();
+	}
+	
+	//의도적으로 낮춤. 0.5*0.5 => 0.25이 된다.
+	*CurrentRegionWeight *= 0.5f;
+	//누적 확률 추첨
+	float TotalWeight = 0.f;
+	for (const auto& WeightedRegion : WeightedRegions)
+	{
+		TotalWeight += WeightedRegion.Value;
+	}
+	
+	int32 Count = FMath::RandRange(1, 3);
+	
+	TSet<FName> NextRegions;
+	for (int Index = 0; Index < Count; Index++)
+	{
+		// 사이에서 랜덤 값 고르기
+		float RandomValue = FMath::FRandRange(0.f, TotalWeight);
+		float Accumulated = 0.f; //누적 해서 초과하면 선택 예정
+		
+		for (const auto& WeightedRegion : WeightedRegions)
+		{
+			Accumulated += WeightedRegion.Value;
+		
+			if (Accumulated >= RandomValue)
+			{
+				// 어차피 TSet이여서 중복안되니까. Add로 해도된다.
+				NextRegions.Add(WeightedRegion.Key);
+				break;
+			}
+		}
+		
+	}
+	
+	return NextRegions.Array();
 }
 
 TWeakObjectPtr<ARRegionVolume> URRegionManager::GetRegionVolume(FName RegionID)
