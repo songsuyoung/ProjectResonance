@@ -6,7 +6,7 @@
 #include "RNPCStatusDisplay.generated.h"
 
 class UTextBlock;
-struct FRUIStatInfo;
+struct FRStatInfo;
 enum class ERStatType : uint8;
 enum class EREmotionState : uint8;
 UCLASS()
@@ -22,7 +22,7 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeDestruct() override;
-	void InitStat(const TArray<FRUIStatInfo>& StatInfos);	
+	void InitStat(const TArray<FRStatInfo>& StatInfos);	
 	void UpdateStat(ERStatType StatType, int32 NewValue);
 	void UpdateEmotion(EREmotionState EmotionState);
 protected:

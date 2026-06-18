@@ -7,11 +7,12 @@
 #include "Character/RBaseCharacter.h"
 #include "Character/RNPCCharacter.h"
 #include "Components/Stat/RBaseStatComponent.h"
+#include "Data/ResonanceMacro.h"
 #include "Data/RLocationPreferenceTable.h"
 #include "System/RDataManager.h"
-#include "System/ResonanceMacro.h"
+#include "Data/ResonanceStructs.h"
+#include "Data/RMessage.h"
 #include "System/REventManager.h"
-#include "System/RMessage.h"
 
 UREmotionComponent::UREmotionComponent()
 {
@@ -142,6 +143,7 @@ float UREmotionComponent::GetStayDuration(FName LocationID)
 	float Stamina = StatComponent->GetCurrentStatValue(ERStatType::Stamina) / FMath::Max(StatComponent->GetMaxStatValue(ERStatType::Stamina), 1.0f);
 	float StaminaMult = 1.0 + (1.0f - Stamina); //역비례해서 스테미나가 적을 수록 더 오래 머물도록 함.
 	
+	// TODO: 크래시 발생, Emotion 시스템에서 선호도를 조사하는 코드 좀 더 생각해보기.
 	EREmotionState EmotionState = Emotions[CurrentEmotionKey]->GetEmotionType();
 	float EmotionMult = Emotions[CurrentEmotionKey]->GetHangAroundMultiplier();
 	

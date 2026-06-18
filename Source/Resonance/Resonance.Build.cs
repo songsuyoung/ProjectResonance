@@ -6,7 +6,6 @@ public class Resonance : ModuleRules
 {
 	public Resonance(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicIncludePaths.AddRange(new string[] { "Resonance" });
@@ -19,10 +18,6 @@ public class Resonance : ModuleRules
 			"EnhancedInput",
 			"GameplayTags",
 			"ResonanceCore",
-			"ResonanceClient",
-			"Slate",
-			"SlateCore",
-			"UMG",
 			"JsonUtilities",
 			"Json",
 			"GameplayStateTreeModule",

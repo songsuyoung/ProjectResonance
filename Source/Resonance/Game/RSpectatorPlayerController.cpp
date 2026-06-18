@@ -38,7 +38,7 @@ void ARSpectatorPlayerController::SwitchObserveTarget()
 	
 	check(NPCSpawnManager);
 	
-	ARCameraCharacter* BaseCharacter = Cast<ARCameraCharacter>(NPCSpawnManager->GetObserveTarget());
+	ARBaseCharacter* BaseCharacter = Cast<ARBaseCharacter>(NPCSpawnManager->GetObserveTarget());
 	
 	if (IsValid(BaseCharacter))
 	{

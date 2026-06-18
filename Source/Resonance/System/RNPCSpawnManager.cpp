@@ -4,12 +4,12 @@
 #include "RDataManager.h"
 #include "System/REventManager.h"
 #include "RGameInstance.h"
-#include "System/RMessage.h"
 #include "RRegionManager.h"
 #include "Character/RNPCCharacter.h"
 #include "Data/ResonanceEnums.h"
+#include "Data/ResonanceMacro.h"
+#include "Data/RMessage.h"
 #include "Data/RNPCDataTable.h"
-#include "System/ResonanceMacro.h"
 
 URNPCSpawnManager* URNPCSpawnManager::Get(UObject* Context)
 {
@@ -41,7 +41,7 @@ ARNPCCharacter* URNPCSpawnManager::GetObserveTarget()
 		return nullptr;
 	}
 	
-	for (int32 Index = 0; Index < NPCIDs.Num(); Index++)
+	for (int32 Index = 1; Index <= NPCIDs.Num(); Index++)
 	{
 		int WrappedIndex = (ObserverIndex + Index) % NPCIDs.Num();
 		

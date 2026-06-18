@@ -11,7 +11,7 @@ class USplineComponent;
 class UREmotionComponent;
 class UWidgetComponent;
 class UUserWidget;
-
+class APlayerController;
 DECLARE_MULTICAST_DELEGATE(FOnRegionEntered);
 DECLARE_MULTICAST_DELEGATE(FOnRegionExited);
 
@@ -32,6 +32,9 @@ public:
 	FName GetPreferenceLocationID() { return TEXT("101"); }
 	float GetBaseDuration() { return 60.f; }
 public:
+	
+	virtual void BecomeViewTarget(APlayerController* PC) override;
+	virtual void EndViewTarget(APlayerController* PC) override;
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	void VisitRegion(const FName& RegionID);
@@ -60,9 +63,6 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Emotion|Settings")
 	TObjectPtr<UREmotionComponent> EmotionComponent;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Emotion|Settings")
-	TObjectPtr<UWidgetComponent> EmotionWidgetComponent;
 	
 protected:
 	// 현재 방문했던 곳은 다시 들리지 않는다. 

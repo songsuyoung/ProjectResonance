@@ -3,8 +3,8 @@
 #include "Components/TextBlock.h"
 #include "System/REventManager.h"
 #include "ResonanceCore/Data/RCommonEnums.h"
-#include "System/ResonanceMacro.h"
-#include "System/RMessage.h"
+#include "Data/ResonanceMacro.h"
+#include "Data/RMessage.h"
 
 URNPCStatusDisplay::URNPCStatusDisplay(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -68,9 +68,9 @@ void URNPCStatusDisplay::NativeDestruct()
 	REVENT_MESSAGE_REMOVE(this, this);
 }
 
-void URNPCStatusDisplay::InitStat(const TArray<FRUIStatInfo>& StatInfos)
+void URNPCStatusDisplay::InitStat(const TArray<FRStatInfo>& StatInfos)
 {
-	for (const FRUIStatInfo& StatInfo : StatInfos)
+	for (const FRStatInfo& StatInfo : StatInfos)
 	{
 		UpdateStat(StatInfo.StatType, StatInfo.Value);
 	}

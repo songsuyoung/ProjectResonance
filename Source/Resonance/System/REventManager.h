@@ -10,7 +10,7 @@ struct FRMessage;
 
 // EventManager - Subject
 UCLASS()
-class RESONANCECLIENT_API UREventManager : public UObject
+class RESONANCE_API UREventManager : public UObject
 {
 	GENERATED_BODY()
 

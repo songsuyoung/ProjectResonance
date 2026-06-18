@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/System/ResonanceUIStructs.h"
+#include "Data/ResonanceStructs.h"
 #include "RMessage.generated.h"
 
 UENUM()
@@ -84,7 +84,7 @@ public:
 		: FRMessage(ERMessageType::InitStat)
 	{}
 
-	FRInitStat(const TArray<FRUIStatInfo>& StatInfos) :
+	FRInitStat(const TArray<FRStatInfo>& StatInfos) :
 		FRMessage(ERMessageType::InitStat),
 		StatInfos(StatInfos)
 	{
@@ -93,7 +93,7 @@ public:
 	FName NPCID;
 	
 	UPROPERTY(Transient)
-	TArray<FRUIStatInfo> StatInfos;
+	TArray<FRStatInfo> StatInfos;
 };
 
 USTRUCT()

@@ -3,15 +3,34 @@
 // 
 #include "Character/RBaseCharacter.h"
 #include "Data/RBaseDataTable.h"
+#include "Data/ResonanceMacro.h"
 #include "Data/RNPCDataTable.h"
 #include "System/RDataManager.h"
-#include "System/ResonanceMacro.h"
+#include "Data/ResonanceStructs.h"
+#include "Data/RMessage.h"
 #include "System/REventManager.h"
-#include "System/RMessage.h"
-#include "UI/System/ResonanceUIStructs.h"
 
 URBaseStatComponent::URBaseStatComponent()
 {
+}
+
+void URBaseStatComponent::SetViewTarget(bool bView)
+{
+	bViewTarget = bView;
+	
+	if (bViewTarget)
+	{
+		FRInitStat InitStat;
+		InitStat.NPCID = OwnerID;
+		InitStat.StatInfos = StatInfos;
+	
+		for (const FRStatInfo& StatInfo : StatInfos)
+		{
+			OnStatChanged.Broadcast(StatInfo.StatType, StatInfo.MaxValue, StatInfo.Value);
+		}
+	
+		REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::InitStat, InitStat);
+	}
 }
 
 float URBaseStatComponent::GetCurrentStatValue(ERStatType StatType)
@@ -58,7 +77,10 @@ void URBaseStatComponent::UpdateStat(ERStatType StatType, float NewStatValue)
 				UpdateStat.NewValue = NewValue;
 	
 				OnStatChanged.Broadcast(StatInfo.StatType, StatInfo.MaxValue, StatInfo.Value);			
-				REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::UpdateStat, UpdateStat);
+				if (bViewTarget)
+				{
+					REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::UpdateStat, UpdateStat);
+				}
 			}
 			break;
 		}
@@ -85,21 +107,6 @@ void URBaseStatComponent::SetRegionPreferences(const TMap<FName, float>& InPrefe
 {
 	PreferredRegions = InPreferredRegions;
 	DislikedRegions = InDislikedRegions;
-}
-
-void URBaseStatComponent::SetupStat(const TArray<FRStatInfo>& InStatInfos)
-{
-	StatInfos = InStatInfos;
-
-	FRInitStat InitStat;
-	InitStat.NPCID = OwnerID;
-	for (const FRStatInfo& StatInfo : StatInfos)
-	{
-		InitStat.StatInfos.Add(FRUIStatInfo(StatInfo.StatType, StatInfo.Value));
-		OnStatChanged.Broadcast(StatInfo.StatType, StatInfo.MaxValue, StatInfo.Value);
-	}
-	
-	REVENT_MESSAGE_NOTIFY_MSG(this, ERMessageType::InitStat, InitStat);
 }
 
 void URBaseStatComponent::BeginPlay()

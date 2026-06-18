@@ -3,10 +3,11 @@
 // Newly Created File Names ..
 #include "System/RPathFinder.h"
 #include "RBakeDataManager.h"
+#include "REventManager.h"
 #include "RNPCSpawnManager.h"
 #include "RRegionManager.h"
+#include "RUIManagerBase.h"
 #include "System/RDataManager.h"
-#include "System/REventManager.h"
 
 void URGameInstance::Init()
 {
@@ -42,6 +43,8 @@ void URGameInstance::Init()
 		NPCSpawnManager->Initialize();
 	}
 	RegionManager = NewObject<URRegionManager>(this, URRegionManager::StaticClass());
+	
+	UIManager = NewObject<URUIManagerBase>(this, UIManagerClass);
 }
 
 void URGameInstance::BeginDestroy()

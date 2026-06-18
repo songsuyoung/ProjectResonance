@@ -19,6 +19,8 @@ public:
 	
 	FOnStatChanged OnStatChanged;
 	
+	void SetViewTarget(bool bView);
+	
 	float GetCurrentStatValue(ERStatType StatType);
 	
 	float GetMaxStatValue(ERStatType StatType);
@@ -30,7 +32,7 @@ public:
 	void GetRegionPreferences(TMap<FName, float>& PreferredRegions, TMap<FName, float>& DislikedRegions);
 protected:
 	void SetRegionPreferences(const TMap<FName, float>& InPreferredRegions, const TMap<FName, float>& InDislikedRegions);
-	void SetupStat(const TArray<FRStatInfo>& InStatInfos);
+	void SetupStat(const TArray<FRStatInfo>& InStatInfos) { StatInfos = InStatInfos; }
 	virtual void BeginPlay() override;
 
 protected:
@@ -46,4 +48,7 @@ protected:
 	
 	UPROPERTY(Transient)
 	FName OwnerID;
+	
+	UPROPERTY(Transient)
+	uint8 bViewTarget : 1;
 };

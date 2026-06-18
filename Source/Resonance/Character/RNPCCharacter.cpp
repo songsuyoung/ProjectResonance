@@ -2,16 +2,15 @@
 
 // UE 5.
 #include "Components/SplineComponent.h"
-#include "Components/WidgetComponent.h"
 
 // 
 #include "Components/Emotion/REmotionComponent.h"
 #include "Components/Stat/RBaseStatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "NPC/System/RAIController.h"
-#include "System/ResonanceMacro.h"
+#include "Data/ResonanceMacro.h"
 #include "System/REventManager.h"
-#include "System/RMessage.h"
+#include "Data/RMessage.h"
 
 ARNPCCharacter::ARNPCCharacter()
 	: Super()
@@ -20,24 +19,34 @@ ARNPCCharacter::ARNPCCharacter()
 {
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
 	EmotionComponent = CreateDefaultSubobject<UREmotionComponent>(TEXT("EmotionComponent"));
-	EmotionWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
-	static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(TEXT("/Game/Blueprints/UI/WidgetComponent/WBP_StatusDisplay"));
-	if (WidgetClassFinder.Succeeded())
-	{
-		EmotionWidgetComponent->SetWidgetClass(WidgetClassFinder.Class);
-	}
-	
-	EmotionWidgetComponent->SetupAttachment(GetMesh(), TEXT("head"));
-	EmotionWidgetComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
-	EmotionWidgetComponent->SetDrawSize(FVector2D(200.0f, 100.0f));
-	EmotionWidgetComponent->SetRelativeRotation(FRotator(0.f, 90.0f, -90.0f));
-	
 	BaseStatComponent = CreateDefaultSubobject<URBaseStatComponent>(TEXT("BaseStatComponent"));
 	
 	AIControllerClass = ARAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	
 	GetCharacterMovement()->MaxWalkSpeed = 250.f;
+}
+
+void ARNPCCharacter::BecomeViewTarget(APlayerController* PC)
+{
+	Super::BecomeViewTarget(PC);
+	
+	// 보는 위젯의 Stat으로 UI가 교체되는데,
+	if (IsValid(BaseStatComponent))
+	{
+		BaseStatComponent->SetViewTarget(true);
+	}
+	// 교체된 이후부터는 계속 보여주어야 한다.
+}
+
+void ARNPCCharacter::EndViewTarget(APlayerController* PC)
+{
+	Super::EndViewTarget(PC);
+	
+	if (IsValid(BaseStatComponent))
+	{
+		BaseStatComponent->SetViewTarget(false);
+	}
 }
 
 void ARNPCCharacter::BeginPlay()

@@ -31,6 +31,8 @@ public:
 	
 	virtual URNPCSpawnManager* GetNPCSpawnManager() override { return NPCSpawnManager; }
 	virtual URRegionManager* GetRegionManager() override { return RegionManager;}
+	
+	virtual URUIManagerBase* GetUIManager() { return UIManager; }
 
 protected:
 
@@ -39,6 +41,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "AssetClass")
 	TSubclassOf<URNPCSpawnManager> NPCSpawnManagerClass;
+
+	UPROPERTY(EditAnywhere, Category = "AssetClass")
+	TSubclassOf<URUIManagerBase> UIManagerClass;
 
 protected:
 

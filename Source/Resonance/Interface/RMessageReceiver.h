@@ -13,7 +13,7 @@ class URMessageReceiver : public UInterface
 };
 
 
-class RESONANCECLIENT_API IRMessageReceiver
+class RESONANCE_API IRMessageReceiver
 {
 	GENERATED_BODY()
 
