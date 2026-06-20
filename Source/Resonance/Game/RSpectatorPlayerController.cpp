@@ -1,6 +1,5 @@
 #include "Game/RSpectatorPlayerController.h"
 
-#include "Character/RCameraCharacter.h"
 #include "Components/RHeroComponent.h"
 #include "Data/ResonanceEnums.h"
 #include "System/RNPCSpawnManager.h"
@@ -20,6 +19,13 @@ void ARSpectatorPlayerController::SetupInputComponent()
 		HeroComponent->SetupInputComponent();
 		HeroComponent->OnInputReceived.AddUObject(this, &ThisClass::OnInputReceived);
 	}
+}
+
+void ARSpectatorPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	Spectator = GetViewTarget();
 }
 
 void ARSpectatorPlayerController::OnInputReceived(ERActionContext ActionContext)
@@ -43,5 +49,12 @@ void ARSpectatorPlayerController::SwitchObserveTarget()
 	if (IsValid(BaseCharacter))
 	{
 		SetViewTarget(BaseCharacter);
+	}
+	else
+	{
+		if (Spectator.IsValid())
+		{
+			SetViewTarget(Spectator.Get());
+		}
 	}
 }

@@ -16,11 +16,15 @@ public:
 	ARSpectatorPlayerController();
 	
 	virtual void SetupInputComponent() override;
-
+	virtual void BeginPlay() override;
 protected:
 	void OnInputReceived(ERActionContext ActionContext);
 	void SwitchObserveTarget();
 protected:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Input")
 	TObjectPtr<URHeroComponent> HeroComponent;
+	
+protected:
+	UPROPERTY(Transient)
+	TWeakObjectPtr<AActor> Spectator;
 };

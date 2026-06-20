@@ -32,9 +32,6 @@ protected:
 	
 	UPROPERTY(Transient)
 	FString StatText;
-
-	UPROPERTY(Transient)
-	FName OwnerID;
 	
 	// string format용도
 	FStringFormatNamedArguments Args;

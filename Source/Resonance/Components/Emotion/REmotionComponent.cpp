@@ -140,12 +140,19 @@ float UREmotionComponent::GetStayDuration(FName LocationID)
 		return 0.0f;
 	}
 	
+	TObjectPtr<UREmotionStateBase>* CurrentEmotion = Emotions.Find(CurrentEmotionKey);
+	
+	if (CurrentEmotion == nullptr)
+	{
+		return 0.f;
+	}
+	
 	float Stamina = StatComponent->GetCurrentStatValue(ERStatType::Stamina) / FMath::Max(StatComponent->GetMaxStatValue(ERStatType::Stamina), 1.0f);
 	float StaminaMult = 1.0 + (1.0f - Stamina); //역비례해서 스테미나가 적을 수록 더 오래 머물도록 함.
 	
 	// TODO: 크래시 발생, Emotion 시스템에서 선호도를 조사하는 코드 좀 더 생각해보기.
-	EREmotionState EmotionState = Emotions[CurrentEmotionKey]->GetEmotionType();
-	float EmotionMult = Emotions[CurrentEmotionKey]->GetHangAroundMultiplier();
+	EREmotionState EmotionState = (*CurrentEmotion)->GetEmotionType();
+	float EmotionMult = (*CurrentEmotion)->GetHangAroundMultiplier();
 	
 	float* Found = PreferenceTable->Preferences[EmotionState].Preferences.Find(LocationID);
 	float LocationPref = 1.0f;

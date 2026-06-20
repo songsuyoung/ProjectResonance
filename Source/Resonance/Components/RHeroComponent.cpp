@@ -33,7 +33,8 @@ void URHeroComponent::SetupInputComponent()
 
 		if (IsValid(EnhancedInputComponent))
 		{
-			EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &ThisClass::Move);
+			//TODO: 추후 캐릭터 만들 때 이 부분 수정해주어야한다. (Trigger -> Started로 임시 변경)
+			EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Started, this, &ThisClass::Move);
 			EnhancedInputComponent->BindAction(LookInputAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 			EnhancedInputComponent->BindAction(JumpInputAction, ETriggerEvent::Started, this, &ThisClass::StartJump);
 			EnhancedInputComponent->BindAction(InteractionInputAction, ETriggerEvent::Completed, this, &ThisClass::Interact);

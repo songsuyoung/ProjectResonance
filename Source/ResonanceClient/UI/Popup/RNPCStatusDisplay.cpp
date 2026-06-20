@@ -21,26 +21,18 @@ void URNPCStatusDisplay::OnMessage(ERMessageType Type, FRMessage* Message)
 			FRInitStat* InitStatValue = static_cast<FRInitStat*>(Message);
 			if (nullptr != InitStatValue)
 			{
-				if (OwnerID.IsNone())
-				{
-					OwnerID = InitStatValue->NPCID;
-					InitStat(InitStatValue->StatInfos);
-				}
+				InitStat(InitStatValue->StatInfos);
 			}
-			break;	
+			break;
 		}
 	case ERMessageType::UpdateStat:
 		{
 			FRUpdateStat* UpdateStatValue = static_cast<FRUpdateStat*>(Message);
 			if (nullptr != UpdateStatValue)
 			{
-				if (OwnerID != UpdateStatValue->NPCID)
-				{
-					return;
-				}
 				UpdateStat(UpdateStatValue->StatType, UpdateStatValue->NewValue);
 			}
-			break;	
+			break;
 		}
 	case ERMessageType::UpdateEmotion:
 		{
@@ -57,14 +49,14 @@ void URNPCStatusDisplay::OnMessage(ERMessageType Type, FRMessage* Message)
 void URNPCStatusDisplay::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	
+
 	REVENT_MESSAGE_ADD(this, this);
 }
 
 void URNPCStatusDisplay::NativeDestruct()
 {
 	Super::NativeDestruct();
-	
+
 	REVENT_MESSAGE_REMOVE(this, this);
 }
 
@@ -79,9 +71,9 @@ void URNPCStatusDisplay::InitStat(const TArray<FRStatInfo>& StatInfos)
 void URNPCStatusDisplay::UpdateStat(ERStatType StatType, int32 NewValue)
 {
 	FString Key = FString::FromInt(static_cast<uint8>(StatType));
-	
+
 	Args.Add(Key, FStringFormatArg(NewValue));
-	
+
 	if (IsValid(TextBlock_Stat))
 	{
 		FString Result = FString::Format(*StatText, Args);
@@ -92,7 +84,7 @@ void URNPCStatusDisplay::UpdateStat(ERStatType StatType, int32 NewValue)
 void URNPCStatusDisplay::UpdateEmotion(EREmotionState EmotionState)
 {
 	Args.Add(TEXT("3"), UEnum::GetValueAsString(EmotionState));
-	
+
 	if (IsValid(TextBlock_Stat))
 	{
 		FString Result = FString::Format(*StatText, Args);
