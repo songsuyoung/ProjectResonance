@@ -4,6 +4,27 @@
 #include "GameFramework/Volume.h"
 #include "RFarmPlotVolume.generated.h"
 
+UENUM(BlueprintType)
+enum class ERequiredFarmTask : uint8
+{
+	Till       UMETA(DisplayName = "호미질 (Till)"),
+	Clear      UMETA(DisplayName = "땅 정리 (Clear)"),
+	Sow        UMETA(DisplayName = "씨앗 심기 (Sow)"),
+	Water      UMETA(DisplayName = "물주기 (Water)"),
+	Weed       UMETA(DisplayName = "잡초 뽑기 (Weed)"),
+	Max
+};
+
+ENUM_RANGE_BY_COUNT(ERequiredFarmTask, ERequiredFarmTask::Max);
+
+UENUM(BlueprintType)
+enum class ERTaskStatus : uint8
+{
+	NotStarted,
+	InProgress,
+	Completed
+};
+
 USTRUCT(BlueprintType)
 struct FRPlotCoord
 {
@@ -23,16 +44,13 @@ struct FRPlotData
 
 public:
 	UPROPERTY(Transient)
+	int32 Index;
+	
+	UPROPERTY(Transient)
 	FVector Location;        // Center
 
 	UPROPERTY(Transient)
-	bool bIsPlowed;
-
-	UPROPERTY(Transient)
-	bool bIsSown;
-
-	UPROPERTY(Transient)
-	bool bIsWatered;
+	ERequiredFarmTask RequiredFarmTask;
 };
 
 UCLASS()
@@ -44,6 +62,16 @@ public:
 	
 	virtual void BeginPlay() override;
 	
+	bool FindNearestPlotRequiringTask(ERequiredFarmTask RequiredTask, const FVector& Location, FRPlotData &PlotData);
+	bool GetCurrentPlot(FRPlotData &OutPlotData);
+	void MarkPlotVisited(ERequiredFarmTask FarmTask, int32 PlotIndex);
+	
+	UFUNCTION(BlueprintCallable)
+	bool GetNextFarmWideTask(ERequiredFarmTask& OutTask);
+	
+protected:
+	
+	void InitializePlotData();
 protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
@@ -56,4 +84,7 @@ protected:
 	
 	UPROPERTY(Transient)
 	TArray<FRPlotData> PlotData;
+	
+	UPROPERTY(Transient)
+	int RequiredTaskIndex;
 };

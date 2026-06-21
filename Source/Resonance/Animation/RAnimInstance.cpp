@@ -30,3 +30,19 @@ void URAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	bIsFalling = CharacterMovementComponent->IsFalling();
 	bShouldMove = false == CharacterMovementComponent->GetCurrentAcceleration().IsNearlyZero() && Speed > 3.0f;
 }
+
+void URAnimInstance::SetDesiredDirection(FVector InDirection, ERAnimType AnimType)
+{
+	switch (AnimType)
+	{
+	case ERAnimType::In_Place:
+		// Root-Lock 모드에서는 외부 Direction을 무시하고 실제 이동 속도를 기준으로 삼는다.
+		// (InDirection은 RootMotion 모드 전용 파라미터)
+		Direction = Velocity.GetSafeNormal();
+		break;
+
+	case ERAnimType::RootMotion:
+		Direction = InDirection;
+		break;
+	}
+}

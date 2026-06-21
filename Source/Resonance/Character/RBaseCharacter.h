@@ -22,6 +22,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stat")
 	TObjectPtr<URBaseStatComponent> BaseStatComponent;
 	
-	UPROPERTY(Transient)
+	UPROPERTY(Transient, BlueprintReadOnly, Category = "ID")
 	FName ID;
 };

@@ -4,13 +4,15 @@ void ARFarmPlotVolume::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// 현재 센터를 중심으로, Row/Col Location 구분 후 PlotData 를 생성한다.
-	FVector Center = GetActorLocation();
+	InitializePlotData();
+}
 
+void ARFarmPlotVolume::InitializePlotData()
+{
 	FVector Origin, BoxExtent;
 	GetActorBounds(false, Origin, BoxExtent);
 
-	FVector LeftUpper = FVector(Center.X - BoxExtent.X, Center.Y + BoxExtent.Y, Center.Z);
+	FVector RightLower = FVector(Origin.X - BoxExtent.X, Origin.Y + BoxExtent.Y, Origin.Z);
 	
 	// BoxExtent 는 절반임
 	float Width  = (BoxExtent.X * 2) / Coordinate.Column;
@@ -18,6 +20,8 @@ void ARFarmPlotVolume::BeginPlay()
 	
 	UWorld* World = GetWorld();
 	check(World);
+
+	DrawDebugBox(World, Origin, BoxExtent, FColor::Green, true, -1.f, 0, 3.f);
 	
 	// 최상단 좌측 Location값을 구해서, Row * Column만큼 이동
 	for (int Row = 0; Row < Coordinate.Row; Row++)
@@ -25,13 +29,87 @@ void ARFarmPlotVolume::BeginPlay()
 		for (int Col = 0; Col < Coordinate.Column; Col++)
 		{
 			FVector Location = FVector(
-				LeftUpper.X + Width * (Col + 0.5f), // 칸의 "중앙"에 찍고 싶다면 +0.5
-				LeftUpper.Y - Height * (Row + 0.5f),
-				LeftUpper.Z
+				RightLower.X + Width * (Col + 0.5f),
+				RightLower.Y - Height * (Row + 0.5f),
+				RightLower.Z - BoxExtent.Z
 			);
+			DrawDebugBox(World, Location, FVector(10.f, 10.f, 10.f), FColor::Blue, true, -1.f, 0, 3.f);
 			
-			DrawDebugBox(World, Location, FVector(FVector(Width, Height, 10.f)), FColor::Red, false, 10.f, 0, 3.f);
-			PlotData.Add({Location, false, false, false});
+			DrawDebugBox(World, Location, FVector(Width * 0.5f, Height * 0.5f, 10.f), FColor::Red, true, -1.f, 0, 3.f);
+			PlotData.Add({PlotData.Num(), Location, ERequiredFarmTask::Till});
 		}
 	}
+}
+
+
+bool ARFarmPlotVolume::FindNearestPlotRequiringTask(ERequiredFarmTask RequiredTask, const FVector& Location, FRPlotData &OutPlotData)
+{
+	float MinDist = FLT_MAX;
+	bool bFound = false;
+	for (int32 Index =0; Index < PlotData.Num(); Index++ )
+	{
+		if (RequiredTask != PlotData[Index].RequiredFarmTask)
+		{
+			continue;
+		}
+		
+		float Dist = FVector::DistSquared2D(PlotData[Index].Location, Location);
+		
+		if (Dist < MinDist)
+		{
+			MinDist = Dist;
+			OutPlotData = PlotData[Index];
+			bFound = true;
+		}
+	}
+	
+	return bFound;
+}
+
+bool ARFarmPlotVolume::GetCurrentPlot(FRPlotData& OutPlotData)
+{
+	if (PlotData.IsValidIndex(RequiredTaskIndex))
+	{
+		OutPlotData = PlotData[RequiredTaskIndex];
+		return true;
+	}
+	
+	return false;
+}
+
+void ARFarmPlotVolume::MarkPlotVisited(ERequiredFarmTask FarmTask, int32 PlotIndex)
+{
+	if (PlotData.IsEmpty())
+	{
+		return;
+	}
+	
+	ERequiredFarmTask NextTask = static_cast<ERequiredFarmTask>(static_cast<uint8>(FarmTask) + 1);
+	
+	// TODO: Enum을 이용한 상태로 확장 가능성있게 구현해야 한다. 
+	// 모든 PlotData의 bIsPlowed 가 true라면, 다음 단계로 이동할 수 있도록 순차실행이 가능하도록 해야함.
+	PlotData[PlotIndex].RequiredFarmTask = NextTask;
+}
+
+bool ARFarmPlotVolume::GetNextFarmWideTask(ERequiredFarmTask& OutTask)
+{
+	uint8 MinPriority = static_cast<uint8>(ERequiredFarmTask::Max);
+	RequiredTaskIndex = -1;
+	for (int Index = 0; Index < PlotData.Num(); Index++)
+	{
+		uint8 TaskIndex = static_cast<uint8>(PlotData[Index].RequiredFarmTask);
+		if (MinPriority > TaskIndex)
+		{
+			RequiredTaskIndex = Index;
+			MinPriority = TaskIndex;
+		}
+	}
+	
+	if (RequiredTaskIndex == INDEX_NONE)
+	{
+		return false;
+	}
+	
+	OutTask = static_cast<ERequiredFarmTask>(MinPriority);
+	return true;
 }

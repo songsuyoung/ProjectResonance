@@ -2,15 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "RSTTask_Plow.generated.h"
+#include "RSTTask_NavigateToPlot.generated.h"
 
 class AAIController;
 class APawn;
 class ARFarmPlotVolume;
-enum class ERequiredFarmTask : uint8;
+class URAnimInstance;
+struct FAIRequestID;
+namespace EPathFollowingResult { enum Type : int; }
 
+enum class ERequiredFarmTask : uint8;
 UCLASS()
-class RESONANCE_API URSTTask_Plow : public UStateTreeTaskBlueprintBase
+class RESONANCE_API URSTTask_NavigateToPlot : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
 	
@@ -18,6 +21,7 @@ protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
+	
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
@@ -26,24 +30,22 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	TObjectPtr<UAnimMontage> PlowAnimation;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	float ElapsedTime;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	ERequiredFarmTask FarmTask;
-	
+	// NPC에게 맞는 FarmVolume을 상위 State에서 찾아 가지고있고,
+	// In을 통해서 연결해 사용한다.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TWeakObjectPtr<ARFarmPlotVolume> FarmVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	ERequiredFarmTask PendingFarmTask;
 
 protected:
 	
 	UPROPERTY(Transient)
-	float WorkDuration;
+	TWeakObjectPtr<URAnimInstance> AnimInstance;
 	
 	UPROPERTY(Transient)
-	int32 WorkIndex;
+	TArray<FVector> PathPoints;
 	
+	UPROPERTY(Transient)
+	int32 PathIndex;	
 };
