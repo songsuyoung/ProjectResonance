@@ -34,7 +34,7 @@ EStateTreeRunStatus URSTTask_NavigateToPlot::EnterState(FStateTreeExecutionConte
 	FVector OwnerLocation = OwnerCharacter->GetActorLocation();
 	// PendingTask인 나랑 가장 가까운 위치를 찾는다.
 	FRPlotData PlotData;
-	if (false == FarmVolume->FindNearestPlotRequiringTask(PendingFarmTask, OwnerLocation, PlotData))
+	if (false == FarmVolume->FindNearestPlotRequiringTask(OwnerLocation, PlotData))
 	{
 		return EStateTreeRunStatus::Failed;
 	}
@@ -50,6 +50,12 @@ EStateTreeRunStatus URSTTask_NavigateToPlot::EnterState(FStateTreeExecutionConte
 	}
 	
 	PathPoints= NavigationPath->PathPoints;
+	PathIndex = 0;
+	
+	if (PathPoints.IsEmpty())
+	{
+		return EStateTreeRunStatus::Failed;
+	}
 	
 	return EStateTreeRunStatus::Running;
 }
@@ -58,7 +64,6 @@ EStateTreeRunStatus URSTTask_NavigateToPlot::Tick(FStateTreeExecutionContext& Co
 {
 	if (PathIndex >= PathPoints.Num())
 	{
-		PathIndex = 0;
 		return EStateTreeRunStatus::Succeeded;
 	}
 	FVector CurrentLocation = OwnerCharacter->GetActorLocation();

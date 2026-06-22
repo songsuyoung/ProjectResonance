@@ -42,13 +42,13 @@ void ARFarmPlotVolume::InitializePlotData()
 }
 
 
-bool ARFarmPlotVolume::FindNearestPlotRequiringTask(ERequiredFarmTask RequiredTask, const FVector& Location, FRPlotData &OutPlotData)
+bool ARFarmPlotVolume::FindNearestPlotRequiringTask(const FVector& Location, FRPlotData &OutPlotData)
 {
 	float MinDist = FLT_MAX;
 	bool bFound = false;
 	for (int32 Index =0; Index < PlotData.Num(); Index++ )
 	{
-		if (RequiredTask != PlotData[Index].RequiredFarmTask)
+		if (FarmTask != PlotData[Index].RequiredFarmTask)
 		{
 			continue;
 		}
@@ -77,14 +77,14 @@ bool ARFarmPlotVolume::GetCurrentPlot(FRPlotData& OutPlotData)
 	return false;
 }
 
-void ARFarmPlotVolume::MarkPlotVisited(ERequiredFarmTask FarmTask, int32 PlotIndex)
+void ARFarmPlotVolume::MarkPlotVisited(ERequiredFarmTask InFarmTask, int32 PlotIndex)
 {
 	if (PlotData.IsEmpty())
 	{
 		return;
 	}
 	
-	ERequiredFarmTask NextTask = static_cast<ERequiredFarmTask>(static_cast<uint8>(FarmTask) + 1);
+	ERequiredFarmTask NextTask = static_cast<ERequiredFarmTask>(static_cast<uint8>(InFarmTask) + 1);
 	
 	// TODO: Enum을 이용한 상태로 확장 가능성있게 구현해야 한다. 
 	// 모든 PlotData의 bIsPlowed 가 true라면, 다음 단계로 이동할 수 있도록 순차실행이 가능하도록 해야함.
@@ -111,5 +111,28 @@ bool ARFarmPlotVolume::GetNextFarmWideTask(ERequiredFarmTask& OutTask)
 	}
 	
 	OutTask = static_cast<ERequiredFarmTask>(MinPriority);
+	return true;
+}
+
+bool ARFarmPlotVolume::UpdateNextFarmWideTask()
+{
+	uint8 MinPriority = static_cast<uint8>(ERequiredFarmTask::Max);
+	RequiredTaskIndex = -1;
+	for (int Index = 0; Index < PlotData.Num(); Index++)
+	{
+		uint8 TaskIndex = static_cast<uint8>(PlotData[Index].RequiredFarmTask);
+		if (MinPriority > TaskIndex)
+		{
+			RequiredTaskIndex = Index;
+			MinPriority = TaskIndex;
+		}
+	}
+	
+	if (RequiredTaskIndex == INDEX_NONE)
+	{
+		return false;
+	}
+	
+	FarmTask = static_cast<ERequiredFarmTask>(MinPriority);
 	return true;
 }

@@ -5,6 +5,7 @@
 #include "RSTCondition_IsFarmTaskMatching.generated.h"
 
 enum class ERequiredFarmTask : uint8;
+class ARFarmPlotVolume;
 
 UCLASS()
 class RESONANCE_API URSTCondition_IsFarmTaskMatching : public UStateTreeConditionBlueprintBase
@@ -16,7 +17,7 @@ public:
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	ERequiredFarmTask PendingFarmTask;
+	TWeakObjectPtr<ARFarmPlotVolume> FarmVolume;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FarmTask|Settings")
 	TArray<ERequiredFarmTask> ExpectedFarmTasks;

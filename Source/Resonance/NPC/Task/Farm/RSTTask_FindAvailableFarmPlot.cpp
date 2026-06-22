@@ -9,7 +9,7 @@ EStateTreeRunStatus URSTTask_FindAvailableFarmPlot::EnterState(FStateTreeExecuti
 		return EStateTreeRunStatus::Failed;
 	}
 	
-	if (false == FarmVolume->GetNextFarmWideTask(PendingTask))
+	if (false == FarmVolume->UpdateNextFarmWideTask())
 	{
 		return EStateTreeRunStatus::Failed;
 	}

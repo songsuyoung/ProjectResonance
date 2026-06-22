@@ -35,9 +35,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TWeakObjectPtr<ARFarmPlotVolume> FarmVolume;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	ERequiredFarmTask PendingFarmTask;
-
 protected:
 	
 	UPROPERTY(Transient)
