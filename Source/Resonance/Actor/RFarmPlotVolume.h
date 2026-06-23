@@ -61,15 +61,10 @@ class RESONANCE_API ARFarmPlotVolume : public AVolume
 public:
 	
 	virtual void BeginPlay() override;
-	ERequiredFarmTask GetPendingFarmTask() { return FarmTask; }
-	bool FindNearestPlotRequiringTask(const FVector& Location, FRPlotData &PlotData);
-	bool GetCurrentPlot(FRPlotData &OutPlotData);
-	void MarkPlotVisited(ERequiredFarmTask FarmTask, int32 PlotIndex);
-	
-	UFUNCTION(BlueprintCallable)
-	bool GetNextFarmWideTask(ERequiredFarmTask& OutTask);
-	
-	bool UpdateNextFarmWideTask();
+	bool GetActivePlot(FRPlotData& OutPlotData);
+	bool FindNearestPendingPlot(const FVector& Location, FRPlotData &PlotData);
+	void CompleteCurrentPlot(ERequiredFarmTask FarmTask);
+	bool RefreshActiveFarmTask();
 	
 protected:
 	
@@ -88,8 +83,8 @@ protected:
 	TArray<FRPlotData> PlotData;
 	
 	UPROPERTY(Transient)
-	int RequiredTaskIndex;
+	ERequiredFarmTask ActiveFarmTask;
 	
 	UPROPERTY(Transient)
-	ERequiredFarmTask FarmTask;
+	int32 ActivePlotIndex;
 };

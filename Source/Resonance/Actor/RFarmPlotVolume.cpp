@@ -7,6 +7,17 @@ void ARFarmPlotVolume::BeginPlay()
 	InitializePlotData();
 }
 
+bool ARFarmPlotVolume::GetActivePlot(FRPlotData& OutPlotData)
+{
+	if (PlotData.IsValidIndex(ActivePlotIndex))
+	{
+		OutPlotData = PlotData[ActivePlotIndex];
+		return true;
+	}
+	
+	return false;
+}
+
 void ARFarmPlotVolume::InitializePlotData()
 {
 	FVector Origin, BoxExtent;
@@ -41,14 +52,13 @@ void ARFarmPlotVolume::InitializePlotData()
 	}
 }
 
-
-bool ARFarmPlotVolume::FindNearestPlotRequiringTask(const FVector& Location, FRPlotData &OutPlotData)
+bool ARFarmPlotVolume::FindNearestPendingPlot(const FVector& Location, FRPlotData &OutPlotData)
 {
 	float MinDist = FLT_MAX;
 	bool bFound = false;
-	for (int32 Index =0; Index < PlotData.Num(); Index++ )
+	for (int32 Index = 0; Index < PlotData.Num(); Index++ )
 	{
-		if (FarmTask != PlotData[Index].RequiredFarmTask)
+		if (ActiveFarmTask != PlotData[Index].RequiredFarmTask)
 		{
 			continue;
 		}
@@ -59,6 +69,7 @@ bool ARFarmPlotVolume::FindNearestPlotRequiringTask(const FVector& Location, FRP
 		{
 			MinDist = Dist;
 			OutPlotData = PlotData[Index];
+			ActivePlotIndex = Index;
 			bFound = true;
 		}
 	}
@@ -66,20 +77,9 @@ bool ARFarmPlotVolume::FindNearestPlotRequiringTask(const FVector& Location, FRP
 	return bFound;
 }
 
-bool ARFarmPlotVolume::GetCurrentPlot(FRPlotData& OutPlotData)
+void ARFarmPlotVolume::CompleteCurrentPlot(ERequiredFarmTask InFarmTask)
 {
-	if (PlotData.IsValidIndex(RequiredTaskIndex))
-	{
-		OutPlotData = PlotData[RequiredTaskIndex];
-		return true;
-	}
-	
-	return false;
-}
-
-void ARFarmPlotVolume::MarkPlotVisited(ERequiredFarmTask InFarmTask, int32 PlotIndex)
-{
-	if (PlotData.IsEmpty())
+	if (false == PlotData.IsValidIndex(ActivePlotIndex))
 	{
 		return;
 	}
@@ -88,13 +88,14 @@ void ARFarmPlotVolume::MarkPlotVisited(ERequiredFarmTask InFarmTask, int32 PlotI
 	
 	// TODO: Enum을 이용한 상태로 확장 가능성있게 구현해야 한다. 
 	// 모든 PlotData의 bIsPlowed 가 true라면, 다음 단계로 이동할 수 있도록 순차실행이 가능하도록 해야함.
-	PlotData[PlotIndex].RequiredFarmTask = NextTask;
+	PlotData[ActivePlotIndex].RequiredFarmTask = NextTask;
+	RefreshActiveFarmTask();
 }
 
-bool ARFarmPlotVolume::GetNextFarmWideTask(ERequiredFarmTask& OutTask)
+bool ARFarmPlotVolume::RefreshActiveFarmTask()
 {
 	uint8 MinPriority = static_cast<uint8>(ERequiredFarmTask::Max);
-	RequiredTaskIndex = -1;
+	int RequiredTaskIndex = -1;
 	for (int Index = 0; Index < PlotData.Num(); Index++)
 	{
 		uint8 TaskIndex = static_cast<uint8>(PlotData[Index].RequiredFarmTask);
@@ -110,29 +111,6 @@ bool ARFarmPlotVolume::GetNextFarmWideTask(ERequiredFarmTask& OutTask)
 		return false;
 	}
 	
-	OutTask = static_cast<ERequiredFarmTask>(MinPriority);
-	return true;
-}
-
-bool ARFarmPlotVolume::UpdateNextFarmWideTask()
-{
-	uint8 MinPriority = static_cast<uint8>(ERequiredFarmTask::Max);
-	RequiredTaskIndex = -1;
-	for (int Index = 0; Index < PlotData.Num(); Index++)
-	{
-		uint8 TaskIndex = static_cast<uint8>(PlotData[Index].RequiredFarmTask);
-		if (MinPriority > TaskIndex)
-		{
-			RequiredTaskIndex = Index;
-			MinPriority = TaskIndex;
-		}
-	}
-	
-	if (RequiredTaskIndex == INDEX_NONE)
-	{
-		return false;
-	}
-	
-	FarmTask = static_cast<ERequiredFarmTask>(MinPriority);
+	ActiveFarmTask = static_cast<ERequiredFarmTask>(MinPriority);
 	return true;
 }

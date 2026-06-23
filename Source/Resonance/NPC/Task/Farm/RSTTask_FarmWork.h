@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "RSTTask_Plow.generated.h"
+#include "RSTTask_FarmWork.generated.h"
 
 class AAIController;
 class APawn;
@@ -10,7 +10,7 @@ class ARFarmPlotVolume;
 enum class ERequiredFarmTask : uint8;
 
 UCLASS()
-class RESONANCE_API URSTTask_Plow : public UStateTreeTaskBlueprintBase
+class RESONANCE_API URSTTask_FarmWork : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
 	
@@ -27,10 +27,10 @@ protected:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	TObjectPtr<UAnimMontage> PlowAnimation;
+	TObjectPtr<UAnimMontage> Animation;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	float ElapsedTime;
+	float WorkDuration;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
 	ERequiredFarmTask FarmTask;
@@ -41,9 +41,5 @@ protected:
 protected:
 	
 	UPROPERTY(Transient)
-	float WorkDuration;
-	
-	UPROPERTY(Transient)
-	int32 WorkIndex;
-	
+	float ElapsedTime;
 };

@@ -9,7 +9,11 @@ bool URSTCondition_IsFarmTaskMatching::TestCondition(FStateTreeExecutionContext&
 		return false;
 	}
 	
-	ERequiredFarmTask PendingFarmTask = FarmVolume->GetPendingFarmTask();
+	FRPlotData PlotData;
+	if (false == FarmVolume->GetActivePlot(PlotData))
+	{
+		return false;
+	}
 	
-	return ExpectedFarmTasks.Contains(PendingFarmTask);
+	return ExpectedFarmTasks.Contains(PlotData.RequiredFarmTask);
 }

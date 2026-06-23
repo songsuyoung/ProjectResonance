@@ -3,10 +3,12 @@
 #include "AIController.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
+#include "StateTreeExecutionContext.h"
 #include "GameFramework/Character.h"
 
 #include "Actor/RFarmPlotVolume.h"
 #include "Animation/RAnimInstance.h"
+#include "Data/ResonanceStructs.h"
 
 EStateTreeRunStatus URSTTask_NavigateToPlot::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
 {
@@ -34,7 +36,7 @@ EStateTreeRunStatus URSTTask_NavigateToPlot::EnterState(FStateTreeExecutionConte
 	FVector OwnerLocation = OwnerCharacter->GetActorLocation();
 	// PendingTask인 나랑 가장 가까운 위치를 찾는다.
 	FRPlotData PlotData;
-	if (false == FarmVolume->FindNearestPlotRequiringTask(OwnerLocation, PlotData))
+	if (false == FarmVolume->FindNearestPendingPlot(OwnerLocation, PlotData))
 	{
 		return EStateTreeRunStatus::Failed;
 	}
@@ -52,11 +54,6 @@ EStateTreeRunStatus URSTTask_NavigateToPlot::EnterState(FStateTreeExecutionConte
 	PathPoints= NavigationPath->PathPoints;
 	PathIndex = 0;
 	
-	if (PathPoints.IsEmpty())
-	{
-		return EStateTreeRunStatus::Failed;
-	}
-	
 	return EStateTreeRunStatus::Running;
 }
 
@@ -66,17 +63,13 @@ EStateTreeRunStatus URSTTask_NavigateToPlot::Tick(FStateTreeExecutionContext& Co
 	{
 		return EStateTreeRunStatus::Succeeded;
 	}
+	
 	FVector CurrentLocation = OwnerCharacter->GetActorLocation();
 	FVector Direction = (PathPoints[PathIndex] - CurrentLocation);
 	Direction.Normalize();
 	
-	// 회전
-	FRotator TargetRotation = Direction.Rotation();
-	TargetRotation.Roll = TargetRotation.Pitch = 0.f;
-	OwnerCharacter->SetActorRotation(FMath::RInterpTo(OwnerCharacter->GetActorRotation(), TargetRotation, DeltaTime, 10.f));
-	// 블렌드스페이스는 로컬 스페이스 기준이므로 월드 방향을 로컬로 변환
 	AnimInstance->SetDesiredDirection(Direction, ERAnimType::RootMotion);
-		
+
 	if (FVector::Dist2D(CurrentLocation, PathPoints[PathIndex]) <= 50.f)
 	{
 		PathIndex++;
