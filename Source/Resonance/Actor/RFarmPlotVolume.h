@@ -62,8 +62,7 @@ public:
 	
 	virtual void BeginPlay() override;
 	bool GetActivePlot(FRPlotData& OutPlotData);
-	bool FindNearestPendingPlot(const FVector& Location, FRPlotData &PlotData);
-	void CompleteCurrentPlot(ERequiredFarmTask FarmTask);
+	void CompleteCurrentPlot(int32 InActivePlotIndex);
 	bool RefreshActiveFarmTask();
 	
 protected:
@@ -78,7 +77,6 @@ protected:
 	FRPlotCoord Coordinate; 
 
 protected:
-	
 	UPROPERTY(Transient)
 	TArray<FRPlotData> PlotData;
 	

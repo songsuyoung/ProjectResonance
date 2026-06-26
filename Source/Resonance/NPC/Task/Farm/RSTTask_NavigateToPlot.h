@@ -8,6 +8,7 @@ class AAIController;
 class APawn;
 class ARFarmPlotVolume;
 class URAnimInstance;
+class UAnimMontage;
 struct FAIRequestID;
 namespace EPathFollowingResult { enum Type : int; }
 
@@ -19,9 +20,7 @@ class RESONANCE_API URSTTask_NavigateToPlot : public UStateTreeTaskBlueprintBase
 	
 protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
-
 	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
-	
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
@@ -36,9 +35,6 @@ protected:
 	TWeakObjectPtr<ARFarmPlotVolume> FarmVolume;
 
 protected:
-	
-	UPROPERTY(Transient)
-	TWeakObjectPtr<URAnimInstance> AnimInstance;
 	
 	UPROPERTY(Transient)
 	TArray<FVector> PathPoints;

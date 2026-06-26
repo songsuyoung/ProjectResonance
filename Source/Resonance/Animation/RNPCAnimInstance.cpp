@@ -14,6 +14,6 @@ void URNPCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		return;
 	}
 	
-	bShouldMove = Speed > 3.0f;
+	bShouldMove = Speed > 0.5f;
 }
 

@@ -39,7 +39,6 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	void VisitRegion(const FName& RegionID);
 	FName PeekNextRegion();
-	
 public:
 
 	FOnRegionEntered OnRegionEntered;

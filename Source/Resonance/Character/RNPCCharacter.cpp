@@ -152,4 +152,3 @@ FName ARNPCCharacter::PeekNextRegion()
 	
 	return PendingRegions[0];
 }
-

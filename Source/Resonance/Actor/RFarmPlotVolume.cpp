@@ -9,13 +9,21 @@ void ARFarmPlotVolume::BeginPlay()
 
 bool ARFarmPlotVolume::GetActivePlot(FRPlotData& OutPlotData)
 {
-	if (PlotData.IsValidIndex(ActivePlotIndex))
+	int32 Row = ActivePlotIndex / Coordinate.Column;
+	int32 ColPos = ActivePlotIndex % Coordinate.Column;
+
+	if (Row >= Coordinate.Row)
 	{
-		OutPlotData = PlotData[ActivePlotIndex];
-		return true;
+		return false;
+		// 모든 Plot 완료                                                                                                                                                                                                   
 	}
-	
-	return false;
+
+	int32 PlotDataIndex = (Row % 2 == 0)
+		                      ? Row * Coordinate.Column + ColPos
+		                      : Row * Coordinate.Column + (Coordinate.Column - 1 - ColPos);
+
+	OutPlotData = PlotData[PlotDataIndex];
+	return true;
 }
 
 void ARFarmPlotVolume::InitializePlotData()
@@ -52,43 +60,29 @@ void ARFarmPlotVolume::InitializePlotData()
 	}
 }
 
-bool ARFarmPlotVolume::FindNearestPendingPlot(const FVector& Location, FRPlotData &OutPlotData)
+void ARFarmPlotVolume::CompleteCurrentPlot(int32 InActivePlotIndex)
 {
-	float MinDist = FLT_MAX;
-	bool bFound = false;
-	for (int32 Index = 0; Index < PlotData.Num(); Index++ )
-	{
-		if (ActiveFarmTask != PlotData[Index].RequiredFarmTask)
-		{
-			continue;
-		}
-		
-		float Dist = FVector::DistSquared2D(PlotData[Index].Location, Location);
-		
-		if (Dist < MinDist)
-		{
-			MinDist = Dist;
-			OutPlotData = PlotData[Index];
-			ActivePlotIndex = Index;
-			bFound = true;
-		}
-	}
+	// Snake 방식으로, PlotDataIndex를 바꾸고 있기 때문에, 실제 인덱스를 알려면 다시 변환해주어야 한다.
+	int32 Row = ActivePlotIndex / Coordinate.Column;                                                                                                                                                                                          
+	int32 ColPos = ActivePlotIndex % Coordinate.Column;                                                                                                                                                                                       
+	int32 PlotDataIndex = (Row % 2 == 0)                                                                                                                                                                                                      
+		? Row * Coordinate.Column + ColPos                                                                                                                                                                                                    
+		: Row * Coordinate.Column + (Coordinate.Column - 1 - ColPos);  
 	
-	return bFound;
-}
-
-void ARFarmPlotVolume::CompleteCurrentPlot(ERequiredFarmTask InFarmTask)
-{
-	if (false == PlotData.IsValidIndex(ActivePlotIndex))
+	// 같아야함.
+	if (InActivePlotIndex != PlotDataIndex)
 	{
 		return;
 	}
 	
-	ERequiredFarmTask NextTask = static_cast<ERequiredFarmTask>(static_cast<uint8>(InFarmTask) + 1);
+	FRPlotData& CurrentPlotData = PlotData[InActivePlotIndex];
+
+	ERequiredFarmTask NextTask = static_cast<ERequiredFarmTask>(static_cast<uint8>(CurrentPlotData.RequiredFarmTask) + 1);
 	
 	// TODO: Enum을 이용한 상태로 확장 가능성있게 구현해야 한다. 
 	// 모든 PlotData의 bIsPlowed 가 true라면, 다음 단계로 이동할 수 있도록 순차실행이 가능하도록 해야함.
-	PlotData[ActivePlotIndex].RequiredFarmTask = NextTask;
+	CurrentPlotData.RequiredFarmTask = NextTask;
+	ActivePlotIndex++;
 	RefreshActiveFarmTask();
 }
 
@@ -111,6 +105,14 @@ bool ARFarmPlotVolume::RefreshActiveFarmTask()
 		return false;
 	}
 	
-	ActiveFarmTask = static_cast<ERequiredFarmTask>(MinPriority);
+	ERequiredFarmTask NewActiveFarmTask = static_cast<ERequiredFarmTask>(MinPriority);
+	
+	if (NewActiveFarmTask != ActiveFarmTask)
+	{
+		ActiveFarmTask = NewActiveFarmTask;
+		ActivePlotIndex = 0; //초기 과정으로 돌아감. 항상 0부터 시작하도록 함.
+		// 원래 자리로 돌아가야함.
+	}
+	
 	return true;
 }

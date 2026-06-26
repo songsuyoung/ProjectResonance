@@ -7,6 +7,7 @@
 class AAIController;
 class APawn;
 class ARFarmPlotVolume;
+struct FRPlotData;
 enum class ERequiredFarmTask : uint8;
 
 UCLASS()
@@ -27,19 +28,19 @@ protected:
 	TWeakObjectPtr<ACharacter> OwnerCharacter;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	TObjectPtr<UAnimMontage> Animation;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	float WorkDuration;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	ERequiredFarmTask FarmTask;
-	
+	TObjectPtr<UAnimMontage> WorkMontage;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TWeakObjectPtr<ARFarmPlotVolume> FarmVolume;
 
 protected:
 	
 	UPROPERTY(Transient)
+	float WorkDuration;
+	
+	UPROPERTY(Transient)
 	float ElapsedTime;
+	
+	UPROPERTY(Transient)
+	int32 ActivePlotIndex;
 };
