@@ -92,3 +92,12 @@ enum class ERLocationType : uint8
 	Park,
 	Store, //Store 선택시 Volume -> Store 중 선택하도록함. (거리기반으로)
 };
+
+UENUM(BlueprintType)
+enum class ERToolType : uint8
+{
+	None,
+	Hoe,        // 괭이
+	Shovel,     // 삽
+	WaterPail,  // 물바구니
+};

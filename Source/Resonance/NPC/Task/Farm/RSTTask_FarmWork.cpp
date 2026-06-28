@@ -2,7 +2,6 @@
 
 #include "Actor/RFarmPlotVolume.h"
 #include "Character/RNPCCharacter.h"
-#include "Components/RJobComponent.h"
 #include "GameFramework/Character.h"
 
 EStateTreeRunStatus URSTTask_FarmWork::EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition)
@@ -34,19 +33,6 @@ EStateTreeRunStatus URSTTask_FarmWork::EnterState(FStateTreeExecutionContext& Co
 	WorkDuration = WorkMontage->GetPlayLength() * Count;
 	ElapsedTime = 0.f;
 	OwnerCharacter->PlayAnimMontage(WorkMontage);
-	
-	if (false == IsValid(ToolMeshData.Mesh))
-	{
-		ToolMeshData.Mesh = ToolMeshData.MeshObj.LoadSynchronous();
-	}
-	
-	// 1번만 교체할 수 있도록 캐싱을 진행해야 한다.
-	JobComponent = OwnerCharacter->GetJobComponent();
-	
-	if (JobComponent.IsValid())
-	{
-		JobComponent->SetToolMesh(ToolMeshData);
-	}
 	
 	return EStateTreeRunStatus::Running;
 }

@@ -110,7 +110,7 @@ void ARNPCCharacter::HandleRegionExited()
 	SetActorEnableCollision(true);
 }
 
-void ARNPCCharacter::VisitRegion(const FName& RegionID)
+void ARNPCCharacter::VisitRegion(const FName& RegionID,  bool bHide)
 {
 	if (false == IsValid(EmotionComponent))
 	{
@@ -118,10 +118,12 @@ void ARNPCCharacter::VisitRegion(const FName& RegionID)
 	}
 	
 	// 이미 방문한 경우에는 변경하지 않는다.
+	/*
 	if (CurrentVisitedRegion == RegionID)
 	{
 		return;
 	}
+	*/
 	
 	if (PendingRegions.IsEmpty())
 	{
@@ -138,6 +140,12 @@ void ARNPCCharacter::VisitRegion(const FName& RegionID)
 	
 	CurrentVisitedRegion = RegionID;
 	PendingRegions.RemoveAt(0);
+
+	if (false == bHide)
+	{
+		return;
+	}
+	
 	float DurationTime = EmotionComponent->GetStayDuration(RegionID);
 
 	FRNPCEnterRegion Msg(ID, RegionID, DurationTime);

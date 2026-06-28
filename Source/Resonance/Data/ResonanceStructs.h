@@ -63,6 +63,27 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FRToolMeshData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool")
+	TSoftObjectPtr<UStaticMesh> MeshObj;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool")
+	FName SocketName = TEXT("hand_r");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool")
+	FVector RelativeLocation = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tool")
+	FRotator RelativeRotation = FRotator::ZeroRotator;
+	
+	UPROPERTY(Transient)
+	TObjectPtr<UStaticMesh> Mesh;
+};
+
+USTRUCT(BlueprintType)
 struct FRStatInfo
 {
 	GENERATED_BODY()

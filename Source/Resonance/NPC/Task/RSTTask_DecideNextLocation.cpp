@@ -24,6 +24,13 @@ EStateTreeRunStatus URSTTask_DecideNextLocation::EnterState(FStateTreeExecutionC
 		return EStateTreeRunStatus::Succeeded;
 	}
 
+	// 가야할 곳이 이미 정해진 경우가 있음.
+	if (NextRegionID.IsValid())
+	{
+		OwnerCharacter->SetNextRegions({NextRegionID});
+		return EStateTreeRunStatus::Succeeded;
+	}
+	
 	// NPC Character에게 현재 있는 위치가 어디있는지 가져온다.	
 	FName RegionID = OwnerCharacter->GetCurrentVisitedRegion();
 	
@@ -51,7 +58,7 @@ EStateTreeRunStatus URSTTask_DecideNextLocation::EnterState(FStateTreeExecutionC
 	// 0~3까지는 Alpha 거꾸로 Alpha +된다
 	float Alpha = (1.f - ((float)EmotionState/ (float)EREmotionState::Max)) * 0.5f;
 	
-	for (auto PreferredRegion : PreferredRegions)
+	for (auto& PreferredRegion : PreferredRegions)
 	{
 		PreferredRegion.Value += Alpha;
 	}

@@ -9,4 +9,11 @@ class RESONANCECLIENT_API URCommonActivatableWidget : public UCommonActivatableW
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const;
+	
+protected:
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CommonUI|Settings")
+	FUIInputConfig InputConfig;
 };

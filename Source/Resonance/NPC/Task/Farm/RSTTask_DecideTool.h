@@ -2,47 +2,27 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "RSTTask_FarmWork.generated.h"
+#include "RSTTask_DecideTool.generated.h"
 
 class AAIController;
 class ARNPCCharacter;
 class ARFarmPlotVolume;
-class URJobComponent;
-struct FRPlotData;
-enum class ERequiredFarmTask : uint8;
-
 
 UCLASS()
-class RESONANCE_API URSTTask_FarmWork : public UStateTreeTaskBlueprintBase
+class RESONANCE_API URSTTask_DecideTool : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 
-	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 protected:
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<AAIController> AIController;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<ARNPCCharacter> OwnerCharacter;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Plow|Settings")
-	TObjectPtr<UAnimMontage> WorkMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	TWeakObjectPtr<ARFarmPlotVolume> FarmVolume;
-
-protected:
-	
-	UPROPERTY(Transient)
-	float WorkDuration;
-	
-	UPROPERTY(Transient)
-	float ElapsedTime;
-	
-	UPROPERTY(Transient)
-	int32 ActivePlotIndex;
 };

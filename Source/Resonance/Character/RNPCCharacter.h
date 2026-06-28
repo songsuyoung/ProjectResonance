@@ -43,7 +43,7 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
-	void VisitRegion(const FName& RegionID);
+	void VisitRegion(const FName& RegionID, bool bHide);
 	FName PeekNextRegion();
 	
 public:

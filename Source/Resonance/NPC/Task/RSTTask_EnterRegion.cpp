@@ -116,5 +116,5 @@ void URSTTask_EnterRegion::MoveTo(float DeltaTime)
 
 void URSTTask_EnterRegion::Enter()
 {
-    OwnerCharacter->VisitRegion(NextRegionID);
+    OwnerCharacter->VisitRegion(NextRegionID, bHide);
 }

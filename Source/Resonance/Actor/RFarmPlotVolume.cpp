@@ -100,10 +100,10 @@ bool ARFarmPlotVolume::RefreshActiveFarmTask()
 		}
 	}
 	
-	if (RequiredTaskIndex == INDEX_NONE)
+	/*if (RequiredTaskIndex == INDEX_NONE)
 	{
 		return false;
-	}
+	}*/
 	
 	ERequiredFarmTask NewActiveFarmTask = static_cast<ERequiredFarmTask>(MinPriority);
 	

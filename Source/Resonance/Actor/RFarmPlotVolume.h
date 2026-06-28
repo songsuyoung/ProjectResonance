@@ -11,7 +11,6 @@ enum class ERequiredFarmTask : uint8
 	Clear      UMETA(DisplayName = "땅 정리 (Clear)"),
 	Sow        UMETA(DisplayName = "씨앗 심기 (Sow)"),
 	Water      UMETA(DisplayName = "물주기 (Water)"),
-	Weed       UMETA(DisplayName = "잡초 뽑기 (Weed)"),
 	Max
 };
 

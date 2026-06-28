@@ -45,6 +45,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
 	float LimitedDistanceScale;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Setting")
+	uint8 bHide : 1;
+	
 protected:
 	
 	UPROPERTY(Transient)
