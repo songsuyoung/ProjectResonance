@@ -4,6 +4,7 @@
 #include "Components/SplineComponent.h"
 
 // 
+#include "Components/RJobComponent.h"
 #include "Components/Emotion/REmotionComponent.h"
 #include "Components/Stat/RBaseStatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -20,6 +21,7 @@ ARNPCCharacter::ARNPCCharacter()
 	SplineComponent = CreateDefaultSubobject<USplineComponent>(TEXT("SplineComponent"));
 	EmotionComponent = CreateDefaultSubobject<UREmotionComponent>(TEXT("EmotionComponent"));
 	BaseStatComponent = CreateDefaultSubobject<URBaseStatComponent>(TEXT("BaseStatComponent"));
+	JobComponent = CreateDefaultSubobject<URJobComponent>(TEXT("JobComponent"));
 	
 	AIControllerClass = ARAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
