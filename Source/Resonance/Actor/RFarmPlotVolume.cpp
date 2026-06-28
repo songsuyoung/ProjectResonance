@@ -36,6 +36,7 @@ void ARFarmPlotVolume::InitializePlotData()
 	// BoxExtent 는 절반임
 	float Width  = (BoxExtent.X * 2) / Coordinate.Column;
 	float Height = (BoxExtent.Y * 2) / Coordinate.Row;
+	Extent = FVector(Width * 0.5f, Height * 0.5f, 10.f);
 	
 	UWorld* World = GetWorld();
 	check(World);
@@ -52,9 +53,11 @@ void ARFarmPlotVolume::InitializePlotData()
 				RightLower.Y - Height * (Row + 0.5f),
 				RightLower.Z - BoxExtent.Z
 			);
+			
+			
 			DrawDebugBox(World, Location, FVector(10.f, 10.f, 10.f), FColor::Blue, true, -1.f, 0, 3.f);
 			
-			DrawDebugBox(World, Location, FVector(Width * 0.5f, Height * 0.5f, 10.f), FColor::Red, true, -1.f, 0, 3.f);
+			DrawDebugBox(World, Location, Extent, FColor::Red, true, -1.f, 0, 3.f);
 			PlotData.Add({PlotData.Num(), Location, ERequiredFarmTask::Till});
 		}
 	}

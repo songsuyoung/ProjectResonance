@@ -17,10 +17,7 @@ UCLASS()
 class RESONANCE_API URAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
-public:
-	void SetDesiredDirection(FVector InDirection, ERAnimType AnimType = ERAnimType::In_Place);
-	
+
 protected:
 	
 	virtual void NativeInitializeAnimation() override;

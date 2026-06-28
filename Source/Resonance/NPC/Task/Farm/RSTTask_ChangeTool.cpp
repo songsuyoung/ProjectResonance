@@ -10,7 +10,14 @@ EStateTreeRunStatus URSTTask_ChangeTool::EnterState(FStateTreeExecutionContext& 
 		JobComponent = OwnerCharacter->GetJobComponent();
 	}
 
-	JobComponent->ApplyToolMesh();
+	if (false == bClear)
+	{
+		JobComponent->ApplyToolMesh();
+	}
+	else
+	{
+		JobComponent->ClearToolMesh();
+	}
 	
 	return EStateTreeRunStatus::Succeeded;
 }

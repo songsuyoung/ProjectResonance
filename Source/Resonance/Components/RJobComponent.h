@@ -21,9 +21,10 @@ public:
 	void SetToolMesh(const FRToolMeshData& ToolMeshData);
 	void SetPendingToolType(ERToolType InToolType);
 	void ApplyToolMesh();
+	void ClearToolMesh();
 	bool IsToolChangeRequired() const;
 	ERToolType GetPendingToolType() const { return PendingToolType; }
-
+	bool HasTool() const;
 private:
 	void OnMeshLoaded();
 

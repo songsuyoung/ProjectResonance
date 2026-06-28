@@ -23,6 +23,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<ARNPCCharacter> OwnerCharacter;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
+	uint8 bClear : 1;
+
 protected:
 	
 	UPROPERTY(Transient)

@@ -47,7 +47,7 @@ public:
 	
 	UPROPERTY(Transient)
 	FVector Location;        // Center
-
+	
 	UPROPERTY(Transient)
 	ERequiredFarmTask RequiredFarmTask;
 };
@@ -62,6 +62,7 @@ public:
 	virtual void BeginPlay() override;
 	bool GetActivePlot(FRPlotData& OutPlotData);
 	void CompleteCurrentPlot(int32 InActivePlotIndex);
+	const FVector& GetPlotExtent() { return Extent; }
 	bool RefreshActiveFarmTask();
 	
 protected:
@@ -76,6 +77,10 @@ protected:
 	FRPlotCoord Coordinate; 
 
 protected:
+		
+	UPROPERTY(Transient)
+	FVector Extent;
+	
 	UPROPERTY(Transient)
 	TArray<FRPlotData> PlotData;
 	
