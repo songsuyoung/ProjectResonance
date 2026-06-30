@@ -9,6 +9,7 @@ enum class ERDataTableType : uint8
 	CharacterData,
 	NPCDataTable,
 	LocationPreferenceDataTable,
+	FarmDailySchedule,
 	Max,
 };
 

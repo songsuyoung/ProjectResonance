@@ -23,6 +23,7 @@ public class Resonance : ModuleRules
 			"GameplayStateTreeModule",
 			"AIModule",
 			"NavigationSystem",
+			"DeveloperSettings",
 		});
 	}
 }

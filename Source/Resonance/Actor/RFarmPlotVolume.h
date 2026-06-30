@@ -7,10 +7,13 @@
 UENUM(BlueprintType)
 enum class ERequiredFarmTask : uint8
 {
-	Till       UMETA(DisplayName = "호미질 (Till)"),
-	Clear      UMETA(DisplayName = "땅 정리 (Clear)"),
-	Sow        UMETA(DisplayName = "씨앗 심기 (Sow)"),
-	Water      UMETA(DisplayName = "물주기 (Water)"),
+	None UMETA(DisplayName = "생략 (None)"),
+	Till UMETA(DisplayName = "호미질 (Till)"),
+	Clear UMETA(DisplayName = "땅 정리 (Clear)"),
+	Sow UMETA(DisplayName = "씨앗 심기 (Sow)"),
+	Weed  UMETA(DisplayName = "잡초 제거 (Weed)"),    
+	Water UMETA(DisplayName = "물주기 (Water)"),
+	Harvest UMETA(DisplayName = "수확 (Harvest)"),
 	Max
 };
 
@@ -51,6 +54,7 @@ public:
 	UPROPERTY(Transient)
 	ERequiredFarmTask RequiredFarmTask;
 };
+struct FRFarmDailySchedule;
 
 UCLASS()
 class RESONANCE_API ARFarmPlotVolume : public AVolume
@@ -60,13 +64,14 @@ class RESONANCE_API ARFarmPlotVolume : public AVolume
 public:
 	
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	bool GetActivePlot(FRPlotData& OutPlotData);
 	void CompleteCurrentPlot(int32 InActivePlotIndex);
 	const FVector& GetPlotExtent() { return Extent; }
 	bool RefreshActiveFarmTask();
 	
 protected:
-	
+	void OnDayChanged(int32 NewDay);
 	void InitializePlotData();
 protected:
 	
@@ -89,4 +94,9 @@ protected:
 	
 	UPROPERTY(Transient)
 	int32 ActivePlotIndex;
+	
+	UPROPERTY(Transient)
+	int32 CycleDays;
+	
+	FRFarmDailySchedule* FarmDailySchedule;
 };

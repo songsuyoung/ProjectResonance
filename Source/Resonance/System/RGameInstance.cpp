@@ -6,6 +6,7 @@
 #include "REventManager.h"
 #include "RNPCSpawnManager.h"
 #include "RRegionManager.h"
+#include "RTimeManager.h"
 #include "RUIManagerBase.h"
 #include "System/RDataManager.h"
 
@@ -26,7 +27,7 @@ void URGameInstance::Init()
 	EventManager = NewObject<UREventManager>(this, UREventManager::StaticClass());
 	BakeDataManager = NewObject<URBakeDataManager>(this, URBakeDataManager::StaticClass());
 	PathFinder = NewObject<URPathFinder>(this, URPathFinder::StaticClass());
-	
+
 	if (IsValid(BakeDataManager))
 	{
 		BakeDataManager->Initialize();

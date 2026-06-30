@@ -1,10 +1,27 @@
 #include "Actor/RFarmPlotVolume.h"
 
+#include "System/RDataManager.h"
+#include "System/RTimeManager.h"
+#include "Data/RFarmDailySchedule.h"
+
 void ARFarmPlotVolume::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	InitializePlotData();
+	
+	URTimeManager* TimeManager = URTimeManager::Get(this);
+	check(TimeManager);
+	TimeManager->OnDayChanged.AddUObject(this, &ThisClass::OnDayChanged);
+}
+
+void ARFarmPlotVolume::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	
+	URTimeManager* TimeManager = URTimeManager::Get(this);
+	check(TimeManager);
+	TimeManager->OnDayChanged.RemoveAll(this);
 }
 
 bool ARFarmPlotVolume::GetActivePlot(FRPlotData& OutPlotData)
@@ -118,4 +135,30 @@ bool ARFarmPlotVolume::RefreshActiveFarmTask()
 	}
 	
 	return true;
+}
+
+void ARFarmPlotVolume::OnDayChanged(int32 NewDay)
+{
+	UE_LOG(LogTemp, Log, TEXT("[Farm] %d"), NewDay);
+	
+	URDataManager* DataManager = URDataManager::Get(this);
+	check(DataManager);
+	
+	UDataTable* DataTable = DataManager->GetDataTable(ERDataTableType::FarmDailySchedule);
+	
+	if (false == IsValid(DataManager))
+	{
+		return;
+	}
+	
+	int32 TargetDay = INT_MAX;
+	for (auto& RowName : DataTable->GetRowNames())
+	{
+		int32 RowDay = FCString::Atoi(*RowName.ToString().RightChop(NewDay)); // "Day_4" → 4
+		if (RowDay >= CycleDays && RowDay < TargetDay)
+		{
+			TargetDay = RowDay;
+			FarmDailySchedule = DataTable->FindRow<FRFarmDailySchedule>(RowName, TEXT(""));
+		}
+	}
 }

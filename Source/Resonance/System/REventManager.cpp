@@ -1,7 +1,7 @@
 #include "System/REventManager.h"
 
 // Newly Created Files...
-#include "System/RBaseGameInstance.h"
+#include "RGameInstance.h"
 
 UREventManager* UREventManager::Get(UObject* Object)
 {
@@ -11,7 +11,7 @@ UREventManager* UREventManager::Get(UObject* Object)
 
     check(World);
 
-    URBaseGameInstance* GameInstance = Cast<URBaseGameInstance>(World->GetGameInstance());
+    URGameInstance* GameInstance = Cast<URGameInstance>(World->GetGameInstance());
 
     check(GameInstance);
 
