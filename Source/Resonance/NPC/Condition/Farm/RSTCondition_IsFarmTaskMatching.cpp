@@ -15,5 +15,10 @@ bool URSTCondition_IsFarmTaskMatching::TestCondition(FStateTreeExecutionContext&
 		return false;
 	}
 	
-	return ExpectedFarmTasks.Contains(PlotData.RequiredFarmTask);
+	if (PlotData.PendingTasks.IsEmpty())
+	{
+		return false;
+	}
+	
+	return ExpectedFarmTasks.Contains(PlotData.PendingTasks[0]);
 }

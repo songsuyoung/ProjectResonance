@@ -52,8 +52,9 @@ public:
 	FVector Location;        // Center
 	
 	UPROPERTY(Transient)
-	ERequiredFarmTask RequiredFarmTask;
+	TArray<ERequiredFarmTask> PendingTasks;
 };
+
 struct FRFarmDailySchedule;
 
 UCLASS()
@@ -68,7 +69,6 @@ public:
 	bool GetActivePlot(FRPlotData& OutPlotData);
 	void CompleteCurrentPlot(int32 InActivePlotIndex);
 	const FVector& GetPlotExtent() { return Extent; }
-	bool RefreshActiveFarmTask();
 	
 protected:
 	void OnDayChanged(int32 NewDay);
@@ -97,6 +97,4 @@ protected:
 	
 	UPROPERTY(Transient)
 	int32 CycleDays;
-	
-	FRFarmDailySchedule* FarmDailySchedule;
 };

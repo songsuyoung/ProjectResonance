@@ -41,7 +41,12 @@ EStateTreeRunStatus URSTTask_DecideTool::EnterState(FStateTreeExecutionContext& 
 		return EStateTreeRunStatus::Failed;
 	}
 
-	ERToolType RequiredToolType = GetToolTypeForFarmTask(PlotData.RequiredFarmTask);
+	if (PlotData.PendingTasks.IsEmpty())
+	{
+		return EStateTreeRunStatus::Failed;
+	}
+	
+	ERToolType RequiredToolType = GetToolTypeForFarmTask(PlotData.PendingTasks[0]);
 	JobComponent->SetPendingToolType(RequiredToolType);
 
 	return EStateTreeRunStatus::Succeeded;

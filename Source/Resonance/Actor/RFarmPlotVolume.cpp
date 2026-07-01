@@ -3,6 +3,7 @@
 #include "System/RDataManager.h"
 #include "System/RTimeManager.h"
 #include "Data/RFarmDailySchedule.h"
+#include "Data/ResonanceEnums.h"
 
 void ARFarmPlotVolume::BeginPlay()
 {
@@ -70,12 +71,7 @@ void ARFarmPlotVolume::InitializePlotData()
 				RightLower.Y - Height * (Row + 0.5f),
 				RightLower.Z - BoxExtent.Z
 			);
-			
-			
-			DrawDebugBox(World, Location, FVector(10.f, 10.f, 10.f), FColor::Blue, true, -1.f, 0, 3.f);
-			
-			DrawDebugBox(World, Location, Extent, FColor::Red, true, -1.f, 0, 3.f);
-			PlotData.Add({PlotData.Num(), Location, ERequiredFarmTask::Till});
+			PlotData.Add({PlotData.Num(), Location, TArray<ERequiredFarmTask>()});
 		}
 	}
 }
@@ -96,45 +92,12 @@ void ARFarmPlotVolume::CompleteCurrentPlot(int32 InActivePlotIndex)
 	}
 	
 	FRPlotData& CurrentPlotData = PlotData[InActivePlotIndex];
-
-	ERequiredFarmTask NextTask = static_cast<ERequiredFarmTask>(static_cast<uint8>(CurrentPlotData.RequiredFarmTask) + 1);
+	if (CurrentPlotData.PendingTasks.Num() > 0)
+	{
+		CurrentPlotData.PendingTasks.RemoveAt(0);
+	}
 	
-	// TODO: Enum을 이용한 상태로 확장 가능성있게 구현해야 한다. 
-	// 모든 PlotData의 bIsPlowed 가 true라면, 다음 단계로 이동할 수 있도록 순차실행이 가능하도록 해야함.
-	CurrentPlotData.RequiredFarmTask = NextTask;
 	ActivePlotIndex++;
-	RefreshActiveFarmTask();
-}
-
-bool ARFarmPlotVolume::RefreshActiveFarmTask()
-{
-	uint8 MinPriority = static_cast<uint8>(ERequiredFarmTask::Max);
-	int RequiredTaskIndex = -1;
-	for (int Index = 0; Index < PlotData.Num(); Index++)
-	{
-		uint8 TaskIndex = static_cast<uint8>(PlotData[Index].RequiredFarmTask);
-		if (MinPriority > TaskIndex)
-		{
-			RequiredTaskIndex = Index;
-			MinPriority = TaskIndex;
-		}
-	}
-	
-	/*if (RequiredTaskIndex == INDEX_NONE)
-	{
-		return false;
-	}*/
-	
-	ERequiredFarmTask NewActiveFarmTask = static_cast<ERequiredFarmTask>(MinPriority);
-	
-	if (NewActiveFarmTask != ActiveFarmTask)
-	{
-		ActiveFarmTask = NewActiveFarmTask;
-		ActivePlotIndex = 0; //초기 과정으로 돌아감. 항상 0부터 시작하도록 함.
-		// 원래 자리로 돌아가야함.
-	}
-	
-	return true;
 }
 
 void ARFarmPlotVolume::OnDayChanged(int32 NewDay)
@@ -146,19 +109,26 @@ void ARFarmPlotVolume::OnDayChanged(int32 NewDay)
 	
 	UDataTable* DataTable = DataManager->GetDataTable(ERDataTableType::FarmDailySchedule);
 	
-	if (false == IsValid(DataManager))
-	{
-		return;
-	}
-	
 	int32 TargetDay = INT_MAX;
+	FRFarmDailySchedule* FarmDailySchedule = nullptr;
 	for (auto& RowName : DataTable->GetRowNames())
 	{
-		int32 RowDay = FCString::Atoi(*RowName.ToString().RightChop(NewDay)); // "Day_4" → 4
+		int32 RowDay = FCString::Atoi(*RowName.ToString().RightChop(4));
 		if (RowDay >= CycleDays && RowDay < TargetDay)
 		{
 			TargetDay = RowDay;
+
 			FarmDailySchedule = DataTable->FindRow<FRFarmDailySchedule>(RowName, TEXT(""));
 		}
+	}
+	
+	if (nullptr != FarmDailySchedule)
+	{
+		for (auto& Plot : PlotData)
+		{
+			Plot.PendingTasks.Append(FarmDailySchedule->Tasks);
+		}	
+		
+		CycleDays++;
 	}
 }

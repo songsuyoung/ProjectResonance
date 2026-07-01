@@ -18,7 +18,6 @@ public:
 
 	const FName GetID() { return ID; }
 
-protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Farm|Settings")
 	TArray<ERequiredFarmTask> Tasks;
