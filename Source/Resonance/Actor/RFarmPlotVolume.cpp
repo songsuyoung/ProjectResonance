@@ -97,13 +97,11 @@ void ARFarmPlotVolume::CompleteCurrentPlot(int32 InActivePlotIndex)
 		CurrentPlotData.PendingTasks.RemoveAt(0);
 	}
 	
-	ActivePlotIndex++;
+	ActivePlotIndex = (ActivePlotIndex + 1) % PlotData.Num();
 }
 
 void ARFarmPlotVolume::OnDayChanged(int32 NewDay)
 {
-	UE_LOG(LogTemp, Log, TEXT("[Farm] %d"), NewDay);
-	
 	URDataManager* DataManager = URDataManager::Get(this);
 	check(DataManager);
 	
@@ -129,6 +127,6 @@ void ARFarmPlotVolume::OnDayChanged(int32 NewDay)
 			Plot.PendingTasks.Append(FarmDailySchedule->Tasks);
 		}	
 		
-		CycleDays++;
+		CycleDays = NewDay;
 	}
 }

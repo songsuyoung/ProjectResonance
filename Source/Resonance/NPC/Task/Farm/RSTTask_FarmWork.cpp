@@ -3,6 +3,7 @@
 #include "Actor/RFarmPlotVolume.h"
 #include "AIController.h"
 #include "Character/RNPCCharacter.h"
+#include "Components/RJobComponent.h"
 #include "GameFramework/Character.h"
 #include "Navigation/PathFollowingComponent.h"
 
@@ -39,7 +40,8 @@ EStateTreeRunStatus URSTTask_FarmWork::EnterState(FStateTreeExecutionContext& Co
 	ActiveCount = 1;
 	NoMove = false;
 	OwnerCharacter->PlayAnimMontage(WorkMontage);
-
+	JobComponent = OwnerCharacter->GetJobComponent();
+	
 	return EStateTreeRunStatus::Running;
 }
 
@@ -65,21 +67,18 @@ EStateTreeRunStatus URSTTask_FarmWork::Tick(FStateTreeExecutionContext& Context,
 			return EStateTreeRunStatus::Succeeded;
 		}
 
-		// 한 구간 완료 시 상하좌우 중 하나로 이동
-		UE_LOG(LogTemp, Warning, TEXT("[FarmWork] ElapsedTime=%.2f / Threshold=%.2f / MoveStepSize=%.1f"), ElapsedTime, Duration * ActiveCount, MoveStepSize);
 		if (ElapsedTime >= Duration * ActiveCount)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[FarmWork] → NoMove=true 진입"));
 			OwnerCharacter->StopAnimMontage(WorkMontage);
 			ActiveCount++;
 			NoMove = true;
 
-			const int32 Dir = FMath::RandRange(0, 1);
-			const FVector Directions[] = {
-				FVector( MoveStepSize, 0.f, 0.f),  // 앞
-				FVector(-MoveStepSize, 0.f, 0.f),  // 뒤
-			};
-			const FVector RawTarget = OwnerCharacter->GetActorLocation() + Directions[Dir];
+			const FVector Forward = OwnerCharacter->GetActorForwardVector();                                                                                                                                                                          
+			const int32 DirIndex = FMath::RandRange(-1, 1);  // -1, 0, 1                                                                                                                                                                              
+			const float AngleDeg = DirIndex * 45.f;	//0~45, -45 도 각도를 기준으로 회전 예정                                                                                                                                                                  
+			const FVector Dir = Forward.RotateAngleAxis(AngleDeg, FVector::UpVector);                                                                                                                                                                 
+			const FVector RawTarget = OwnerCharacter->GetActorLocation() + Dir * MoveStepSize;
+			
 			const FVector MaxLocation = PlotCenter + FarmVolume->GetPlotExtent();
 			const FVector MinLocation = PlotCenter - FarmVolume->GetPlotExtent();
 			// 밭 범위 안으로 Clamp
@@ -100,5 +99,15 @@ void URSTTask_FarmWork::ExitState(FStateTreeExecutionContext& Context, const FSt
 {
 	Super::ExitState(Context, Transition);
 	
-	OwnerCharacter->StopAnimMontage(WorkMontage);
+	if (false == JobComponent.IsValid())
+	{
+		return;
+	}
+	
+	// 일할 시간이 끝났기에, 현재 활성화됐던 Index 완료됐음을 알리고, Montage 를 강제로 멈춤.
+	if (false == JobComponent->IsWorkTime())
+	{
+		FarmVolume->CompleteCurrentPlot(ActivePlotIndex);
+		OwnerCharacter->StopAnimMontage(WorkMontage);
+	}
 }

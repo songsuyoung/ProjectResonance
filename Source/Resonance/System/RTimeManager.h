@@ -30,7 +30,10 @@ public:
 	static URTimeManager* Get(UObject* Context);
 	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual TStatId GetStatId() const override;
+	
+	const int32 GetHourTime() const { return CurrentHour; }
 	
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnHourChanged, int32 /*NewHour*/);
 	FOnHourChanged OnHourChanged;

@@ -60,4 +60,7 @@ protected:
 
 	UPROPERTY(Transient)
 	bool NoMove;
+	
+	UPROPERTY(Transient)
+	TWeakObjectPtr<URJobComponent> JobComponent;
 };

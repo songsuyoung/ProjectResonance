@@ -34,16 +34,16 @@ public:
 	void Initialize();
 	void DeInitialize();
 	ARNPCCharacter* GetObserveTarget();
+
+	// 풀링과 관련된 함수
+	void AcquireNPC(FName NPCID);
 protected:
 	virtual void OnMessage(ERMessageType Type, FRMessage* Message);
-	
+		
 	void InitSpawnNPC();
 	void SpawnNPC(const FName& NPCID, const FName& RegionID);
 	
 protected:
-	
-	// 풀링과 관련된 함수
-	void AcquireNPC(FName NPCID);
 	void ReleaseNPC(const FRMessage* Msg);
 	
 protected:

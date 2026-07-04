@@ -145,7 +145,7 @@ void URNPCSpawnManager::ReleaseNPC(const FRMessage* Msg)
 
 	TWeakObjectPtr<URNPCSpawnManager> ThisWeakPtr = this;
 
-	World->GetTimerManager().SetTimer(
+	/*World->GetTimerManager().SetTimer(
 		PoolingSlot.SpawnTimerHandle,
 		FTimerDelegate::CreateLambda([ThisWeakPtr,CapturedNPCID]()
 		{
@@ -157,7 +157,7 @@ void URNPCSpawnManager::ReleaseNPC(const FRMessage* Msg)
 		}),
 		MsgRef.HangAroundTime,
 		false
-	);
+	);*/
 	
 	ActiveNPC.Remove(MsgRef.NPCID);
 }

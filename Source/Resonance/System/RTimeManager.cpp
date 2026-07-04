@@ -31,6 +31,22 @@ void URTimeManager::Initialize(FSubsystemCollectionBase& Collection)
 	HoursPerDay = TimeSettings->HoursPerDay;
 }
 
+void URTimeManager::OnWorldBeginPlay(UWorld& InWorld)
+{
+	Super::OnWorldBeginPlay(InWorld);
+	
+	TWeakObjectPtr<URTimeManager> ThisPtr = this;
+	
+	InWorld.GetTimerManager().SetTimerForNextTick([ThisPtr]()
+	  {
+		if (false == ThisPtr.IsValid())
+		{
+			return;
+		}
+		ThisPtr->OnDayChanged.Broadcast(ThisPtr->CurrentDay);
+	  });
+}
+
 TStatId URTimeManager::GetStatId() const
 {
 	RETURN_QUICK_DECLARE_CYCLE_STAT(URTimeManager, STATGROUP_Tickables); 

@@ -18,13 +18,29 @@ Source/
 
 ---
 
+## 구현 이력
+
+| 단계 | 내용 |
+|---|---|
+| 기반 | 모듈 분리 (Core/Runtime/Client/Editor), Input Command 패턴, DataManager 템플릿 |
+| 전투 | 콤보 공격, AnimNotify 기반 히트 체크, GameplayTag 상태 전환, Skill/Weapon 모듈화 |
+| NPC 기반 | WayPoint 이동, Region 순차 방문, Spawn 시스템, NPC 풀링 |
+| 경로 탐색 | Dijkstra 알고리즘, 직선/순환 이동, 우측 보행 규칙, Spline 부드러운 이동 |
+| NPC 감정 | EmotionComponent, 스태미나 연동, 장소 체류 시간 보정 |
+| NPC UI | NPC ViewTarget, NPC 상태 디스플레이 위젯 |
+| 농부 - 기초 | 밭갈기 이동 루틴, 1회 사이클, 지그재그 패턴, 농부 메시 |
+| 농부 - 고도화 | NavigateToPlot → FarmWork 반복, 도구 교체(ChangeTool/DecideTool), 집 귀환 |
+| 농부 - 데이터화 | DataTable 기반 일과 스케줄(`RFarmDailySchedule`), `RTimeManager` 게임 내 시간 |
+
+---
+
 ## 주요 시스템
 
 ### NPC AI (StateTree)
 
 UE5 StateTree 기반. `ARAIController`가 `UStateTreeAIComponent`를 소유하며 NPC 행동 전체를 제어한다.
 
-**이동 흐름:**
+**일반 NPC 이동 흐름:**
 ```
 DecideNextLocation → FindLinePath → MoveToSpline → EnterRegion
                                                   ↘ RestToRecover (스태미나 부족 시)
@@ -44,12 +60,37 @@ DecideNextLocation → FindLinePath → MoveToSpline → EnterRegion
 
 `ARFarmPlotVolume`이 Row × Column 격자 밭을 관리한다. 작업 순서는 Snake 패턴 (짝수 행 좌→우, 홀수 행 우→좌).
 
-**작업 단계:** `Till → Clear → Sow → Water → Weed`
+**작업 단계:** `Till → Clear → Sow → Water → Weed → Harvest`
 
-**진행 방식:**
-- `ActivePlotIndex` 하나로 Snake 순서 추적. 실제 PlotData 인덱스는 수식으로 변환
-- `CompleteCurrentPlot()` 호출 시 인덱스 증가, 전체 단계 완료 시 다음 FarmTask로 전환
-- NPC는 `NavigateToPlot → FarmWork`를 반복
+**농부 State 흐름:**
+```
+DecideTool → ChangeTool → NavigateToPlot → FarmWork → (반복)
+                                                     ↘ 귀환 (모든 플롯 완료 시)
+```
+
+| Task / Condition | 역할 |
+|---|---|
+| `URSTTask_NavigateToPlot` | 다음 작업할 플롯 위치로 이동 |
+| `URSTTask_FarmWork` | 플롯에서 밭일 수행 (`CompleteCurrentPlot` 호출) |
+| `URSTTask_DecideTool` | 현재 FarmTask에 맞는 도구 결정 |
+| `URSTTask_ChangeTool` | `URJobComponent`에 도구 메시 교체 요청 |
+| `URSTCondition_IsFarmTaskMatching` | 현재 Task와 도구가 일치하는지 확인 |
+| `URSTCondition_IsToolChangeRequired` | 도구 교체 필요 여부 확인 |
+
+**데이터 구조:**
+- `ARFarmPlotVolume`: `ActivePlotIndex` 하나로 Snake 순서 추적. `GetActivePlot()` / `CompleteCurrentPlot()` 인터페이스 제공
+- `FRFarmDailySchedule`: DataTable Row — 하루 수행할 `ERequiredFarmTask` 배열 정의
+- `URJobComponent`: NPC가 소유한 도구 컴포넌트. Async 로드로 StaticMesh 교체
+
+---
+
+### 시간 시스템 (TimeManager)
+
+`URTimeManager` — `UTickableWorldSubsystem` 파생. 게임 내 시간 흐름을 관리한다.
+
+- `URTimeSettings` (`UDeveloperSettings`): 에디터 Project Settings에서 `HourDuration`(초/시간), `HoursPerDay` 설정 가능
+- `OnHourChanged` / `OnDayChanged` 멀티캐스트 델리게이트로 시간 이벤트 전파
+- `ARFarmPlotVolume`이 `OnDayChanged`를 수신해 매일 밭 플롯 초기화(`InitializePlotData`) 실행
 
 ---
 
@@ -127,3 +168,4 @@ REVENT_MESSAGE_NOTIFY_MSG(EnterRegion, Payload);
 | UI | CommonUI (`UCommonActivatableWidget`) |
 | 데이터 | DataTable + JSON (JsonObjectConverter) |
 | 에디터 | LevelEditor Toolbar Extension + 커스텀 Bake 시스템 |
+| 시간 | `UTickableWorldSubsystem` 기반 게임 내 시간 (`URTimeManager`) |

@@ -127,7 +127,7 @@ float UREmotionComponent::GetStayDuration(FName LocationID)
 	
 	if (false == IsValid(NPCCharacter))
 	{
-		return 0.0f;
+		return 1.0f;
 	}
 	
 	URDataManager* DataManager = URDataManager::Get(this);
@@ -137,14 +137,14 @@ float UREmotionComponent::GetStayDuration(FName LocationID)
 	
 	if (nullptr == PreferenceTable)
 	{
-		return 0.0f;
+		return 1.0f;
 	}
 	
 	TObjectPtr<UREmotionStateBase>* CurrentEmotion = Emotions.Find(CurrentEmotionKey);
 	
 	if (CurrentEmotion == nullptr)
 	{
-		return 0.f;
+		return 1.f;
 	}
 	
 	float Stamina = StatComponent->GetCurrentStatValue(ERStatType::Stamina) / FMath::Max(StatComponent->GetMaxStatValue(ERStatType::Stamina), 1.0f);
@@ -166,7 +166,7 @@ float UREmotionComponent::GetStayDuration(FName LocationID)
 	//0~1 사이의 값을 가짐 
 	float DurationTime = FMath::Clamp(TotalDuration, 5.0f, 20.f);
 	
-	return DurationTime;
+	return 5.f;
 }
 
 EREmotionState UREmotionComponent::GetEmotionState()
