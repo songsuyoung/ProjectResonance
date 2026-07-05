@@ -24,6 +24,7 @@ public class Resonance : ModuleRules
 			"AIModule",
 			"NavigationSystem",
 			"DeveloperSettings",
+			"SmartObjectsModule",
 		});
 	}
 }
