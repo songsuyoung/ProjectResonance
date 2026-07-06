@@ -2,12 +2,15 @@
 
 // UE 5.
 #include "Components/SplineComponent.h"
+#include "MotionWarpingComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // 
+#include "RNPCCharacter.h"
+
 #include "Components/RJobComponent.h"
 #include "Components/Emotion/REmotionComponent.h"
 #include "Components/Stat/RBaseStatComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "NPC/System/RAIController.h"
 #include "Data/ResonanceMacro.h"
 #include "System/REventManager.h"
@@ -22,7 +25,7 @@ ARNPCCharacter::ARNPCCharacter()
 	EmotionComponent = CreateDefaultSubobject<UREmotionComponent>(TEXT("EmotionComponent"));
 	BaseStatComponent = CreateDefaultSubobject<URBaseStatComponent>(TEXT("BaseStatComponent"));
 	JobComponent = CreateDefaultSubobject<URJobComponent>(TEXT("JobComponent"));
-	
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	AIControllerClass = ARAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	

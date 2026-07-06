@@ -13,6 +13,7 @@ class UWidgetComponent;
 class UUserWidget;
 class URJobComponent;
 class APlayerController;
+class UMotionWarpingComponent;
 DECLARE_MULTICAST_DELEGATE(FOnRegionEntered);
 DECLARE_MULTICAST_DELEGATE(FOnRegionExited);
 
@@ -23,11 +24,12 @@ class RESONANCE_API ARNPCCharacter : public ARCameraCharacter
 	
 public:
 	ARNPCCharacter();
-	
+
+	UMotionWarpingComponent* GetMotionWarpingComponent() const { return MotionWarpingComponent; }
 	USplineComponent* GetSplineComponent() const { return SplineComponent; }
 	UREmotionComponent* GetEmotionComponent() const { return EmotionComponent; }
 	URJobComponent* GetJobComponent() const { return JobComponent; }
-	
+
 public:
 	FName GetCurrentVisitedRegion() const { return CurrentVisitedRegion; }
 	void SetID(FName NPCID, FName HomeGroundID) { Super::SetID(NPCID); CurrentVisitedRegion = HomeGroundID; }
@@ -63,6 +65,8 @@ protected:
 	TArray<FName> PendingRegions;
 	
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Motion|Settings")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Path|Settings")
 	TObjectPtr<USplineComponent> SplineComponent;

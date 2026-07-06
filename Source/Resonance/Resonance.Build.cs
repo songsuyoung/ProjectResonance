@@ -25,6 +25,7 @@ public class Resonance : ModuleRules
 			"NavigationSystem",
 			"DeveloperSettings",
 			"SmartObjectsModule",
+			"MotionWarping"
 		});
 	}
 }
