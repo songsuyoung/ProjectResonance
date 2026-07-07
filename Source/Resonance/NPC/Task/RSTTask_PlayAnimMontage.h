@@ -19,7 +19,7 @@ public:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 	virtual void ExitState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 	UFUNCTION()
-	void OnAnimMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted);
+	void OnAnimMontageBlendOut(UAnimMontage* AnimMontage, bool bInterrupted);
 protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")

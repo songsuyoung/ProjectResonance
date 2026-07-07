@@ -55,7 +55,7 @@ EStateTreeRunStatus URSTTask_PlayAnimMontage::EnterState(FStateTreeExecutionCont
 	
 	UAnimInstance* AnimInstance = MeshComponent->GetAnimInstance();
 	
-	AnimInstance->OnMontageBlendingOut.AddDynamic(this, &ThisClass::OnAnimMontageEnded);
+	AnimInstance->OnMontageBlendingOut.AddDynamic(this, &ThisClass::OnAnimMontageBlendOut);
 		
 	OwnerCharacter->PlayAnimMontage(AnimationMontage);
 	
@@ -87,7 +87,7 @@ void URSTTask_PlayAnimMontage::ExitState(FStateTreeExecutionContext& Context, co
 	}
 }
 
-void URSTTask_PlayAnimMontage::OnAnimMontageEnded(UAnimMontage* AnimMontage, bool bInterrupted)
+void URSTTask_PlayAnimMontage::OnAnimMontageBlendOut(UAnimMontage* AnimMontage, bool bInterrupted)
 {
 	if (AnimMontage == AnimationMontage)
 	{
