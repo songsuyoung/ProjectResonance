@@ -4,15 +4,9 @@
 #include "Animation/AnimInstance.h"
 #include "RAnimInstance.generated.h"
 
-class ACharacter;
+class ARBaseCharacter;
 class UCharacterMovementComponent;
 
-UENUM(BlueprintType)
-enum class ERAnimType : uint8
-{
-	In_Place,
-	RootMotion
-};
 UCLASS()
 class RESONANCE_API URAnimInstance : public UAnimInstance
 {
@@ -43,5 +37,5 @@ protected:
 	TWeakObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
 	
 	UPROPERTY(Transient, BlueprintReadOnly)
-	TWeakObjectPtr<ACharacter> OwnerCharacter;
+	TWeakObjectPtr<ARBaseCharacter> OwnerCharacter;
 };

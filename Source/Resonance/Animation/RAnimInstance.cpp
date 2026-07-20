@@ -1,6 +1,7 @@
 #include "Animation/RAnimInstance.h"
 
 // UE 5. Files..
+#include "Character/RBaseCharacter.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -8,7 +9,7 @@ void URAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 	
-	OwnerCharacter = Cast<ACharacter>(GetOwningActor());
+	OwnerCharacter = Cast<ARBaseCharacter>(GetOwningActor());
 	
 	if (OwnerCharacter.IsValid())
 	{

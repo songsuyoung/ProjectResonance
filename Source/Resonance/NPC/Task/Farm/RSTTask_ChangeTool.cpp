@@ -12,7 +12,7 @@ EStateTreeRunStatus URSTTask_ChangeTool::EnterState(FStateTreeExecutionContext& 
 
 	if (false == bClear)
 	{
-		JobComponent->ApplyToolMesh();
+		JobComponent->ApplyToolMesh(ToolType);
 	}
 	else
 	{

@@ -7,6 +7,7 @@
 
 class ARNPCCharacter;
 class AAIController;
+class UAnimMontage;
 
 UCLASS()
 class RESONANCE_API URSTTask_PlayAnimMontage : public UStateTreeTaskBlueprintBase
@@ -18,6 +19,7 @@ public:
 	
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 	virtual void ExitState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
+protected:
 	UFUNCTION()
 	void OnAnimMontageBlendOut(UAnimMontage* AnimMontage, bool bInterrupted);
 protected:
@@ -27,7 +29,7 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	TWeakObjectPtr<AActor> SmartObjectActor;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Context")
 	FSmartObjectClaimHandle ClaimHandle;
 	
@@ -41,5 +43,15 @@ protected:
 	uint8 bUseMotionWarping : 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings")
+	uint8 bUseLookAt : 1;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings")
+	float LookAtAlpha;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings")
 	uint8 bWaitForAnimationToFinish :1;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TWeakObjectPtr<UAnimInstance> AnimInstance;
+	
 };

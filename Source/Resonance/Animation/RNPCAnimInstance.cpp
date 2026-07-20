@@ -3,8 +3,6 @@
 // UE 5. Files..
 #include "Character/RNPCCharacter.h"
 #include "Components/RJobComponent.h"
-#include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 void URNPCAnimInstance::NativeInitializeAnimation()
 {
@@ -28,5 +26,11 @@ void URNPCAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	bShouldMove = Speed > 3.0f;
 	bHasTool = JobComponent->HasTool();
+	HoldToolAlpha = FMath::FInterpTo(HoldToolAlpha, bHasTool? 1.0f:0.f, DeltaSeconds, 8.0);
+	LookAtAlpha =  FMath::FInterpTo(HoldToolAlpha, bLookAt? 1.0f:0.f, DeltaSeconds, 8.0);
+	
+	if (LookAtAlpha > 0.2f)
+	{
+		LookAtLocation = OwnerCharacter->GetLookAtLocation();
+	}
 }
-

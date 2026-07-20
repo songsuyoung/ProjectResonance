@@ -24,4 +24,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings")
 	float SearchRange;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings")
+	FVector Offset;
 };

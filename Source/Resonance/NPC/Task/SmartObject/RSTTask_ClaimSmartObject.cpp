@@ -10,8 +10,7 @@ EStateTreeRunStatus URSTTask_ClaimSmartObject::EnterState(FStateTreeExecutionCon
 	
 	USmartObjectSubsystem* SmartObjectSubsystem = World->GetSubsystem<USmartObjectSubsystem>();
 	
-	FSmartObjectRequest Request;                                                                                                                                                                                                              
-	// QueryBox를 Input으로 받지 말고 NPC 위치 기준으로 생성                                                                                                                                                                              
+	FSmartObjectRequest Request;                                       
 	const FVector NPCLocation = OwnerCharacter->GetActorLocation();
 	TArray<FSmartObjectRequestResult> OutResults;
 	

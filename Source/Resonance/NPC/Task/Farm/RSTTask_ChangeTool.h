@@ -7,7 +7,7 @@
 class AAIController;
 class ARNPCCharacter;
 class URJobComponent;
-
+enum class ERToolType : uint8;
 UCLASS()
 class RESONANCE_API URSTTask_ChangeTool : public UStateTreeTaskBlueprintBase
 {
@@ -25,6 +25,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
 	uint8 bClear : 1;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ERToolType ToolType;
 
 protected:
 	

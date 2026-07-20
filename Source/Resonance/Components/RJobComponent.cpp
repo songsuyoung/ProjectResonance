@@ -57,7 +57,7 @@ void URJobComponent::SetPendingToolType(ERToolType InToolType)
 	PendingToolType = InToolType;
 }
 
-void URJobComponent::ApplyToolMesh()
+void URJobComponent::ApplyToolMesh(ERToolType ToolType)
 {
 	if (false == IsValid(StaticMeshComponent))
 	{
@@ -67,8 +67,13 @@ void URJobComponent::ApplyToolMesh()
 	const FRToolMeshData* ToolMeshData = ToolMeshMap.Find(PendingToolType);
 	if (nullptr == ToolMeshData)
 	{
-		ClearToolMesh();
-		return;
+		ToolMeshData = ToolMeshMap.Find(ToolType);
+		PendingToolType = ToolType;
+		if (nullptr == ToolMeshData)
+		{
+			ClearToolMesh();
+			return;
+		}
 	}
 	
 	if (IsValid((*ToolMeshData).Mesh))

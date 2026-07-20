@@ -101,4 +101,5 @@ enum class ERToolType : uint8
 	Hoe,        // 괭이
 	Shovel,     // 삽
 	WaterPail,  // 물바구니
+	Plate,		// 접시
 };

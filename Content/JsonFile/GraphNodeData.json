@@ -171,6 +171,16 @@
 						"y": 0,
 						"z": 0
 					}
+				},
+				{
+					"index": 7,
+					"cost": 460.65170288085938,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
 				}
 			]
 		},
@@ -179,6 +189,176 @@
 				{
 					"index": 5,
 					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 7,
+					"cost": 210,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 8,
+					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 5,
+					"cost": 460.65170288085938,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 6,
+					"cost": 210,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 8,
+					"cost": 200,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 6,
+					"cost": 410,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 7,
+					"cost": 200,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 11,
+					"cost": 330.1514892578125,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 10,
+					"cost": 202.48518371582031,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 11,
+					"cost": 247.58836364746094,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 9,
+					"cost": 202.48518371582031,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 11,
+					"cost": 347.1314697265625,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				}
+			]
+		},
+		{
+			"edges": [
+				{
+					"index": 8,
+					"cost": 330.1514892578125,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 9,
+					"cost": 247.58836364746094,
+					"currentForward":
+					{
+						"x": 1,
+						"y": 0,
+						"z": 0
+					}
+				},
+				{
+					"index": 10,
+					"cost": 347.1314697265625,
 					"currentForward":
 					{
 						"x": 1,

@@ -32,9 +32,9 @@ bool URSTCondition_CanTalk::TestCondition(FStateTreeExecutionContext& Context) c
 		CollisionParams
 	);
 	bool bTalk = false;
+	ACharacter* TargetCharacter = nullptr;
 	if (bRes)
 	{
-		ACharacter* TargetCharacter = nullptr;
 		float MinDistance = FLT_MAX;
 		// 주변에 대화할 사람이 있니?
 		for (const FOverlapResult& OverlapResult : OverlapResults)
@@ -63,6 +63,7 @@ bool URSTCondition_CanTalk::TestCondition(FStateTreeExecutionContext& Context) c
 	
 	if (bTalk)
 	{
+		OwnerCharacter->SetLookAtLocation(TargetCharacter->GetActorLocation());
 		return true;	
 	}
 	
